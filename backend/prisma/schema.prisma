@@ -1,0 +1,192 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String?
+  avatar    String?
+  role      String   @default("USER") // USER, ADMIN, SUPER_ADMIN
+  
+  // Profile and preferences (JSON as strings for SQLite)
+  interests     String?  @default("[]") // JSON array as string
+  dailyGoal     Int      @default(5) // Number of cards per day
+  timezone      String   @default("UTC")
+  notifications Boolean  @default(true)
+  
+  // Gamification
+  xp            Int      @default(0)
+  level         Int      @default(1)
+  streak        Int      @default(0)
+  lastActive    DateTime?
+  
+  // Relations
+  progress      UserProgress[]
+  sessions      LearningSession[]
+  uploads       ContentUpload[]
+  conversations ChatConversation[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("users")
+}
+
+model Content {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  type        String   // SUMMARY, ARTICLE, COURSE, UPLOADED
+  source      String   // CURATED, AI_GENERATED, USER_UPLOADED
+  sourceUrl   String?
+  
+  // Content metadata
+  difficulty    String @default("BEGINNER") // BEGINNER, INTERMEDIATE, ADVANCED
+  topics        String @default("[]") // JSON array as string
+  tags          String @default("[]") // JSON array as string
+  estimatedTime Int    // in minutes
+  
+  // AI-generated content flags
+  isAiGenerated Boolean @default(false)
+  sourceType    String? // book, article, video, etc.
+  
+  // Relations
+  cards       Card[]
+  uploads     ContentUpload[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("content")
+}
+
+model Card {
+  id        String   @id @default(uuid())
+  contentId String
+  content   Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  
+  // Card data
+  type      String   // SUMMARY, FLASHCARD, QUIZ, VISUAL, AUDIO
+  title     String
+  text      String?
+  imageUrl  String?
+  audioUrl  String?
+  order     Int
+  
+  // Quiz-specific fields (stored as JSON string)
+  quiz      String? // JSON: { question, choices, answer, explanation }
+  
+  // Flashcard-specific fields
+  front     String?
+  back      String?
+  
+  // Relations
+  progress  UserProgress[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("cards")
+}
+
+model UserProgress {
+  id         String    @id @default(uuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cardId     String
+  card       Card      @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  
+  status     String    @default("NOT_STARTED") // NOT_STARTED, IN_PROGRESS, COMPLETED, NEEDS_REVIEW
+  score      Float?    // For quizzes, 0.0 to 1.0
+  attempts   Int       @default(0)
+  
+  // Spaced repetition
+  easeFactor    Float    @default(2.5)
+  interval      Int      @default(1) // Days until next review
+  repetitions   Int      @default(0)
+  nextReview    DateTime @default(now())
+  lastReviewed  DateTime?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([userId, cardId])
+  @@map("user_progress")
+}
+
+model LearningSession {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  cardsCompleted  Int      @default(0)
+  duration        Int      @default(0) // in seconds
+  xpEarned        Int      @default(0)
+  
+  // Session metadata
+  startedAt       DateTime @default(now())
+  completedAt     DateTime?
+  
+  @@map("learning_sessions")
+}
+
+model ContentUpload {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contentId   String?
+  content     Content? @relation(fields: [contentId], references: [id])
+  
+  filename    String
+  originalName String
+  mimeType    String
+  size        Int
+  url         String
+  
+  // Processing status
+  status      String   @default("PROCESSING") // PROCESSING, COMPLETED, FAILED
+  error       String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("content_uploads")
+}
+
+model ChatConversation {
+  id        String        @id @default(uuid())
+  userId    String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  title     String?
+  messages  ChatMessage[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("chat_conversations")
+}
+
+model ChatMessage {
+  id             String           @id @default(uuid())
+  conversationId String
+  conversation   ChatConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  
+  role      String  // USER, ASSISTANT, SYSTEM
+  content   String
+  metadata  String? // JSON as string: Additional context, sources, etc.
+  
+  createdAt DateTime @default(now())
+  
+  @@map("chat_messages")
+}
