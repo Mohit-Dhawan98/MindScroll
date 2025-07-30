@@ -2,6 +2,9 @@
 node_modules/
 */node_modules/
 
+.claude
+.zencoder
+.vscode
 # Environment variables
 .env
 .env.local

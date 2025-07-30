@@ -110,6 +110,12 @@ model UserProgress {
   score      Float?    // For quizzes, 0.0 to 1.0
   attempts   Int       @default(0)
   
+  // Learning progress
+  isKnown      Boolean   @default(false)
+  reviewCount  Int       @default(0)
+  streak       Int       @default(0)
+  difficulty   Float     @default(2.5)
+  
   // Spaced repetition
   easeFactor    Float    @default(2.5)
   interval      Int      @default(1) // Days until next review
