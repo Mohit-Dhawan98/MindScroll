@@ -12,10 +12,15 @@ import contentRoutes from './routes/content.js'
 import userRoutes from './routes/user.js'
 import uploadRoutes from './routes/upload.js'
 import aiRoutes from './routes/ai.js'
+import libraryRoutes from './routes/library.js'
+import progressRoutes from './routes/progress.js'
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler.js'
 import { notFound } from './middleware/notFound.js'
+
+// Import processors (disabled - now using manual library management)
+// import { startContentProcessor } from './processors/index.js'
 
 // Load environment variables
 dotenv.config()
@@ -66,6 +71,8 @@ app.use('/api/content', contentRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/upload', uploadRoutes)
 app.use('/api/ai', aiRoutes)
+app.use('/api/library', libraryRoutes)
+app.use('/api/progress', progressRoutes)
 
 // API info endpoint
 app.get('/api', (req, res) => {
@@ -88,10 +95,14 @@ app.use(notFound)
 app.use(errorHandler)
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`🚀 MindScroll API server running on port ${PORT}`)
   console.log(`📚 Environment: ${process.env.NODE_ENV}`)
   console.log(`🔗 Health check: http://localhost:${PORT}/health`)
+  
+  // Content processor disabled - using manual library management
+  console.log(`📖 Library content managed manually via scripts`)
+  console.log(`📤 User upload processing available via /api/upload/*`)
 })
 
 export default app
