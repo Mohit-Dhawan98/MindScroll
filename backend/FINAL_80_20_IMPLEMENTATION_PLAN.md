@@ -38,49 +38,63 @@ Book File → Enhanced Parser → Semantic Chunks → Vector Store (FAISS)
 
 #### 3. Three-Card Pipeline (Weeks 2-3)
 
-##### Summary Cards: TextRank + RAG
+##### Summary Cards: Hierarchical Structure + TextRank + Semantic RAG
 ```python
-# Pseudocode approach
-chunks = semantic_chunk(book_text)
-topics = bertopic.fit_transform(chunks)
-for topic in important_topics:
-    key_sentences = textrank.extract_sentences(topic_chunks, n=10)
-    context = vector_search(topic_keywords, top_k=3)
-    summary = gpt4_rag_prompt(key_sentences + context, "summarize key takeaways")
+# Revised approach
+chapters = detect_structure(book_text)  # Find chapters/sections
+for chapter in chapters:
+    chapter_chunks = semantic_chunk(chapter_text)
+    key_sentences = textrank.extract_key_sentences(chapter_chunks, n=8)
+    
+    # Semantic RAG: Find related content from entire book
+    chapter_embedding = embed(chapter.main_concepts)
+    related_context = semantic_search(chapter_embedding, entire_book_chunks, top_k=3)
+    
+    summary = claude_api(key_sentences + related_context, "create chapter summary")
 ```
-- **Target**: 3-7 bullet points per major topic/chapter
-- **Quality Gate**: ROUGE-1 score ≥0.85 vs chapter content
+- **Target**: 2-3 cards per chapter + 1-2 book overview cards
+- **Quality Gate**: Claude API validates summary completeness
 
-##### Flashcards: Entity Extraction + RAG
+##### Flashcards: Entity Extraction + Semantic RAG
 ```python
-# Pseudocode approach  
-entities = spacy_ner.extract_entities(chunks)
-knowledge_graph = extract_triples(chunks) # Simple subject-predicate-object
+# Revised approach  
+entities = extract_entities_simple(chunks)  # Capitalized phrases + frequency
 for important_entity in top_entities:
-    related_chunks = vector_search(entity, top_k=2)
-    qa_pair = gpt4_rag_prompt(related_chunks, "generate Q&A about {entity}")
+    primary_context = get_entity_primary_context(entity)
+    entity_embedding = embed(primary_context)
+    
+    # Pure semantic search - no keyword matching
+    related_chunks = semantic_search(entity_embedding, all_chunks, top_k=5)
+    
+    qa_pair = claude_api(primary_context + related_chunks, "generate comprehensive Q&A")
 ```
-- **Target**: 20-40 factual Q&A pairs per book
-- **Quality Gate**: 90% of answers verifiable in source text
+- **Target**: 3-5 flashcards per chapter focusing on key entities/concepts
+- **Quality Gate**: Claude API verifies answers against source chunks
 
-##### Quiz Cards: Similarity-Based Distractors + RAG
+##### Quiz Cards: Flashcard Conversion + Semantic Distractor Generation
 ```python
-# Pseudocode approach
-for flashcard in flashcards:
-    question, correct_answer = flashcard.q, flashcard.a
-    # Find semantic distractors
-    similar_entities = vector_search(correct_answer, top_k=10)
-    distractors = filter_plausible_distractors(similar_entities, correct_answer)
-    mcq = format_multiple_choice(question, correct_answer, distractors)
+# Revised approach
+for flashcard in best_flashcards:
+    primary_content = flashcard.primary_context
+    answer_embedding = embed(flashcard.answer)
+    
+    # Find semantically similar but distinct concepts for distractors
+    similar_concepts = semantic_search(answer_embedding, all_entities, top_k=15)
+    distractor_candidates = filter_different_but_plausible(similar_concepts)
+    
+    # Let Claude generate the complete MCQ
+    mcq = claude_api(primary_content + distractor_candidates, 
+                    "create MCQ with plausible distractors")
 ```
-- **Target**: 10-15 MCQs per book with 3 plausible distractors each
-- **Quality Gate**: Distractors have cosine similarity ≥0.5 but ≠1.0 to correct answer
+- **Target**: 1-2 quiz cards per chapter (10-15 total per book)
+- **Quality Gate**: Claude API validates distractor plausibility and correctness
 
 #### 4. Quality Assurance Pipeline (Week 4)
 **Scope**: Automated filtering and validation
 - **Duplicate Detection**: Semantic similarity clustering (threshold=0.8)
-- **Answer Validation**: BERT-QA model verifies generated answers against source
+- **Answer Validation**: Claude/GPT API validates generated answers against source chunks
 - **Content Grounding**: Vector search confirms all facts appear in source material
+- **Fact Checking**: API-based verification of claims against retrieved context
 - **Success Metric**: <5% invalid cards in final output
 
 ### Technical Stack Decisions

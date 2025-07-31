@@ -217,6 +217,43 @@ class FileStorage {
   }
 
   /**
+   * Clear cache for specific content ID (used with override)
+   */
+  async clearCache(contentId) {
+    try {
+      const files = [
+        path.join(CACHE_STORAGE, `${contentId}-cards.json`),
+        path.join(TEXT_STORAGE, `${contentId}.json`)
+      ]
+      
+      const chunkDir = path.join(CHUNKS_STORAGE, contentId)
+      
+      let cleared = 0
+      
+      // Remove cache files
+      for (const file of files) {
+        if (fs.existsSync(file)) {
+          await fs.promises.unlink(file)
+          cleared++
+        }
+      }
+      
+      // Remove chunks directory
+      if (fs.existsSync(chunkDir)) {
+        await fs.promises.rm(chunkDir, { recursive: true, force: true })
+        cleared++
+      }
+      
+      console.log(`🗑️ Cleared ${cleared} cached files for content ${contentId}`)
+      return cleared
+      
+    } catch (error) {
+      console.error('Error clearing cache:', error)
+      throw error
+    }
+  }
+
+  /**
    * Clean up old files
    */
   async cleanup(olderThanDays = 30) {
