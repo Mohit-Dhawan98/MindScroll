@@ -1,8 +1,13 @@
 import fs from 'fs'
 import path from 'path'
-import { extractText } from 'unpdf'
+import { createRequire } from 'module'
 import { EPub } from 'epub2'
 import natural from 'natural'
+
+// pdf.js-extract uses CommonJS, need to import it differently
+const require = createRequire(import.meta.url)
+const PDFExtract = require('pdf.js-extract').PDFExtract
+const pdfExtract = new PDFExtract()
 
 export async function extractTextFromPDF(filePath) {
   try {
@@ -28,8 +33,9 @@ export async function extractTextFromPDF(filePath) {
       return result
     }
     
-    // Return the text content for backwards compatibility
-    return result.text
+    // Return the full structured result object (not just text for backwards compatibility)
+    // This preserves page structure and metadata for enhanced processing
+    return result
     
   } catch (error) {
     console.error(`Error extracting text from ${filePath}:`, error)
@@ -41,34 +47,115 @@ async function extractFromPDF(filePath) {
   try {
     console.log(`📄 Extracting PDF: ${path.basename(filePath)}`)
     
-    const dataBuffer = fs.readFileSync(filePath)
-    const extractedText = await extractText(dataBuffer)
+    // Use pdf.js-extract for reliable extraction
+    const pdfData = await new Promise((resolve, reject) => {
+      pdfExtract.extract(filePath, {}, (err, data) => {
+        if (err) reject(err)
+        else resolve(data)
+      })
+    })
     
-    if (!extractedText || extractedText.length < 100) {
+    // Extract text from all pages with proper structure preservation
+    let fullText = ''
+    const pages = []
+    
+    console.log(`📊 Processing ${pdfData.pages.length} pages with detailed structure...`)
+    
+    for (let pageNum = 0; pageNum < pdfData.pages.length; pageNum++) {
+      const page = pdfData.pages[pageNum]
+      
+      // Sort content by Y position (top to bottom) then X position (left to right)
+      const sortedContent = page.content
+        .filter(item => item.str && item.str.trim())
+        .sort((a, b) => {
+          // Sort by Y position first (top to bottom)
+          const yDiff = Math.abs(a.y - b.y)
+          if (yDiff > 5) { // Same line tolerance
+            return b.y - a.y // Higher Y values come first (top of page)
+          }
+          // If on same line, sort by X position (left to right)
+          return a.x - b.x
+        })
+      
+      // Group content into lines based on Y position
+      const lines = []
+      let currentLine = []
+      let currentY = null
+      
+      for (const item of sortedContent) {
+        if (currentY === null || Math.abs(item.y - currentY) <= 5) {
+          // Same line (within 5 units tolerance)
+          currentLine.push(item.str.trim())
+          currentY = item.y
+        } else {
+          // New line
+          if (currentLine.length > 0) {
+            lines.push(currentLine.join(' '))
+          }
+          currentLine = [item.str.trim()]
+          currentY = item.y
+        }
+      }
+      
+      // Add the last line
+      if (currentLine.length > 0) {
+        lines.push(currentLine.join(' '))
+      }
+      
+      // Join lines for this page
+      const pageText = lines
+        .filter(line => line.length > 0)
+        .join('\n')
+      
+      if (pageText.trim()) {
+        pages.push({
+          pageNumber: pageNum + 1,
+          text: pageText.trim(),
+          lines: lines.filter(line => line.length > 0),
+          wordCount: pageText.split(/\s+/).length
+        })
+        
+        // Add page break marker and page content to full text
+        fullText += `\n--- PAGE ${pageNum + 1} ---\n`
+        fullText += pageText + '\n\n'
+      }
+    }
+    
+    console.log(`📊 Structured extraction: ${pages.length} pages, ${pages.reduce((sum, p) => sum + p.lines.length, 0)} total lines`)
+    
+    if (!fullText || fullText.length < 100) {
       throw new Error('PDF appears to be empty or contains mostly images')
     }
     
     // Clean and normalize the extracted text
-    let cleanText = extractedText
+    let cleanText = fullText
       .replace(/\f/g, '\n\n') // Form feeds to paragraph breaks
       .replace(/\r\n/g, '\n') // Normalize line endings
       .replace(/\r/g, '\n')
       .replace(/\n{3,}/g, '\n\n') // Multiple newlines to double
-      .replace(/\s+/g, ' ') // Multiple spaces to single
+      // Don't collapse spaces within lines, but normalize line structure
+      .split('\n')
+      .map(line => line.replace(/\s+/g, ' ').trim()) // Normalize spaces within each line
+      .filter(line => line.length > 0) // Remove empty lines
+      .join('\n')
       .replace(/[^\w\s.,!?;:()\-"'\n]/g, '') // Remove special chars but keep punctuation
       .trim()
     
-    // Extract metadata (unpdf provides less detail than pdf-parse)
+    // Extract metadata
     const metadata = {
+      pages: pdfData.pages.length,
+      extractedPages: pages.length,
       wordCount: cleanText.split(/\s+/).length,
       charCount: cleanText.length,
-      extractedWith: 'unpdf'
+      extractedWith: 'pdf.js-extract',
+      averageWordsPerPage: pages.length > 0 ? Math.round(pages.reduce((sum, p) => sum + p.wordCount, 0) / pages.length) : 0
     }
     
-    console.log(`✅ PDF extracted: ${metadata.wordCount} words, ${metadata.charCount} characters`)
+    console.log(`✅ PDF extracted: ${metadata.pages} pages, ${metadata.wordCount} words`)
     
     return {
       text: cleanText,
+      pages: pages, // Structured page data
       metadata
     }
     

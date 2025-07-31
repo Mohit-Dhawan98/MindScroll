@@ -45,12 +45,14 @@ model User {
 model Content {
   id          String   @id @default(uuid())
   title       String
+  author      String?  // Book/content author
   description String?
   type        String   // SUMMARY, ARTICLE, COURSE, UPLOADED
   source      String   // CURATED, AI_GENERATED, USER_UPLOADED
   sourceUrl   String?
   
   // Content metadata
+  category      String @default("general") // technology, business, science, etc.
   difficulty    String @default("BEGINNER") // BEGINNER, INTERMEDIATE, ADVANCED
   topics        String @default("[]") // JSON array as string
   tags          String @default("[]") // JSON array as string
@@ -59,6 +61,11 @@ model Content {
   // AI-generated content flags
   isAiGenerated Boolean @default(false)
   sourceType    String? // book, article, video, etc.
+  
+  // Content status and metadata
+  isActive      Boolean @default(true)  // Enable/disable content
+  totalCards    Int     @default(0)     // Total number of cards
+  textFileId    String? // Reference to stored text file
   
   // Relations
   cards       Card[]
