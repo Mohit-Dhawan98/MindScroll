@@ -219,10 +219,66 @@ class FileStorage {
   /**
    * Clear cache for specific content ID (used with override)
    */
+  /**
+   * Cache chapter structure for consistent processing
+   */
+  async cacheChapterStructure(contentId, chapterStructure) {
+    try {
+      const cacheFile = path.join(CACHE_STORAGE, `${contentId}-chapters.json`)
+      
+      const cacheData = {
+        contentId,
+        chapterStructure,
+        cachedAt: new Date().toISOString(),
+        totalChapters: chapterStructure.chapters ? chapterStructure.chapters.length : 0
+      }
+      
+      await fs.promises.writeFile(cacheFile, JSON.stringify(cacheData, null, 2))
+      console.log(`💾 Cached chapter structure: ${cacheData.totalChapters} chapters`)
+      
+    } catch (error) {
+      console.error('Error caching chapter structure:', error)
+      throw error
+    }
+  }
+
+  /**
+   * Get cached chapter structure
+   */
+  async getCachedChapterStructure(contentId) {
+    try {
+      const cacheFile = path.join(CACHE_STORAGE, `${contentId}-chapters.json`)
+      
+      if (!fs.existsSync(cacheFile)) {
+        return null
+      }
+      
+      const data = await fs.promises.readFile(cacheFile, 'utf-8')
+      const cacheData = JSON.parse(data)
+      
+      // Check if cache is recent (within 30 days for chapter structure)
+      const cacheAge = Date.now() - new Date(cacheData.cachedAt).getTime()
+      const maxAge = 30 * 24 * 60 * 60 * 1000 // 30 days (longer than cards)
+      
+      if (cacheAge > maxAge) {
+        console.log(`⚠️  Chapter structure cache expired for ${contentId}, will regenerate`)
+        return null
+      }
+      
+      console.log(`📚 Using cached chapter structure for ${contentId} (${cacheData.totalChapters} chapters)`)
+      return cacheData.chapterStructure
+      
+    } catch (error) {
+      console.error('Error retrieving cached chapter structure:', error)
+      return null
+    }
+  }
+
   async clearCache(contentId) {
     try {
       const files = [
         path.join(CACHE_STORAGE, `${contentId}-cards.json`),
+        path.join(CACHE_STORAGE, `${contentId}-chapters.json`),
         path.join(TEXT_STORAGE, `${contentId}.json`)
       ]
       
@@ -338,6 +394,24 @@ class FileStorage {
       
     } catch (error) {
       console.error('Error getting storage stats:', error)
+      return null
+    }
+  }
+
+  /**
+   * Cache debug data for analyzing card generation issues
+   */
+  async cacheDebugData(type, identifier, data) {
+    try {
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+      const debugFile = path.join(CACHE_STORAGE, `debug-${type}-${identifier.replace(/[^a-z0-9]/gi, '_')}-${timestamp}.json`)
+      
+      await fs.promises.writeFile(debugFile, JSON.stringify(data, null, 2))
+      console.log(`🐛 Cached debug data: ${path.basename(debugFile)}`)
+      
+      return debugFile
+    } catch (error) {
+      console.error('Error caching debug data:', error)
       return null
     }
   }

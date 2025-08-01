@@ -125,7 +125,8 @@ async function addBookToLibrary(filePath, category, aiProvider = 'openai', overr
       const cardGenerator = new (await import('../../src/processors/enhancedCardGenerator.js')).EnhancedCardGenerator(aiProvider)
       
       // Pass the full textData object (which may include structured pages) to the card generator
-      cards = await cardGenerator.generateEnhancedLearningCards(textData, title, author, category)
+      // Also pass contentId to ensure consistent caching
+      cards = await cardGenerator.generateEnhancedLearningCards(textData, title, author, category, contentId)
       
       // Cache the generated cards
       if (cards && cards.length > 0) {
@@ -144,10 +145,24 @@ async function addBookToLibrary(filePath, category, aiProvider = 'openai', overr
       throw new Error(`❌ PROCESSING FAILED: Only ${cards.length} cards generated (minimum 5 required) - book will NOT be added to database`)
     }
     
-    // Check if cards have proper content
-    const invalidCards = cards.filter(card => 
-      !card.title || !card.content || card.title.length < 10 || card.content.length < 100
-    )
+    // Check if cards have proper content based on card type
+    const invalidCards = cards.filter(card => {
+      if (!card.title || card.title.length < 10) return true
+      
+      // Different validation for different card types
+      if (card.type === 'FLASHCARD') {
+        // Flashcards should have front and back fields
+        return !card.front || !card.back || card.front.length < 20 || card.back.length < 100
+      } else if (card.type === 'QUIZ') {
+        // Quiz cards should have question, options, correctAnswer, and explanation
+        return !card.question || !card.options || !card.correctAnswer || !card.explanation ||
+               card.question.length < 50 || !Array.isArray(card.options) || card.options.length < 2 ||
+               card.explanation.length < 50
+      } else {
+        // Other cards (APPLICATION, SYNTHESIS) should have content field
+        return !card.content || card.content.length < 100
+      }
+    })
     
     if (invalidCards.length > cards.length * 0.3) {
       throw new Error(`❌ PROCESSING FAILED: ${invalidCards.length}/${cards.length} cards are invalid - book will NOT be added to database`)
@@ -186,15 +201,18 @@ async function addBookToLibrary(filePath, category, aiProvider = 'openai', overr
       title: card.title,
       text: card.content, // Schema uses 'text' not 'content'
       order: index + 1,
-      tags: JSON.stringify(card.tags || []),
       // Add quiz data if it's a quiz card
-      ...(card.quiz && { quiz: JSON.stringify(card.quiz) })
+      ...(card.quiz && { quiz: JSON.stringify(card.quiz) }),
+      // Add flashcard data if it's a flashcard
+      ...(card.front && { front: card.front }),
+      ...(card.back && { back: card.back })
     }))
     
-    await prisma.card.createMany({ data: cardData })
+    const cardResult = await prisma.card.createMany({ data: cardData })
     
     console.log(`✅ Successfully added "${title}" to library`)
     console.log(`📊 Generated ${cards.length} learning cards`)
+    console.log(`💾 Database: ${cardResult.count} cards uploaded successfully`)
     console.log(`🆔 Content ID: ${content.id}`)
     
     return content
@@ -220,47 +238,52 @@ function calculateDifficulty(category) {
   return difficultyMap[category] || 'MEDIUM'
 }
 
-// CLI execution
-if (process.argv.length < 4) {
-  console.log('Usage: node addBook.js <file-path> <category> [--provider openai|anthropic] [--override]')
-  console.log('Categories: technology, business, science, personal-development, economics, health, history, philosophy, arts')
-  console.log('Providers: openai (GPT-4.1-mini, default), anthropic (Claude-3-Haiku)')
-  console.log('Options: --override (force reprocess existing books)')
-  process.exit(1)
-}
+// Export for use by bulk processor
+export { addBookToLibrary }
 
-const args = process.argv.slice(2)
-const filePath = args[0]
-const category = args[1]
-
-// Parse command line options
-let aiProvider = 'openai' // Default to OpenAI GPT-4.1-mini
-let override = false
-
-const providerIndex = args.findIndex(arg => arg === '--provider')
-if (providerIndex !== -1 && providerIndex + 1 < args.length) {
-  const provider = args[providerIndex + 1].toLowerCase()
-  if (['openai', 'anthropic'].includes(provider)) {
-    aiProvider = provider
-  } else {
-    console.error('❌ Invalid provider. Use "openai" or "anthropic"')
+// CLI execution - only run if this file is executed directly
+if (import.meta.url === `file://${process.argv[1]}`) {
+  if (process.argv.length < 4) {
+    console.log('Usage: node addBook.js <file-path> <category> [--provider openai|anthropic] [--override]')
+    console.log('Categories: technology, business, science, personal-development, economics, health, history, philosophy, arts')
+    console.log('Providers: openai (GPT-4.1-mini, default), anthropic (Claude-3-Haiku)')
+    console.log('Options: --override (force reprocess existing books)')
     process.exit(1)
   }
+
+  const args = process.argv.slice(2)
+  const filePath = args[0]
+  const category = args[1]
+
+  // Parse command line options
+  let aiProvider = 'openai' // Default to OpenAI GPT-4.1-mini
+  let override = false
+
+  const providerIndex = args.findIndex(arg => arg === '--provider')
+  if (providerIndex !== -1 && providerIndex + 1 < args.length) {
+    const provider = args[providerIndex + 1].toLowerCase()
+    if (['openai', 'anthropic'].includes(provider)) {
+      aiProvider = provider
+    } else {
+      console.error('❌ Invalid provider. Use "openai" or "anthropic"')
+      process.exit(1)
+    }
+  }
+
+  if (args.includes('--override')) {
+    override = true
+    console.log('🔄 Override mode enabled - will reprocess existing books')
+  }
+
+  console.log(`🤖 Using AI Provider: ${aiProvider.toUpperCase()} (${aiProvider === 'openai' ? 'GPT-4.1-mini' : 'Claude-3-Haiku'})`)
+
+  addBookToLibrary(filePath, category, aiProvider, override)
+    .then(() => {
+      console.log('🎉 Book added successfully!')
+      process.exit(0)
+    })
+    .catch((error) => {
+      console.error('💥 Failed to add book:', error.message)
+      process.exit(1)
+    })
 }
-
-if (args.includes('--override')) {
-  override = true
-  console.log('🔄 Override mode enabled - will reprocess existing books')
-}
-
-console.log(`🤖 Using AI Provider: ${aiProvider.toUpperCase()} (${aiProvider === 'openai' ? 'GPT-4.1-mini' : 'Claude-3-Haiku'})`)
-
-addBookToLibrary(filePath, category, aiProvider, override)
-  .then(() => {
-    console.log('🎉 Book added successfully!')
-    process.exit(0)
-  })
-  .catch((error) => {
-    console.error('💥 Failed to add book:', error.message)
-    process.exit(1)
-  })
