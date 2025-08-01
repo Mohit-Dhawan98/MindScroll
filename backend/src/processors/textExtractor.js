@@ -165,34 +165,131 @@ async function extractFromPDF(filePath) {
   }
 }
 
+function cleanHtmlContent(htmlContent) {
+  if (!htmlContent) return ''
+  
+  // Enhanced HTML cleaning that preserves text structure
+  let cleanText = htmlContent
+    // First, handle specific HTML elements that should become line breaks
+    .replace(/<\/?(h[1-6]|p|div|br|li|tr)(\s[^>]*)?\s*>/gi, '\n')
+    .replace(/<\/?(ul|ol|table)(\s[^>]*)?\s*>/gi, '\n\n')
+    
+    // Convert HTML entities
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&[a-zA-Z0-9#]+;/g, ' ')
+    
+    // Remove all remaining HTML tags
+    .replace(/<[^>]*>/g, ' ')
+    
+    // Clean up whitespace
+    .replace(/\s+/g, ' ')
+    .replace(/\n\s+/g, '\n')
+    .replace(/\s+\n/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+  
+  return cleanText
+}
+
 async function extractFromEPUB(filePath) {
   try {
     console.log(`📖 Extracting EPUB: ${path.basename(filePath)}`)
     
     const epub = new EPub(filePath)
-    await epub.parse()
+    
+    // Parse the EPUB file
+    await new Promise((resolve, reject) => {
+      epub.parse()
+      epub.on('end', resolve)
+      epub.on('error', reject)
+    })
     
     let fullText = ''
+    const pages = [] // Use pages array for compatibility with enhanced card generator
     const chapters = []
     
-    // Extract text from each chapter
-    for (const chapter of epub.flow) {
+    console.log(`📊 Processing ${epub.flow.length} EPUB chapters with enhanced structure...`)
+    
+    // Extract text from each chapter with proper HTML processing
+    for (let chapterIndex = 0; chapterIndex < epub.flow.length; chapterIndex++) {
+      const chapter = epub.flow[chapterIndex]
       try {
-        const chapterText = await epub.getChapterRaw(chapter.id)
+        const chapterHtml = await new Promise((resolve, reject) => {
+          epub.getChapterRaw(chapter.id, (err, text) => {
+            if (err) reject(err)
+            else resolve(text)
+          })
+        })
         
-        // Strip HTML tags and clean text
-        const cleanChapterText = chapterText
-          .replace(/<[^>]*>/g, ' ') // Remove HTML tags
-          .replace(/\s+/g, ' ') // Normalize whitespace
-          .replace(/&[a-zA-Z0-9#]+;/g, ' ') // Remove HTML entities
-          .trim()
+        // Enhanced HTML cleaning that preserves structure
+        const cleanChapterText = cleanHtmlContent(chapterHtml)
         
         if (cleanChapterText.length > 100) {
+          // Split chapter into logical sections/paragraphs for page-like structure
+          const paragraphs = cleanChapterText
+            .split(/\n\s*\n/)
+            .filter(p => p.trim().length > 50)
+          
+          // Group paragraphs into "pages" (similar to PDF pages for consistency)
+          const wordsPerPage = 300 // Reasonable page size for EPUB
+          let currentPageText = ''
+          let currentPageLines = []
+          
+          for (const paragraph of paragraphs) {
+            const paragraphWords = paragraph.split(/\s+/).length
+            
+            if (currentPageText.split(/\s+/).length + paragraphWords > wordsPerPage && currentPageText) {
+              // Create a "page" from accumulated content
+              pages.push({
+                pageNumber: pages.length + 1,
+                text: currentPageText.trim(),
+                lines: currentPageLines.filter(line => line.length > 0),
+                wordCount: currentPageText.split(/\s+/).length,
+                chapterIndex: chapterIndex,
+                chapterTitle: chapter.title || `Chapter ${chapterIndex + 1}`
+              })
+              
+              // Add page break marker to full text
+              fullText += `\n--- PAGE ${pages.length} ---\n`
+              fullText += currentPageText + '\n\n'
+              
+              // Start new page
+              currentPageText = paragraph
+              currentPageLines = [paragraph]
+            } else {
+              if (currentPageText) currentPageText += '\n\n'
+              currentPageText += paragraph
+              currentPageLines.push(paragraph)
+            }
+          }
+          
+          // Add remaining content as final page
+          if (currentPageText.trim()) {
+            pages.push({
+              pageNumber: pages.length + 1,
+              text: currentPageText.trim(),
+              lines: currentPageLines.filter(line => line.length > 0),
+              wordCount: currentPageText.split(/\s+/).length,
+              chapterIndex: chapterIndex,
+              chapterTitle: chapter.title || `Chapter ${chapterIndex + 1}`
+            })
+            
+            fullText += `\n--- PAGE ${pages.length} ---\n`
+            fullText += currentPageText + '\n\n'
+          }
+          
+          // Store chapter info for backwards compatibility
           chapters.push({
-            title: chapter.title || `Chapter ${chapters.length + 1}`,
-            text: cleanChapterText
+            title: chapter.title || `Chapter ${chapterIndex + 1}`,
+            text: cleanChapterText,
+            startPage: Math.max(1, pages.length - Math.ceil(cleanChapterText.split(/\s+/).length / wordsPerPage)),
+            endPage: pages.length
           })
-          fullText += cleanChapterText + '\n\n'
         }
       } catch (chapterError) {
         console.warn(`Failed to extract chapter ${chapter.id}:`, chapterError.message)
@@ -203,19 +300,37 @@ async function extractFromEPUB(filePath) {
       throw new Error('EPUB appears to be empty or unreadable')
     }
     
+    // Clean and normalize the full text (similar to PDF processing)
+    let cleanText = fullText
+      .replace(/\r\n/g, '\n') // Normalize line endings
+      .replace(/\r/g, '\n')
+      .replace(/\n{3,}/g, '\n\n') // Multiple newlines to double
+      .split('\n')
+      .map(line => line.replace(/\s+/g, ' ').trim()) // Normalize spaces within each line
+      .filter(line => line.length > 0) // Remove empty lines
+      .join('\n')
+      .replace(/[^\w\s.,!?;:()\-"'\n]/g, '') // Remove special chars but keep punctuation
+      .trim()
+    
     const metadata = {
       title: epub.metadata.title,
       author: epub.metadata.creator,
+      pages: pages.length,
+      extractedPages: pages.length,
       chapters: chapters.length,
-      wordCount: fullText.split(/\s+/).length,
-      charCount: fullText.length
+      wordCount: cleanText.split(/\s+/).length,
+      charCount: cleanText.length,
+      extractedWith: 'epub2',
+      averageWordsPerPage: pages.length > 0 ? Math.round(pages.reduce((sum, p) => sum + p.wordCount, 0) / pages.length) : 0
     }
     
-    console.log(`✅ EPUB extracted: ${chapters.length} chapters, ${metadata.wordCount} words`)
+    console.log(`✅ EPUB extracted: ${pages.length} pages (${chapters.length} chapters), ${metadata.wordCount} words`)
     
+    // Return structure compatible with enhanced card generator (same as PDF)
     return {
-      text: fullText,
-      chapters,
+      text: cleanText,
+      pages: pages, // Structured page data for chapter detection
+      chapters: chapters, // Keep for backwards compatibility
       metadata
     }
     

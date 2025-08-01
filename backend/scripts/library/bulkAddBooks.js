@@ -149,7 +149,7 @@ async function processBook(filePath, category, options) {
     const fileName = path.basename(filePath)
     
     // Import the single book processor dynamically
-    const { default: addBookToLibrary } = await import('./addBook.js')
+    const { addBookToLibrary } = await import('./addBook.js')
     
     // Build command arguments
     const args = [filePath, category]
