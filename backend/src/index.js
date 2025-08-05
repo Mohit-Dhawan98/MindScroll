@@ -94,6 +94,29 @@ app.get('/api', (req, res) => {
 app.use(notFound)
 app.use(errorHandler)
 
+// Global error handlers to prevent silent crashes
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('🚨 Unhandled Rejection at:', promise, 'reason:', reason)
+  // Don't crash the server, just log the error
+})
+
+process.on('uncaughtException', (error) => {
+  console.error('🚨 Uncaught Exception:', error)
+  console.error('🚨 Stack trace:', error.stack)
+  // Don't crash the server, just log the error
+})
+
+// Graceful shutdown handlers
+process.on('SIGTERM', () => {
+  console.log('📴 SIGTERM received. Shutting down gracefully...')
+  process.exit(0)
+})
+
+process.on('SIGINT', () => {
+  console.log('📴 SIGINT received. Shutting down gracefully...')
+  process.exit(0)
+})
+
 // Start server
 app.listen(PORT, async () => {
   console.log(`🚀 MindScroll API server running on port ${PORT}`)

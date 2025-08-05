@@ -2389,7 +2389,7 @@ Generate quiz card in valid JSON format:
   "title": "Quiz question title",
   "question": "Multiple choice question testing the concepts",
   "options": ["A) Option 1", "B) Option 2", "C) Option 3", "D) Option 4"],
-  "correctAnswer": "B",
+  "correctAnswer": "A, B, C, or D (randomize - don't always use B)",
   "explanation": "Brief explanation of why this answer is correct",
   "difficulty": "MEDIUM",
   "tags": ["${category}", "quiz", "assessment"],
@@ -2399,6 +2399,7 @@ Generate quiz card in valid JSON format:
 Requirements:
 - Test understanding of flashcard concepts
 - Create 4 plausible options with 1 correct answer
+- IMPORTANT: Randomize which option (A, B, C, or D) is correct - don't always use B
 - Use application context if available for scenario-based questions
 - Generate believable distractors
 - Return only the JSON, no additional text`
@@ -2974,7 +2975,8 @@ Create an overview card in valid JSON format. IMPORTANT: Escape all quotes and s
 
 {
   "title": "Overview: ${bookTitle}",
-  "content": "Comprehensive book overview (300-400 words). Include main themes and central message, how the chapters connect, key insights and takeaways, and why this book matters. Use only escaped quotes within content.",
+  "front": "Complete Book Overview",
+  "back": "Comprehensive book overview (300-400 words). Include main themes and central message, how the chapters connect, key insights and takeaways, and why this book matters. Use only escaped quotes within content.",
   "difficulty": "MEDIUM",
   "tags": ["overview", "${category}", "book-summary"]
 }
@@ -2987,8 +2989,12 @@ Focus on the big picture and connections. Return only the JSON.`
         return [{
           ...overviewCard,
           type: 'SUMMARY',
-          chapterTitle: 'Book Overview',
-          sourceChunks: allChunks.slice(0, 5).map(c => c.id)
+          chapterContext: 'Book Overview',
+          sourceChunks: allChunks.slice(0, 5).map(c => c.id),
+          sourceCards: [], // No source cards for book overview
+          // Ensure both content and back fields are populated for compatibility
+          content: overviewCard.back || overviewCard.content,
+          back: overviewCard.back || overviewCard.content
         }]
       }
       
