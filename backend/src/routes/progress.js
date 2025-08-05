@@ -382,29 +382,28 @@ router.get('/stats', protect, async (req, res) => {
       select: { xp: true, level: true, streak: true }
     })
 
-    // Calculate detailed stats
-    const totalCards = await prisma.userProgress.count({
-      where: { userId }
-    })
-
-    const completedCards = await prisma.userProgress.count({
-      where: { userId, isKnown: true }
-    })
-
-    const cardsDueToday = await prisma.userProgress.count({
-      where: {
-        userId,
-        nextReview: {
-          lte: new Date(),
-          gte: new Date(new Date().setHours(0, 0, 0, 0))
+    // 🚀 Parallel queries for better performance
+    const [totalCards, completedCards, cardsDueToday, averageAccuracy] = await Promise.all([
+      prisma.userProgress.count({
+        where: { userId }
+      }),
+      prisma.userProgress.count({
+        where: { userId, isKnown: true }
+      }),
+      prisma.userProgress.count({
+        where: {
+          userId,
+          nextReview: {
+            lte: new Date(),
+            gte: new Date(new Date().setHours(0, 0, 0, 0))
+          }
         }
-      }
-    })
-
-    const averageAccuracy = await prisma.userProgress.aggregate({
-      where: { userId },
-      _avg: { streak: true }
-    })
+      }),
+      prisma.userProgress.aggregate({
+        where: { userId },
+        _avg: { streak: true }
+      })
+    ])
 
     // Calculate level from XP (simple formula)
     const level = Math.floor((user?.xp || 0) / 100) + 1
