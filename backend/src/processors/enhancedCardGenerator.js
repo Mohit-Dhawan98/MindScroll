@@ -106,6 +106,10 @@ export class EnhancedCardGenerator {
         const flashcard = await this.generateFlashcardFromChunkGroup(chunkGroup, allChunks, bookStructure, bookTitle, author, category)
         
         if (flashcard) {
+          // Add simple mapping - which chunks were used to generate this card
+          flashcard.sourceChunks = chunkGroup.map(c => c.id)
+          flashcard.sourceCards = [] // Flashcards don't derive from other cards
+          
           allFlashcards.push(flashcard)
           allCards.push(flashcard)
         }
@@ -125,20 +129,30 @@ export class EnhancedCardGenerator {
         await this.cacheTierCards(actualContentId, 'tier1-flashcards', allFlashcards, bookTitle)
       }
       
-      // Step 4B: Generate APPLICATION cards from flashcards (Tier 2)
-      console.log(`📝 Tier 2: Generating application cards from flashcards...`)
-      const applicationCards = await this.generateApplicationsFromFlashcards(allFlashcards, allChunks, bookTitle, author, category)
-      allCards.push(...applicationCards)
-      console.log(`✅ Tier 2 Complete: Generated ${applicationCards.length} application cards`)
+      // Step 4B: Generate APPLICATION cards for AI tutor context (PAUSED - save LLM credits)
+      console.log(`⏸️ Tier 2: APPLICATION card generation paused (will implement when AI tutor is ready)`)
+      const applicationCards = [] // Empty array for now
       
-      // Cache Tier 2 cards (if debug mode enabled)
-      if (this.debugMode) {
-        await this.cacheTierCards(actualContentId, 'tier2-applications', applicationCards, bookTitle)
-      }
+      // TODO: Uncomment when AI tutor is implemented
+      // const applicationCards = await this.generateApplicationsFromFlashcards(allFlashcards, allChunks, bookTitle, author, category)
+      // applicationCards.forEach(app => {
+      //   app.sourceCards = app.sourceFlashcards || []
+      //   app.sourceChunks = []
+      // })
+      // if (this.debugMode) {
+      //   await this.cacheTierCards(actualContentId, 'ai-tutor-applications', applicationCards, bookTitle)
+      // }
       
       // Step 4C: Generate QUIZ cards from flashcards + applications (Tier 3)  
       console.log(`❓ Tier 3: Generating quiz cards...`)
       const quizCards = await this.generateQuizzesFromCards(allFlashcards, applicationCards, bookStructure, bookTitle, author, category)
+      
+      // Add card dependency tracking for quizzes
+      quizCards.forEach(quiz => {
+        quiz.sourceCards = quiz.sourceFlashcards || [] // Use the flashcards that generated this quiz
+        quiz.sourceChunks = [] // Quizzes don't directly use chunks
+      })
+      
       allCards.push(...quizCards)
       console.log(`✅ Tier 3 Complete: Generated ${quizCards.length} quiz cards`)
       
@@ -147,15 +161,22 @@ export class EnhancedCardGenerator {
         await this.cacheTierCards(actualContentId, 'tier3-quizzes', quizCards, bookTitle)
       }
       
-      // Step 4D: Generate SYNTHESIS cards from all cards + chapter context (Tier 4)
-      console.log(`🧩 Tier 4: Generating synthesis cards...`)
-      const synthesisCards = await this.generateSynthesisFromAllCards(allFlashcards, applicationCards, quizCards, bookStructure, allChunks, bookTitle, author, category)
-      allCards.push(...synthesisCards)
-      console.log(`✅ Tier 4 Complete: Generated ${synthesisCards.length} synthesis cards`)
+      // Step 4D: Generate SUMMARY cards from chapter flashcards (Tier 4)
+      console.log(`📄 Tier 4: Generating chapter summary cards...`)
+      const summaryCards = await this.generateChapterSummaries(allFlashcards, bookStructure, bookTitle, author, category)
+      
+      // Add card dependency tracking for summaries
+      summaryCards.forEach(summary => {
+        summary.sourceCards = summary.sourceFlashcards || [] // Use flashcards from the chapter
+        summary.sourceChunks = [] // Summaries don't directly use chunks
+      })
+      
+      allCards.push(...summaryCards)
+      console.log(`✅ Tier 4 Complete: Generated ${summaryCards.length} chapter summary cards`)
       
       // Cache Tier 4 cards (if debug mode enabled)
       if (this.debugMode) {
-        await this.cacheTierCards(actualContentId, 'tier4-synthesis', synthesisCards, bookTitle)
+        await this.cacheTierCards(actualContentId, 'tier4-summaries', summaryCards, bookTitle)
       }
       
       // Generate book-level overview cards
@@ -180,7 +201,15 @@ export class EnhancedCardGenerator {
       console.log(`✨ Final output: ${finalCards.length} high-quality cards`)
       console.log(`📊 Breakdown: ${finalCards.filter(c => c.type === 'SUMMARY').length} summaries, ${finalCards.filter(c => c.type === 'FLASHCARD').length} flashcards, ${finalCards.filter(c => c.type === 'APPLICATION').length} applications, ${finalCards.filter(c => c.type === 'QUIZ').length} quizzes, ${finalCards.filter(c => c.type === 'SYNTHESIS').length} synthesis`)
       
-      return finalCards
+      // Return both cards and chapter information for database creation
+      return {
+        cards: finalCards,
+        chapters: bookStructure.chapters,
+        chunkMapping: allChunks.reduce((map, chunk) => {
+          map[chunk.id] = chunk
+          return map
+        }, {})
+      }
       
     } catch (error) {
       console.error('❌ Error in enhanced card generation:', error)
@@ -2381,7 +2410,26 @@ Requirements:
       })
 
       if (response && response.question && response.options) {
-        quizzes.push(response)
+        // Convert letter answer to numeric index (A=0, B=1, C=2, D=3)
+        const letterToIndex = { 'A': 0, 'B': 1, 'C': 2, 'D': 3 }
+        const correctAnswerIndex = letterToIndex[response.correctAnswer] || 0
+        
+        // Restructure the quiz card to match database schema
+        const quizCard = {
+          type: "QUIZ",
+          title: response.title || "Quiz Question",
+          quiz: {
+            question: response.question,
+            choices: response.options, // Frontend expects 'choices' not 'options'
+            correctAnswer: correctAnswerIndex, // Convert to numeric index
+            explanation: response.explanation
+          },
+          difficulty: response.difficulty || "MEDIUM",
+          tags: response.tags || ["quiz"],
+          chapterContext: flashcards[0]?.chapterContext || null, // Inherit from source flashcards
+          sourceFlashcards: response.basedOnFlashcards || []
+        }
+        quizzes.push(quizCard)
       }
 
     } catch (error) {
@@ -2418,6 +2466,12 @@ Requirements:
         
         try {
           const application = await this.generateApplicationCards(flashcardGroup, {relatedChunks: []}, bookTitle, author, category)
+          
+          // Add source flashcard tracking to each application
+          application.forEach(app => {
+            app.sourceFlashcards = flashcardGroup.map(fc => fc.id || `flashcard_${fc.title}`)
+          })
+          
           applications.push(...application)
         } catch (error) {
           console.warn(`⚠️ Error generating application for ${chapterKey}:`, error.message)
@@ -2819,9 +2873,9 @@ Make distractors challenging but clearly wrong. Return only the JSON.`
           quizCards.push({
             ...quizCard,
             type: 'QUIZ',
-            chapterTitle: flashcard.chapterTitle,
-            sourceFlashcard: flashcard.entity,
-            sourceChunks: flashcard.sourceChunks
+            chapterContext: flashcard.chapterContext, // Inherit from source flashcard
+            sourceChunks: flashcard.sourceChunks, // Inherit from source flashcard
+            sourceCards: [flashcard.entity || flashcard.title] // Track source flashcard
           })
         }
         
@@ -2831,6 +2885,74 @@ Make distractors challenging but clearly wrong. Return only the JSON.`
     }
     
     return quizCards
+  }
+
+  /**
+   * Generate chapter summary cards (Tier 4 - SUMMARY cards)
+   * Replace synthesis cards with chapter-specific summaries from flashcards
+   */
+  async generateChapterSummaries(allFlashcards, bookStructure, bookTitle, author, category) {
+    const summaryCards = []
+    
+    // Group flashcards by chapter
+    const flashcardsByChapter = {}
+    allFlashcards.forEach(flashcard => {
+      const chapterTitle = flashcard.chapterContext || 'Unknown Chapter'
+      if (!flashcardsByChapter[chapterTitle]) {
+        flashcardsByChapter[chapterTitle] = []
+      }
+      flashcardsByChapter[chapterTitle].push(flashcard)
+    })
+    
+    console.log(`📄 Generating summaries for ${Object.keys(flashcardsByChapter).length} chapters`)
+    
+    // Generate summary for each chapter
+    for (const [chapterTitle, chapterFlashcards] of Object.entries(flashcardsByChapter)) {
+      try {
+        if (chapterFlashcards.length === 0) continue
+        
+        // Collect key concepts from flashcards in this chapter
+        const keyConcepts = chapterFlashcards.map(card => 
+          `• ${card.title}: ${card.front} → ${card.back.substring(0, 100)}...`
+        ).join('\n')
+        
+        const prompt = `Create a comprehensive chapter summary card for "${chapterTitle}" from "${bookTitle}".
+
+Key concepts covered in this chapter:
+${keyConcepts}
+
+Create a chapter summary card using flashcard format in valid JSON. IMPORTANT: Escape all quotes and special characters properly.
+{
+  "title": "Chapter Summary: ${chapterTitle}",
+  "front": "What are the key insights and main concepts from ${chapterTitle}?",
+  "back": "Comprehensive summary (400-500 words) that synthesizes all key concepts from this chapter. Include: main themes and core concepts, how concepts connect and relate, key insights and practical applications, and important takeaways. Write as a cohesive narrative that helps students understand the big picture of this chapter. Use only escaped quotes within content.",
+  "difficulty": "MEDIUM",
+  "tags": ["summary", "${category}", "chapter-overview"]
+}
+
+Focus on connecting the dots between concepts. Return only the JSON.`
+
+        const summaryCard = await this.callAI(prompt)
+        
+        if (summaryCard) {
+          summaryCards.push({
+            ...summaryCard,
+            type: 'SUMMARY',
+            chapterContext: chapterTitle, // Use consistent field name
+            sourceChunks: [...new Set(chapterFlashcards.flatMap(card => card.sourceChunks || []))], // Inherit from flashcards
+            sourceCards: chapterFlashcards.map(card => card.entity || card.title) // Track source flashcards
+          })
+          
+          console.log(`✅ Generated summary for chapter: "${chapterTitle}"`)
+        }
+        
+      } catch (error) {
+        console.warn(`⚠️ Failed to generate summary for chapter "${chapterTitle}":`, error.message)
+      }
+    }
+    
+    console.log(`📄 Generated ${summaryCards.length} chapter summary cards`)
+    return summaryCards
   }
 
   /**

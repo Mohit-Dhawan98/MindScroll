@@ -95,6 +95,8 @@ async function addBookToLibrary(filePath, category, aiProvider = 'openai', overr
     // Check if we have cached cards
     console.log('📦 Checking for cached cards...')
     let cards = await fileStorage.getCachedCards(contentId)
+    let chapters = []
+    let chunkMapping = {}
     
     if (!cards) {
       // Extract text
@@ -126,7 +128,20 @@ async function addBookToLibrary(filePath, category, aiProvider = 'openai', overr
       
       // Pass the full textData object (which may include structured pages) to the card generator
       // Also pass contentId to ensure consistent caching
-      cards = await cardGenerator.generateEnhancedLearningCards(textData, title, author, category, contentId)
+      const cardGenerationResult = await cardGenerator.generateEnhancedLearningCards(textData, title, author, category, contentId)
+      
+      // Handle both old format (just cards array) and new format (object with cards + chapters)
+      if (Array.isArray(cardGenerationResult)) {
+        // Old format - just cards
+        cards = cardGenerationResult
+        console.log('⚠️ Using legacy card format - chapters will not be created')
+      } else {
+        // New format - cards + chapters
+        cards = cardGenerationResult.cards
+        chapters = cardGenerationResult.chapters
+        chunkMapping = cardGenerationResult.chunkMapping
+        console.log(`📚 Received ${chapters.length} chapters and ${cards.length} cards`)
+      }
       
       // Cache the generated cards
       if (cards && cards.length > 0) {
@@ -149,18 +164,27 @@ async function addBookToLibrary(filePath, category, aiProvider = 'openai', overr
     const invalidCards = cards.filter(card => {
       if (!card.title || card.title.length < 10) return true
       
-      // Different validation for different card types
+      // Different validation for different card types (updated for clean schema)
       if (card.type === 'FLASHCARD') {
         // Flashcards should have front and back fields
         return !card.front || !card.back || card.front.length < 20 || card.back.length < 100
       } else if (card.type === 'QUIZ') {
-        // Quiz cards should have question, options, correctAnswer, and explanation
-        return !card.question || !card.options || !card.correctAnswer || !card.explanation ||
-               card.question.length < 50 || !Array.isArray(card.options) || card.options.length < 2 ||
-               card.explanation.length < 50
+        // Quiz cards should have nested quiz object with question, choices, correctAnswer, explanation
+        if (!card.quiz) return true
+        try {
+          const quiz = typeof card.quiz === 'string' ? JSON.parse(card.quiz) : card.quiz
+          return !quiz.question || !quiz.choices || quiz.correctAnswer === undefined || !quiz.explanation ||
+                 quiz.question.length < 20 || !Array.isArray(quiz.choices) || quiz.choices.length < 2 ||
+                 quiz.explanation.length < 30
+        } catch (e) {
+          return true // Invalid JSON
+        }
+      } else if (card.type === 'SUMMARY') {
+        // Summary cards should have front and back fields (using flashcard structure)
+        return !card.front || !card.back || card.front.length < 20 || card.back.length < 100
       } else {
-        // Other cards (APPLICATION, SYNTHESIS) should have content field
-        return !card.content || card.content.length < 100
+        // Unknown card type
+        return true
       }
     })
     
@@ -194,16 +218,54 @@ async function addBookToLibrary(filePath, category, aiProvider = 'openai', overr
       }
     })
     
-    // Save cards
+    // Create chapters based on what cards actually have
+    const uniqueChapterContexts = [...new Set(cards.map(card => card.chapterContext).filter(Boolean))]
+    var chapterTitleToId = {}
+    
+    if (uniqueChapterContexts.length > 0) {
+      console.log(`📚 Creating ${uniqueChapterContexts.length} chapters from card data...`)
+      
+      const chapterData = uniqueChapterContexts.map((chapterContext, index) => ({
+        contentId: content.id,
+        chapterNumber: index + 1,
+        chapterTitle: chapterContext, // Use exactly what cards have
+        sourceChunks: JSON.stringify([]) // Will be populated from cards
+      }))
+      
+      await prisma.chapter.createMany({ data: chapterData })
+      console.log(`✅ Created ${chapterData.length} chapters`)
+      
+      // Get created chapters for card mapping
+      const createdChapters = await prisma.chapter.findMany({
+        where: { contentId: content.id },
+        orderBy: { chapterNumber: 'asc' }
+      })
+      
+      // Map chapter titles to IDs for card assignment
+      chapterTitleToId = createdChapters.reduce((map, chapter) => {
+        map[chapter.chapterTitle] = chapter.id
+        return map
+      }, {})
+      
+      console.log('📊 Chapter mapping from cards:')
+      Object.keys(chapterTitleToId).forEach(title => {
+        console.log(`  "${title}" → ${chapterTitleToId[title]}`)
+      })
+    }
+    
+    // Save cards with chapter IDs
     const cardData = cards.map((card, index) => ({
       contentId: content.id,
       type: card.type || 'SUMMARY', // Use the type from enhanced generator
       title: card.title,
-      text: card.content, // Schema uses 'text' not 'content'
       order: index + 1,
+      // Add chapter ID if available
+      ...(card.chapterContext && chapterTitleToId && chapterTitleToId[card.chapterContext] && { 
+        chapterId: chapterTitleToId[card.chapterContext] 
+      }),
       // Add quiz data if it's a quiz card
       ...(card.quiz && { quiz: JSON.stringify(card.quiz) }),
-      // Add flashcard data if it's a flashcard
+      // Add flashcard/summary data using front/back fields
       ...(card.front && { front: card.front }),
       ...(card.back && { back: card.back })
     }))

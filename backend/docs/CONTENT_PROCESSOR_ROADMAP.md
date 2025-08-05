@@ -320,3 +320,23 @@ class ProcessorFactory {
 - **Performance**: Optimize chunking and embedding generation
 
 This roadmap leverages 80% of the existing book processing infrastructure while adding support for diverse content types. The modular design ensures maintainability and extensibility.
+
+## 🎓 Learning System Integration
+
+**See**: [Unified Learning System Design](./UNIFIED_LEARNING_SYSTEM_DESIGN.md)
+
+The content processing roadmap is designed to integrate seamlessly with our adaptive learning system:
+
+- **Concept Mapping**: All processors extract learning concepts and structure units
+- **Card Generation**: Unified 4-tier card system (FLASHCARD → APPLICATION → QUIZ → SYNTHESIS)
+- **Adaptive Routing**: Smart navigation based on user performance and content type
+- **Content Flexibility**: Different content types enable different card types and learning flows
+
+### **Content Type Learning Configurations**:
+- **Books**: Chapter-based with full 4-tier progression
+- **Research Papers**: Section-based with FLASHCARD + QUIZ + SYNTHESIS
+- **Articles**: Topic-based with simplified FLASHCARD + QUIZ progression  
+- **Videos**: Segment-based with timestamp navigation and 3-tier progression
+- **Audio**: Segment-based with transcript sync and concept-focused learning
+
+This ensures consistent learning experiences across all content types while leveraging content-specific features and optimizations.

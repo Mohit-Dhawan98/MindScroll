@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { useAuthStore } from '@/stores/authStore'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'
 
@@ -13,7 +14,7 @@ export const api = axios.create({
 // Add token to requests if available
 api.interceptors.request.use((config) => {
   if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('token')
+    const token = useAuthStore.getState().token
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
@@ -27,8 +28,8 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       if (typeof window !== 'undefined') {
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
+        // Clear auth state using Zustand
+        useAuthStore.getState().logout()
         window.location.href = '/auth/login'
       }
     }
@@ -124,6 +125,17 @@ export const progressAPI = {
     api.get('/progress/session', { params }),
   
   getStats: () => api.get('/progress/stats'),
+  
+  // Chapter progress endpoints
+  getChapterProgress: (contentId: string) =>
+    api.get(`/progress/chapters/${contentId}`),
+  
+  updateChapterProgress: (data: { chapterId: string; cardType: string; action: string }) =>
+    api.post('/progress/chapter', data),
+  
+  // Learning path with smart recommendations
+  getLearningPath: (contentId: string) =>
+    api.get(`/progress/learning-path/${contentId}`),
 }
 
 // Library API calls (NEW)
@@ -136,4 +148,12 @@ export const libraryAPI = {
   getCategories: () => api.get('/library/categories'),
   
   getStats: () => api.get('/library/stats'),
+  
+  // Enrollment endpoints
+  enrollInBook: (contentId: string) => api.post(`/library/enroll/${contentId}`),
+  
+  unenrollFromBook: (contentId: string) => api.delete(`/library/enroll/${contentId}`),
+  
+  getMyLibrary: (params?: { limit?: number; offset?: number }) =>
+    api.get('/library/my-library', { params }),
 }
