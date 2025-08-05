@@ -388,7 +388,7 @@ router.get('/stats', protect, async (req, res) => {
     })
 
     const completedCards = await prisma.userProgress.count({
-      where: { userId, status: 'COMPLETED' }
+      where: { userId, isKnown: true }
     })
 
     const cardsDueToday = await prisma.userProgress.count({

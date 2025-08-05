@@ -20,7 +20,7 @@ import {
 } from 'lucide-react'
 
 export default function MyLibraryPage() {
-  const { user } = useAuthStore()
+  const { user, hasHydrated } = useAuthStore()
   const router = useRouter()
   const [enrolledContent, setEnrolledContent] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -33,13 +33,18 @@ export default function MyLibraryPage() {
   })
 
   useEffect(() => {
+    // Don't redirect until Zustand has hydrated from localStorage
+    if (!hasHydrated) {
+      return
+    }
+    
     if (!user) {
       router.push('/auth/login')
       return
     }
     
     loadMyLibrary()
-  }, [user, router])
+  }, [user, router, hasHydrated])
 
   const loadMyLibrary = async (offset = 0) => {
     try {
@@ -124,7 +129,7 @@ export default function MyLibraryPage() {
     }
   }
 
-  if (!user) {
+  if (!hasHydrated || (!user && hasHydrated)) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>
   }
 

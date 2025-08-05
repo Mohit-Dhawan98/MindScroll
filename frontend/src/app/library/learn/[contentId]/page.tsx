@@ -10,7 +10,7 @@ import toast from 'react-hot-toast'
 import { ArrowLeft, BookOpen } from 'lucide-react'
 
 export default function LearnPage() {
-  const { user } = useAuthStore()
+  const { user, hasHydrated } = useAuthStore()
   const router = useRouter()
   const params = useParams()
   const contentId = params.contentId as string
@@ -23,13 +23,18 @@ export default function LearnPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // Don't redirect until Zustand has hydrated from localStorage
+    if (!hasHydrated) {
+      return
+    }
+    
     if (!user) {
       router.push('/auth/login')
       return
     }
     
     loadContentData()
-  }, [user, contentId, router])
+  }, [user, contentId, router, hasHydrated])
 
   const loadContentData = async () => {
     try {
