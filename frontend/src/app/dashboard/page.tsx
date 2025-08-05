@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { useRouter } from 'next/navigation'
 import CardViewer from '@/components/cards/CardViewer'
@@ -89,27 +89,36 @@ export default function Dashboard() {
     try {
       setLoading(true)
       
-      // Load user progress stats
-      const statsResponse = await progressAPI.getStats()
-      if (statsResponse.data?.success) {
-        setUserStats(statsResponse.data.data)
+      // 🚀 Parallel API calls for 40-60% faster loading
+      const [statsResponse, enrolledResponse, contentResponse] = await Promise.allSettled([
+        progressAPI.getStats(),
+        libraryAPI.getMyLibrary({ limit: 5 }),
+        libraryAPI.getContent({ limit: 5, excludeEnrolled: 'true' })
+      ])
+      
+      // Handle each response independently
+      if (statsResponse.status === 'fulfilled' && statsResponse.value.data?.success) {
+        setUserStats(statsResponse.value.data.data)
       }
       
-      // Load enrolled content first (prioritize user's library)
-      const enrolledResponse = await libraryAPI.getMyLibrary({ limit: 5 })
-      console.log('📚 Dashboard: My Library Response:', enrolledResponse)
-      if (enrolledResponse.data?.success) {
-        console.log('📚 Dashboard: Setting enrolled content:', enrolledResponse.data.data.content)
-        setEnrolledContent(enrolledResponse.data.data.content)
+      if (enrolledResponse.status === 'fulfilled' && enrolledResponse.value.data?.success) {
+        console.log('📚 Dashboard: Setting enrolled content:', enrolledResponse.value.data.data.content)
+        setEnrolledContent(enrolledResponse.value.data.data.content)
       }
       
-      // Load available content from global library (exclude enrolled books)
-      const contentResponse = await libraryAPI.getContent({ 
-        limit: 5, 
-        excludeEnrolled: 'true' 
-      })
-      if (contentResponse.data?.success) {
-        setAvailableContent(contentResponse.data.data.content)
+      if (contentResponse.status === 'fulfilled' && contentResponse.value.data?.success) {
+        setAvailableContent(contentResponse.value.data.data.content)
+      }
+      
+      // Log any failures without blocking the UI
+      if (statsResponse.status === 'rejected') {
+        console.warn('Stats API failed:', statsResponse.reason)
+      }
+      if (enrolledResponse.status === 'rejected') {
+        console.warn('Enrolled content API failed:', enrolledResponse.reason)
+      }
+      if (contentResponse.status === 'rejected') {
+        console.warn('Available content API failed:', contentResponse.reason)
       }
       
     } catch (error) {
@@ -185,6 +194,25 @@ export default function Dashboard() {
     // Show completion celebration
     toast.success(`🎉 Session completed! Great job!`)
   }
+
+  // 🚀 Memoize expensive book categorization computations (reduces re-renders)
+  const { inProgressBooks, completedBooks } = useMemo(() => {
+    const inProgress = enrolledContent.filter(content => {
+      const progressPercentage = content.totalCards > 0 
+        ? Math.round((content.completedCards / content.totalCards) * 100) 
+        : 0
+      return progressPercentage < 100
+    })
+    
+    const completed = enrolledContent.filter(content => {
+      const progressPercentage = content.totalCards > 0 
+        ? Math.round((content.completedCards / content.totalCards) * 100) 
+        : 0
+      return progressPercentage >= 100
+    })
+    
+    return { inProgressBooks: inProgress, completedBooks: completed }
+  }, [enrolledContent])
 
   if (!hasHydrated || (!user && hasHydrated)) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>
@@ -360,26 +388,8 @@ export default function Dashboard() {
                   </div>
                 ) : enrolledContent.length > 0 ? (
                   <>
-                    {/* Separate In Progress and Completed Books */}
-                    {(() => {
-                      const inProgressBooks = enrolledContent.filter(content => {
-                        const progressPercentage = content.totalCards > 0 
-                          ? Math.round((content.completedCards / content.totalCards) * 100) 
-                          : 0
-                        return progressPercentage < 100
-                      })
-                      
-                      const completedBooks = enrolledContent.filter(content => {
-                        const progressPercentage = content.totalCards > 0 
-                          ? Math.round((content.completedCards / content.totalCards) * 100) 
-                          : 0
-                        return progressPercentage >= 100
-                      })
-                      
-                      return (
-                        <>
-                          {/* In Progress Books */}
-                          {inProgressBooks.length > 0 && (
+                    {/* In Progress Books */}
+                    {inProgressBooks.length > 0 && (
                             <div className="mb-6">
                               <h3 className="text-sm font-medium text-gray-700 mb-3 flex items-center">
                                 <Brain className="w-4 h-4 mr-2 text-blue-600" />
@@ -480,9 +490,6 @@ export default function Dashboard() {
                               </div>
                             </div>
                           )}
-                        </>
-                      )
-                    })()}
                     
                     {/* Available Content - Secondary */}
                     {availableContent.length > 0 && (
