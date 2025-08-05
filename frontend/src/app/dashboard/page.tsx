@@ -55,6 +55,7 @@ export default function Dashboard() {
   const [cards, setCards] = useState<any[]>([])
   const [currentSession, setCurrentSession] = useState<any>(null)
   const [availableContent, setAvailableContent] = useState<any[]>([])
+  const [enrolledContent, setEnrolledContent] = useState<any[]>([])
   const [showAITutor, setShowAITutor] = useState(false)
   const [isAITutorMinimized, setIsAITutorMinimized] = useState(true)
   const [loading, setLoading] = useState(true)
@@ -84,14 +85,22 @@ export default function Dashboard() {
       
       // Load user progress stats
       const statsResponse = await progressAPI.getStats()
-      if (statsResponse.success) {
-        setUserStats(statsResponse.data)
+      if (statsResponse.data?.success) {
+        setUserStats(statsResponse.data.data)
       }
       
-      // Load available content
-      const contentResponse = await libraryAPI.getContent({ limit: 10 })
-      if (contentResponse.success) {
-        setAvailableContent(contentResponse.data.content)
+      // Load enrolled content first (prioritize user's library)
+      const enrolledResponse = await libraryAPI.getMyLibrary({ limit: 5 })
+      console.log('📚 Dashboard: My Library Response:', enrolledResponse)
+      if (enrolledResponse.data?.success) {
+        console.log('📚 Dashboard: Setting enrolled content:', enrolledResponse.data.data.content)
+        setEnrolledContent(enrolledResponse.data.data.content)
+      }
+      
+      // Load available content from global library
+      const contentResponse = await libraryAPI.getContent({ limit: 5 })
+      if (contentResponse.data?.success) {
+        setAvailableContent(contentResponse.data.data.content)
       }
       
     } catch (error) {
@@ -111,17 +120,17 @@ export default function Dashboard() {
         sessionId: currentSession?.sessionId
       })
       
-      if (response.success) {
+      if (response.data?.success) {
         // Update user stats with new XP
         setUserStats(prev => ({
           ...prev,
-          xp: prev.xp + (response.data.xpGained || 0),
+          xp: prev.xp + (response.data.data.xpGained || 0),
           completedCards: action === 'known' ? prev.completedCards + 1 : prev.completedCards
         }))
         
         // Show XP gain feedback
-        if (response.data.xpGained > 0) {
-          toast.success(`+${response.data.xpGained} XP!`)
+        if (response.data.data.xpGained > 0) {
+          toast.success(`+${response.data.data.xpGained} XP!`)
         }
       }
       
@@ -141,9 +150,9 @@ export default function Dashboard() {
         limit: 10 
       })
       
-      if (sessionResponse.success && sessionResponse.data.cards.length > 0) {
-        setCards(sessionResponse.data.cards)
-        setCurrentSession(sessionResponse.data)
+      if (sessionResponse.data?.success && sessionResponse.data.data.cards.length > 0) {
+        setCards(sessionResponse.data.data.cards)
+        setCurrentSession(sessionResponse.data.data)
         setShowCards(true)
       } else {
         toast.info('No cards available for review right now!')
@@ -276,8 +285,30 @@ export default function Dashboard() {
             <div className="bg-white rounded-2xl p-6 shadow-sm">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
               <div className="grid grid-cols-2 gap-4">
-                <button className="flex items-center space-x-3 p-4 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors text-left">
-                  <Upload className="w-6 h-6 text-blue-600" />
+                <button 
+                  onClick={() => router.push('/library')}
+                  className="flex items-center space-x-3 p-4 bg-green-50 hover:bg-green-100 rounded-xl transition-colors text-left"
+                >
+                  <BookOpen className="w-6 h-6 text-green-600" />
+                  <div>
+                    <p className="font-medium text-gray-900">Browse Library</p>
+                    <p className="text-sm text-gray-600">Find new books to study</p>
+                  </div>
+                </button>
+                
+                <button 
+                  onClick={() => router.push('/library/my-library')}
+                  className="flex items-center space-x-3 p-4 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors text-left"
+                >
+                  <Brain className="w-6 h-6 text-blue-600" />
+                  <div>
+                    <p className="font-medium text-gray-900">My Library</p>
+                    <p className="text-sm text-gray-600">Continue your studies</p>
+                  </div>
+                </button>
+                
+                <button className="flex items-center space-x-3 p-4 bg-orange-50 hover:bg-orange-100 rounded-xl transition-colors text-left">
+                  <Upload className="w-6 h-6 text-orange-600" />
                   <div>
                     <p className="font-medium text-gray-900">Upload Content</p>
                     <p className="text-sm text-gray-600">PDF, article, or URL</p>
@@ -303,10 +334,13 @@ export default function Dashboard() {
             {/* Learning Sets */}
             <div className="bg-white rounded-2xl p-6 shadow-sm">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-gray-900">Your Learning Sets</h2>
-                <button className="flex items-center space-x-2 text-blue-600 hover:text-blue-700">
+                <h2 className="text-lg font-semibold text-gray-900">Continue Learning</h2>
+                <button 
+                  onClick={() => router.push('/library')}
+                  className="flex items-center space-x-2 text-blue-600 hover:text-blue-700"
+                >
                   <Plus className="w-4 h-4" />
-                  <span className="text-sm font-medium">Create New</span>
+                  <span className="text-sm font-medium">Browse Library</span>
                 </button>
               </div>
               
@@ -315,44 +349,156 @@ export default function Dashboard() {
                   <div className="flex items-center justify-center p-8">
                     <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
                   </div>
-                ) : availableContent.length > 0 ? (
-                  availableContent.map((content) => (
-                    <div 
-                      key={content.id}
-                      className="flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-xl cursor-pointer transition-colors"
-                      onClick={() => startLearningSession(content.id)}
-                    >
-                      <div className="flex items-center space-x-4">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                          content.category === 'technology' ? 'bg-blue-100' :
-                          content.category === 'business' ? 'bg-green-100' :
-                          content.category === 'science' ? 'bg-purple-100' :
-                          content.category === 'personal-development' ? 'bg-orange-100' :
-                          'bg-gray-100'
-                        }`}>
-                          {content.category === 'technology' ? <Brain className="w-6 h-6 text-blue-600" /> :
-                           content.category === 'business' ? <Briefcase className="w-6 h-6 text-green-600" /> :
-                           content.category === 'science' ? <BookOpen className="w-6 h-6 text-purple-600" /> :
-                           <BookOpen className="w-6 h-6 text-gray-600" />}
-                        </div>
-                        <div>
-                          <h3 className="font-medium text-gray-900">{content.title}</h3>
-                          <p className="text-sm text-gray-600">
-                            {content.totalCards} cards • {content.difficulty}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm font-medium text-gray-900">Start Learning</p>
-                        <p className="text-xs text-gray-500">by {content.author}</p>
+                ) : enrolledContent.length > 0 ? (
+                  <>
+                    {/* Enrolled Content - Priority */}
+                    <div className="mb-6">
+                      <h3 className="text-sm font-medium text-gray-700 mb-3 flex items-center">
+                        <Brain className="w-4 h-4 mr-2 text-blue-600" />
+                        My Enrolled Books
+                      </h3>
+                      <div className="space-y-3">
+                        {enrolledContent.map((content) => {
+                          const progressPercentage = content.totalCards > 0 
+                            ? Math.round((content.completedCards / content.totalCards) * 100) 
+                            : 0
+                          
+                          return (
+                            <div 
+                              key={content.id}
+                              className="flex items-center justify-between p-4 bg-blue-50 hover:bg-blue-100 rounded-xl cursor-pointer transition-colors border border-blue-200"
+                              onClick={() => router.push(`/library/learn/${content.id}`)}
+                            >
+                              <div className="flex items-center space-x-4">
+                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                                  content.category === 'technology' ? 'bg-blue-100' :
+                                  content.category === 'business' ? 'bg-green-100' :
+                                  content.category === 'science' ? 'bg-purple-100' :
+                                  content.category === 'personal-development' ? 'bg-orange-100' :
+                                  'bg-gray-100'
+                                }`}>
+                                  {content.category === 'technology' ? <Brain className="w-6 h-6 text-blue-600" /> :
+                                   content.category === 'business' ? <Briefcase className="w-6 h-6 text-green-600" /> :
+                                   content.category === 'science' ? <BookOpen className="w-6 h-6 text-purple-600" /> :
+                                   <BookOpen className="w-6 h-6 text-gray-600" />}
+                                </div>
+                                <div className="flex-1">
+                                  <h3 className="font-medium text-gray-900">{content.title}</h3>
+                                  <p className="text-sm text-gray-600">
+                                    {content.completedCards}/{content.totalCards} cards • {content.difficulty}
+                                  </p>
+                                  <div className="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                                    <div 
+                                      className="bg-blue-600 h-1.5 rounded-full transition-all duration-300"
+                                      style={{ width: `${progressPercentage}%` }}
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-sm font-medium text-gray-900">Continue</p>
+                                <p className="text-xs text-gray-500">{progressPercentage}% complete</p>
+                              </div>
+                            </div>
+                          )
+                        })}
                       </div>
                     </div>
-                  ))
+                    
+                    {/* Available Content - Secondary */}
+                    {availableContent.length > 0 && (
+                      <div>
+                        <h3 className="text-sm font-medium text-gray-700 mb-3 flex items-center">
+                          <BookOpen className="w-4 h-4 mr-2 text-green-600" />
+                          Discover New Books
+                        </h3>
+                        <div className="space-y-3">
+                          {availableContent.slice(0, 3).map((content) => (
+                            <div 
+                              key={content.id}
+                              className="flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-xl cursor-pointer transition-colors"
+                              onClick={() => router.push('/library')}
+                            >
+                              <div className="flex items-center space-x-4">
+                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                                  content.category === 'technology' ? 'bg-blue-100' :
+                                  content.category === 'business' ? 'bg-green-100' :
+                                  content.category === 'science' ? 'bg-purple-100' :
+                                  content.category === 'personal-development' ? 'bg-orange-100' :
+                                  'bg-gray-100'
+                                }`}>
+                                  {content.category === 'technology' ? <Brain className="w-6 h-6 text-blue-600" /> :
+                                   content.category === 'business' ? <Briefcase className="w-6 h-6 text-green-600" /> :
+                                   content.category === 'science' ? <BookOpen className="w-6 h-6 text-purple-600" /> :
+                                   <BookOpen className="w-6 h-6 text-gray-600" />}
+                                </div>
+                                <div>
+                                  <h3 className="font-medium text-gray-900">{content.title}</h3>
+                                  <p className="text-sm text-gray-600">
+                                    {content._count?.cards || content.totalCards || 0} cards • {content.difficulty}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-sm font-medium text-gray-900">View in Library</p>
+                                <p className="text-xs text-gray-500">by {content.author}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </>
+                ) : availableContent.length > 0 ? (
+                  <div className="space-y-3">
+                    <h3 className="text-sm font-medium text-gray-700 mb-3 flex items-center">
+                      <BookOpen className="w-4 h-4 mr-2 text-green-600" />
+                      Available Books
+                    </h3>
+                    {availableContent.map((content) => (
+                      <div 
+                        key={content.id}
+                        className="flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-xl cursor-pointer transition-colors"
+                        onClick={() => router.push('/library')}
+                      >
+                        <div className="flex items-center space-x-4">
+                          <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                            content.category === 'technology' ? 'bg-blue-100' :
+                            content.category === 'business' ? 'bg-green-100' :
+                            content.category === 'science' ? 'bg-purple-100' :
+                            content.category === 'personal-development' ? 'bg-orange-100' :
+                            'bg-gray-100'
+                          }`}>
+                            {content.category === 'technology' ? <Brain className="w-6 h-6 text-blue-600" /> :
+                             content.category === 'business' ? <Briefcase className="w-6 h-6 text-green-600" /> :
+                             content.category === 'science' ? <BookOpen className="w-6 h-6 text-purple-600" /> :
+                             <BookOpen className="w-6 h-6 text-gray-600" />}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900">{content.title}</h3>
+                            <p className="text-sm text-gray-600">
+                              {content._count?.cards || content.totalCards || 0} cards • {content.difficulty}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-medium text-gray-900">Browse Library</p>
+                          <p className="text-xs text-gray-500">by {content.author}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 ) : (
                   <div className="text-center p-8 text-gray-500">
                     <BookOpen className="w-12 h-12 mx-auto mb-4 text-gray-300" />
                     <p className="text-lg font-medium mb-2">No content available</p>
-                    <p className="text-sm">Add some books to the library to get started!</p>
+                    <p className="text-sm mb-4">Browse the library to find books and start learning!</p>
+                    <button
+                      onClick={() => router.push('/library')}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      Browse Library
+                    </button>
                   </div>
                 )}
               </div>

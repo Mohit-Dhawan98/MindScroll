@@ -31,10 +31,11 @@ model User {
   lastActive    DateTime?
   
   // Relations
-  progress      UserProgress[]
-  sessions      LearningSession[]
-  uploads       ContentUpload[]
-  conversations ChatConversation[]
+  progress        UserProgress[]
+  sessions        LearningSession[]
+  uploads         ContentUpload[]
+  conversations   ChatConversation[]
+  chapterProgress ChapterProgress[]
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -67,9 +68,13 @@ model Content {
   totalCards    Int     @default(0)     // Total number of cards
   textFileId    String? // Reference to stored text file
   
+  // Simplified Learning System fields
+  enabledCardTypes  String  @default("[\"FLASHCARD\", \"QUIZ\", \"SUMMARY\"]") // JSON array as string
+  
   // Relations
-  cards       Card[]
-  uploads     ContentUpload[]
+  cards         Card[]
+  uploads       ContentUpload[]
+  chapters      Chapter[]
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -82,23 +87,24 @@ model Card {
   contentId String
   content   Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
   
-  // Card data
-  type      String   // SUMMARY, FLASHCARD, QUIZ, VISUAL, AUDIO
+  // Card data - simplified for 3-card system
+  type      String   // FLASHCARD, QUIZ, SUMMARY only
   title     String
-  text      String?
-  imageUrl  String?
-  audioUrl  String?
   order     Int
   
-  // Quiz-specific fields (stored as JSON string)
-  quiz      String? // JSON: { question, choices, answer, explanation }
+  // Type-specific fields
+  quiz      String? // JSON: { question, choices, correctAnswer, explanation } for QUIZ cards
+  front     String? // Front of flashcard for FLASHCARD cards, or summary title for SUMMARY cards
+  back      String? // Back of flashcard for FLASHCARD cards, or summary content for SUMMARY cards
   
-  // Flashcard-specific fields
-  front     String?
-  back      String?
+  // Simplified Learning System fields
+  chapterId    String? // Links to chapter
+  sourceChunks String  @default("[]") // JSON array of chunk IDs used to generate this card
+  sourceCards  String  @default("[]") // JSON array of card IDs used to generate this card (for derived cards)
   
   // Relations
-  progress  UserProgress[]
+  progress UserProgress[]
+  chapter  Chapter?      @relation(fields: [chapterId], references: [id])
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -202,4 +208,48 @@ model ChatMessage {
   createdAt DateTime @default(now())
   
   @@map("chat_messages")
+}
+
+// Simplified Learning System Models
+
+model Chapter {
+  id            String   @id @default(uuid())
+  contentId     String
+  content       Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  
+  chapterNumber Int
+  chapterTitle  String
+  sourceChunks  String   @default("[]") // JSON array of chunk IDs used
+  
+  // Relations
+  cards            Card[]
+  chapterProgress  ChapterProgress[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("chapters")
+}
+
+model ChapterProgress {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chapterId String
+  chapter   Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  
+  flashcardsCompleted    Int     @default(0)
+  flashcardsTotal        Int     @default(0)
+  quizzesCompleted       Int     @default(0)
+  quizzesTotal           Int     @default(0)
+  summariesCompleted     Int     @default(0)
+  summariesTotal         Int     @default(1)
+  completionPercentage   Float   @default(0.0)
+  lastAccessed          DateTime?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([userId, chapterId])
+  @@map("chapter_progress")
 }

@@ -2,6 +2,8 @@ import { validationResult } from 'express-validator'
 import { PrismaClient } from '@prisma/client'
 import { UploadStatus } from '../utils/constants.js'
 import contentProcessor from '../services/contentProcessor.js'
+import { extractTextFromPDF } from '../processors/textExtractor.js'
+import { EnhancedCardGenerator } from '../processors/enhancedCardGenerator.js'
 import path from 'path'
 import fs from 'fs/promises'
 
@@ -278,11 +280,35 @@ async function processFileUpload(uploadId, filePath, mimeType, options = {}) {
 
     let contentData
     if (mimeType === 'application/pdf') {
-      contentData = await contentProcessor.processPDF(filePath)
+      // Use the working extractTextFromPDF function instead of broken contentProcessor
+      const extractedContent = await extractTextFromPDF(filePath)
+      
+      // Handle both string and object returns from extractTextFromPDF
+      if (typeof extractedContent === 'string') {
+        contentData = { 
+          text: extractedContent, 
+          title: path.basename(filePath, '.pdf'),
+          pages: null,
+          metadata: {}
+        }
+      } else {
+        // Full structured result from extractTextFromPDF
+        contentData = {
+          text: extractedContent.text,
+          title: extractedContent.title || path.basename(filePath, '.pdf'), 
+          pages: extractedContent.pages,
+          metadata: extractedContent.metadata || {}
+        }
+      }
     } else {
       // For other file types, read as text
       const text = await fs.readFile(filePath, 'utf-8')
-      contentData = { text, title: path.basename(filePath) }
+      contentData = { 
+        text, 
+        title: path.basename(filePath),
+        pages: null,
+        metadata: {}
+      }
     }
 
     // Generate metadata
@@ -304,13 +330,23 @@ async function processFileUpload(uploadId, filePath, mimeType, options = {}) {
       }
     })
 
-    // Generate cards
-    const cards = await contentProcessor.generateCards(contentData.text, {
-      difficulty: options.difficulty || metadata.difficulty,
-      generateQuiz: options.generateQuiz !== false,
-      generateFlashcards: options.generateFlashcards !== false,
-      generateSummary: true
-    })
+    // Generate enhanced cards using the same system as global library
+    const cardGenerator = new EnhancedCardGenerator()
+    
+    // Prepare content in the format expected by enhancedCardGenerator
+    const textContent = {
+      text: contentData.text,
+      pages: contentData.pages || [], // Use extracted pages if available
+      metadata: contentData.metadata || {}
+    }
+    
+    const cards = await cardGenerator.generateEnhancedLearningCards(
+      textContent, 
+      contentData.title,
+      'Unknown Author', // No author for user uploads
+      options.category || metadata.topics?.[0] || 'general',
+      content.id // Use database content ID
+    )
 
     // Save cards to database
     for (const cardData of cards) {
@@ -319,11 +355,10 @@ async function processFileUpload(uploadId, filePath, mimeType, options = {}) {
           contentId: content.id,
           type: cardData.type,
           title: cardData.title,
-          text: cardData.text || null,
           front: cardData.front || null,
           back: cardData.back || null,
-          quiz: cardData.quiz ? JSON.stringify(cardData.quiz) : null,
-          order: cardData.order
+          quiz: cardData.quiz ? JSON.stringify(cardData.quiz) : null, // For QUIZ cards
+          order: cardData.order || 0
         }
       })
     }
@@ -375,29 +410,38 @@ async function processUrlUpload(uploadId, url) {
       }
     })
 
-    // Generate cards
-    const cards = await contentProcessor.generateCards(contentData.text, {
-      difficulty: metadata.difficulty,
-      generateQuiz: true,
-      generateFlashcards: true,
-      generateSummary: true
-    })
-
-    // Save cards to database
-    for (const cardData of cards) {
-      await prisma.card.create({
-        data: {
-          contentId: content.id,
-          type: cardData.type,
-          title: cardData.title,
-          text: cardData.text || null,
-          front: cardData.front || null,
-          back: cardData.back || null,
-          quiz: cardData.quiz ? JSON.stringify(cardData.quiz) : null,
-          order: cardData.order
-        }
-      })
+    // Generate enhanced cards using the same system as global library
+    const cardGenerator = new EnhancedCardGenerator()
+    
+    // Prepare content in the format expected by enhancedCardGenerator
+    const textContent = {
+      text: contentData.text,
+      pages: [], // URLs don't have page structure
+      metadata: { title: contentData.title, description: contentData.description }
     }
+    
+    const cards = await cardGenerator.generateEnhancedLearningCards(
+      textContent, 
+      contentData.title,
+      'Web Content', // Generic author for URLs
+      metadata.topics?.[0] || 'general',
+      content.id // Use database content ID
+    )
+
+    // Save cards to database (using same pattern as addBook.js)
+    const cardData = cards.map((card, index) => ({
+      contentId: content.id,
+      type: card.type || 'SUMMARY',
+      title: card.title,
+      order: index + 1,
+      // Add quiz data if it's a quiz card
+      ...(card.quiz && { quiz: JSON.stringify(card.quiz) }),
+      // Add flashcard/summary data using front/back fields
+      ...(card.front && { front: card.front }),
+      ...(card.back && { back: card.back })
+    }))
+    
+    const cardResult = await prisma.card.createMany({ data: cardData })
 
     // Update upload status
     await prisma.contentUpload.update({

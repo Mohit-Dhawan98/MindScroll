@@ -33,10 +33,6 @@ export const useAuthStore = create<AuthState>()(
           const { token, user } = response.data.data || response.data
           
           set({ user, token, loading: false })
-          
-          // Store in localStorage for API interceptor
-          localStorage.setItem('token', token)
-          localStorage.setItem('user', JSON.stringify(user))
         } catch (error: any) {
           const errorMessage = error.response?.data?.error || 'Login failed'
           set({ error: errorMessage, loading: false })
@@ -51,10 +47,6 @@ export const useAuthStore = create<AuthState>()(
           const { token, user } = response.data.data || response.data
           
           set({ user, token, loading: false })
-          
-          // Store in localStorage for API interceptor
-          localStorage.setItem('token', token)
-          localStorage.setItem('user', JSON.stringify(user))
         } catch (error: any) {
           const errorMessage = error.response?.data?.error || 'Registration failed'
           set({ error: errorMessage, loading: false })
@@ -64,8 +56,6 @@ export const useAuthStore = create<AuthState>()(
 
       logout: () => {
         set({ user: null, token: null, error: null })
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
       },
 
       fetchUser: async () => {
