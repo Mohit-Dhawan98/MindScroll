@@ -49,7 +49,7 @@ const mockCards = [
 ]
 
 export default function Dashboard() {
-  const { user, logout } = useAuthStore()
+  const { user, logout, hasHydrated } = useAuthStore()
   const router = useRouter()
   const [showCards, setShowCards] = useState(false)
   const [cards, setCards] = useState<any[]>([])
@@ -71,13 +71,18 @@ export default function Dashboard() {
   })
 
   useEffect(() => {
+    // Don't redirect until Zustand has hydrated from localStorage
+    if (!hasHydrated) {
+      return
+    }
+    
     if (!user) {
       router.push('/auth/login')
       return
     }
     
     loadDashboardData()
-  }, [user, router])
+  }, [user, router, hasHydrated])
 
   const loadDashboardData = async () => {
     try {
@@ -177,7 +182,7 @@ export default function Dashboard() {
     toast.success(`🎉 Session completed! Great job!`)
   }
 
-  if (!user) {
+  if (!hasHydrated || (!user && hasHydrated)) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>
   }
 

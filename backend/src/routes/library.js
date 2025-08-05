@@ -336,7 +336,8 @@ router.get('/my-library', protect, async (req, res) => {
             }
           }
         },
-        status: true
+        isKnown: true,
+        reviewCount: true
       }
     })
     
@@ -358,9 +359,13 @@ router.get('/my-library', protect, async (req, res) => {
       }
       
       const contentStats = contentMap.get(contentId)
-      if (progress.status === 'COMPLETED') contentStats.completedCards++
-      else if (progress.status === 'IN_PROGRESS') contentStats.inProgressCards++
-      else contentStats.notStartedCards++
+      if (progress.isKnown) {
+        contentStats.completedCards++
+      } else if (progress.reviewCount > 0) {
+        contentStats.inProgressCards++
+      } else {
+        contentStats.notStartedCards++
+      }
     })
     
     const enrolledContent = Array.from(contentMap.values())

@@ -20,7 +20,7 @@ import {
 } from 'lucide-react'
 
 export default function LibraryPage() {
-  const { user } = useAuthStore()
+  const { user, hasHydrated } = useAuthStore()
   const router = useRouter()
   const [content, setContent] = useState<any[]>([])
   const [categories, setCategories] = useState<any[]>([])
@@ -37,6 +37,11 @@ export default function LibraryPage() {
   })
 
   useEffect(() => {
+    // Don't redirect until Zustand has hydrated from localStorage
+    if (!hasHydrated) {
+      return
+    }
+    
     if (!user) {
       router.push('/auth/login')
       return
@@ -44,7 +49,7 @@ export default function LibraryPage() {
     
     loadLibraryData()
     loadCategories()
-  }, [user, router, selectedCategory, selectedDifficulty])
+  }, [user, router, selectedCategory, selectedDifficulty, hasHydrated])
 
   const loadLibraryData = async (offset = 0) => {
     try {
@@ -149,7 +154,7 @@ export default function LibraryPage() {
     item.author?.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  if (!user) {
+  if (!hasHydrated || (!user && hasHydrated)) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>
   }
 

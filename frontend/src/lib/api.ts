@@ -28,6 +28,10 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       if (typeof window !== 'undefined') {
+        console.warn('🚨 401 Unauthorized received from:', error.config?.url, error.response?.data)
+        console.warn('🚨 Current token exists:', !!useAuthStore.getState().token)
+        console.warn('🚨 Triggering logout and redirect...')
+        
         // Clear auth state using Zustand
         useAuthStore.getState().logout()
         window.location.href = '/auth/login'
