@@ -17,7 +17,8 @@ import {
   MessageCircle,
   Upload,
   Plus,
-  Briefcase
+  Briefcase,
+  CheckCircle
 } from 'lucide-react'
 
 // Mock data - replace with API calls
@@ -102,8 +103,11 @@ export default function Dashboard() {
         setEnrolledContent(enrolledResponse.data.data.content)
       }
       
-      // Load available content from global library
-      const contentResponse = await libraryAPI.getContent({ limit: 5 })
+      // Load available content from global library (exclude enrolled books)
+      const contentResponse = await libraryAPI.getContent({ 
+        limit: 5, 
+        excludeEnrolled: 'true' 
+      })
       if (contentResponse.data?.success) {
         setAvailableContent(contentResponse.data.data.content)
       }
@@ -356,59 +360,129 @@ export default function Dashboard() {
                   </div>
                 ) : enrolledContent.length > 0 ? (
                   <>
-                    {/* Enrolled Content - Priority */}
-                    <div className="mb-6">
-                      <h3 className="text-sm font-medium text-gray-700 mb-3 flex items-center">
-                        <Brain className="w-4 h-4 mr-2 text-blue-600" />
-                        My Enrolled Books
-                      </h3>
-                      <div className="space-y-3">
-                        {enrolledContent.map((content) => {
-                          const progressPercentage = content.totalCards > 0 
-                            ? Math.round((content.completedCards / content.totalCards) * 100) 
-                            : 0
-                          
-                          return (
-                            <div 
-                              key={content.id}
-                              className="flex items-center justify-between p-4 bg-blue-50 hover:bg-blue-100 rounded-xl cursor-pointer transition-colors border border-blue-200"
-                              onClick={() => router.push(`/library/learn/${content.id}`)}
-                            >
-                              <div className="flex items-center space-x-4">
-                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                                  content.category === 'technology' ? 'bg-blue-100' :
-                                  content.category === 'business' ? 'bg-green-100' :
-                                  content.category === 'science' ? 'bg-purple-100' :
-                                  content.category === 'personal-development' ? 'bg-orange-100' :
-                                  'bg-gray-100'
-                                }`}>
-                                  {content.category === 'technology' ? <Brain className="w-6 h-6 text-blue-600" /> :
-                                   content.category === 'business' ? <Briefcase className="w-6 h-6 text-green-600" /> :
-                                   content.category === 'science' ? <BookOpen className="w-6 h-6 text-purple-600" /> :
-                                   <BookOpen className="w-6 h-6 text-gray-600" />}
-                                </div>
-                                <div className="flex-1">
-                                  <h3 className="font-medium text-gray-900">{content.title}</h3>
-                                  <p className="text-sm text-gray-600">
-                                    {content.completedCards}/{content.totalCards} cards • {content.difficulty}
-                                  </p>
-                                  <div className="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                    {/* Separate In Progress and Completed Books */}
+                    {(() => {
+                      const inProgressBooks = enrolledContent.filter(content => {
+                        const progressPercentage = content.totalCards > 0 
+                          ? Math.round((content.completedCards / content.totalCards) * 100) 
+                          : 0
+                        return progressPercentage < 100
+                      })
+                      
+                      const completedBooks = enrolledContent.filter(content => {
+                        const progressPercentage = content.totalCards > 0 
+                          ? Math.round((content.completedCards / content.totalCards) * 100) 
+                          : 0
+                        return progressPercentage >= 100
+                      })
+                      
+                      return (
+                        <>
+                          {/* In Progress Books */}
+                          {inProgressBooks.length > 0 && (
+                            <div className="mb-6">
+                              <h3 className="text-sm font-medium text-gray-700 mb-3 flex items-center">
+                                <Brain className="w-4 h-4 mr-2 text-blue-600" />
+                                Continue Learning
+                              </h3>
+                              <div className="space-y-3">
+                                {inProgressBooks.map((content) => {
+                                  const progressPercentage = content.totalCards > 0 
+                                    ? Math.round((content.completedCards / content.totalCards) * 100) 
+                                    : 0
+                                  
+                                  return (
                                     <div 
-                                      className="bg-blue-600 h-1.5 rounded-full transition-all duration-300"
-                                      style={{ width: `${progressPercentage}%` }}
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="text-right">
-                                <p className="text-sm font-medium text-gray-900">Continue</p>
-                                <p className="text-xs text-gray-500">{progressPercentage}% complete</p>
+                                      key={content.id}
+                                      className="flex items-center justify-between p-4 bg-blue-50 hover:bg-blue-100 rounded-xl cursor-pointer transition-colors border border-blue-200"
+                                      onClick={() => router.push(`/library/learn/${content.id}`)}
+                                    >
+                                      <div className="flex items-center space-x-4">
+                                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                                          content.category === 'technology' ? 'bg-blue-100' :
+                                          content.category === 'business' ? 'bg-green-100' :
+                                          content.category === 'science' ? 'bg-purple-100' :
+                                          content.category === 'personal-development' ? 'bg-orange-100' :
+                                          'bg-gray-100'
+                                        }`}>
+                                          {content.category === 'technology' ? <Brain className="w-6 h-6 text-blue-600" /> :
+                                           content.category === 'business' ? <Briefcase className="w-6 h-6 text-green-600" /> :
+                                           content.category === 'science' ? <BookOpen className="w-6 h-6 text-purple-600" /> :
+                                           <BookOpen className="w-6 h-6 text-gray-600" />}
+                                        </div>
+                                        <div className="flex-1">
+                                          <h3 className="font-medium text-gray-900">{content.title}</h3>
+                                          <p className="text-sm text-gray-600">
+                                            {content.completedCards}/{content.totalCards} cards • {content.difficulty}
+                                          </p>
+                                          <div className="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                                            <div 
+                                              className="bg-blue-600 h-1.5 rounded-full transition-all duration-300"
+                                              style={{ width: `${progressPercentage}%` }}
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div className="text-right">
+                                        <p className="text-sm font-medium text-gray-900">Continue</p>
+                                        <p className="text-xs text-gray-500">{progressPercentage}% complete</p>
+                                      </div>
+                                    </div>
+                                  )
+                                })}
                               </div>
                             </div>
-                          )
-                        })}
-                      </div>
-                    </div>
+                          )}
+                          
+                          {/* Completed Books */}
+                          {completedBooks.length > 0 && (
+                            <div className="mb-6">
+                              <h3 className="text-sm font-medium text-gray-700 mb-3 flex items-center">
+                                <CheckCircle className="w-4 h-4 mr-2 text-green-600" />
+                                Completed Books
+                              </h3>
+                              <div className="space-y-3">
+                                {completedBooks.map((content) => {
+                                  const progressPercentage = content.totalCards > 0 
+                                    ? Math.round((content.completedCards / content.totalCards) * 100) 
+                                    : 0
+                                  
+                                  return (
+                                    <div 
+                                      key={content.id}
+                                      className="flex items-center justify-between p-4 bg-green-50 hover:bg-green-100 rounded-xl cursor-pointer transition-colors border border-green-200"
+                                      onClick={() => router.push(`/library/learn/${content.id}`)}
+                                    >
+                                      <div className="flex items-center space-x-4">
+                                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center bg-green-100`}>
+                                          <CheckCircle className="w-6 h-6 text-green-600" />
+                                        </div>
+                                        <div className="flex-1">
+                                          <h3 className="font-medium text-gray-900">{content.title}</h3>
+                                          <p className="text-sm text-gray-600">
+                                            {content.completedCards}/{content.totalCards} cards • {content.difficulty}
+                                          </p>
+                                          <div className="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                                            <div 
+                                              className="bg-green-600 h-1.5 rounded-full transition-all duration-300"
+                                              style={{ width: `${progressPercentage}%` }}
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div className="text-right">
+                                        <p className="text-sm font-medium text-green-900">✓ Complete</p>
+                                        <p className="text-xs text-green-600">{progressPercentage}% complete</p>
+                                      </div>
+                                    </div>
+                                  )
+                                })}
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      )
+                    })()}
                     
                     {/* Available Content - Secondary */}
                     {availableContent.length > 0 && (

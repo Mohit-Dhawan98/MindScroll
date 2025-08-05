@@ -182,11 +182,13 @@ export default function CardViewer({ cards, onCardAction, onComplete }: CardView
     setSelectedQuizOption(optionIndex)
     setShowQuizResult(true)
     
-    // Auto-advance after showing result
+    // Auto-advance after showing result - give more time for wrong answers
+    const isCorrect = optionIndex === quizData.correctAnswer
+    const delayTime = isCorrect ? 2000 : 3000 // 2s for correct, 3s for wrong to read explanation
+    
     setTimeout(async () => {
-      const isCorrect = optionIndex === quizData.correctAnswer
       await handleCardAction(isCorrect ? 'known' : 'unknown')
-    }, 1500)
+    }, delayTime)
   }
 
   const handleCardAction = async (action: 'known' | 'unknown' | 'skip') => {
