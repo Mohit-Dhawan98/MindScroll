@@ -37,7 +37,27 @@ router.get('/content', protect, async (req, res) => {
     const whereClause = {
       isActive: true,
       ...(category && { category }),
-      ...(difficulty && { difficulty })
+      ...(difficulty && { difficulty }),
+      // Exclude user uploads that don't have cards (still processing)
+      OR: [
+        {
+          source: { not: 'USER_UPLOADED' } // Include all non-user content
+        },
+        {
+          AND: [
+            { source: 'USER_UPLOADED' },
+            { totalCards: { gt: 0 } }, // Only include user uploads that have cards
+            { chapters: { some: {} } }, // And have at least one chapter
+            { 
+              uploads: {
+                some: {
+                  status: 'COMPLETED' // Only show books from completed uploads
+                }
+              }
+            }
+          ]
+        }
+      ]
     }
     
     console.log('📋 Where clause:', whereClause)

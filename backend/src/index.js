@@ -19,8 +19,9 @@ import progressRoutes from './routes/progress.js'
 import { errorHandler } from './middleware/errorHandler.js'
 import { notFound } from './middleware/notFound.js'
 
-// Import processors (disabled - now using manual library management)
-// import { startContentProcessor } from './processors/index.js'
+// Import queue service and worker
+import './services/queueService.js'
+import './services/worker.js'
 
 // Load environment variables
 dotenv.config()
@@ -37,16 +38,22 @@ const limiter = rateLimit({
   legacyHeaders: false
 })
 
-// Security middleware
-app.use(helmet())
-app.use(compression())
-app.use(limiter)
-
-// CORS configuration
+// CORS configuration - MUST come before other middleware
 app.use(cors({
   origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
-  credentials: true
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 }))
+
+// Security middleware - after CORS to avoid conflicts
+app.use(helmet({
+  crossOriginResourcePolicy: false,
+}))
+app.use(compression())
+app.use(limiter)
 
 // Logging
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'))
@@ -123,9 +130,10 @@ app.listen(PORT, async () => {
   console.log(`📚 Environment: ${process.env.NODE_ENV}`)
   console.log(`🔗 Health check: http://localhost:${PORT}/health`)
   
-  // Content processor disabled - using manual library management
+  // Queue-based processing system initialized
   console.log(`📖 Library content managed manually via scripts`)
-  console.log(`📤 User upload processing available via /api/upload/*`)
+  console.log(`📤 User upload processing with queue system available via /api/upload/*`)
+  console.log(`🔄 Content processing worker started`)
 })
 
 export default app
