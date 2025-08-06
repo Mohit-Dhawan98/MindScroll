@@ -22,7 +22,7 @@ const prisma = new PrismaClient()
  * - .txt (simple text files)
  */
 
-async function addBookToLibrary(filePath, category, aiProvider = 'openai', override = false) {
+async function addBookToLibrary(filePath, category, aiProvider = 'openai', override = false, source = 'CURATED', customTitle = null) {
   try {
     console.log(`📚 Adding book to library: ${filePath}`)
     
@@ -31,23 +31,39 @@ async function addBookToLibrary(filePath, category, aiProvider = 'openai', overr
       throw new Error(`File not found: ${filePath}`)
     }
     
-    const validCategories = ['technology', 'business', 'science', 'personal-development', 'economics', 'health', 'history', 'philosophy', 'arts']
+    const validCategories = ['technology', 'business', 'science', 'personal-development', 'economics', 'health', 'history', 'philosophy', 'arts', 'general']
     if (!validCategories.includes(category)) {
       throw new Error(`Invalid category. Must be one of: ${validCategories.join(', ')}`)
     }
     
-    // Extract book info from filename
-    const filename = path.basename(filePath, path.extname(filePath))
-    const parts = filename.split(' - ')
+    // Map 'general' to 'business' for difficulty calculation
+    const mappedCategory = category === 'general' ? 'business' : category
     
-    // Handle "Title - Author" format
+    // Extract book info from custom title or filename
     let title, author
-    if (parts.length >= 2) {
-      title = parts[0]?.trim() || 'Unknown Title'
-      author = parts.slice(1).join(' - ').trim() || 'Unknown Author'
+    if (customTitle) {
+      // Use custom title from upload metadata
+      const parts = customTitle.split(' - ')
+      if (parts.length >= 2) {
+        title = parts[0]?.trim() || 'Unknown Title'
+        author = parts.slice(1).join(' - ').trim() || 'Unknown Author'
+      } else {
+        title = customTitle
+        author = 'Unknown Author'
+      }
     } else {
-      title = filename
-      author = 'Unknown Author'
+      // Extract from filename (legacy behavior)
+      const filename = path.basename(filePath, path.extname(filePath))
+      const parts = filename.split(' - ')
+      
+      // Handle "Title - Author" format
+      if (parts.length >= 2) {
+        title = parts[0]?.trim() || 'Unknown Title'
+        author = parts.slice(1).join(' - ').trim() || 'Unknown Author'
+      } else {
+        title = filename
+        author = 'Unknown Author'
+      }
     }
     
     console.log(`📖 Book: "${title}" by ${author}`)
@@ -204,8 +220,8 @@ async function addBookToLibrary(filePath, category, aiProvider = 'openai', overr
         category,
         description: `Professional learning cards generated from "${title}" by ${author}`,
         type: 'COURSE',
-        source: 'CURATED',
-        difficulty: calculateDifficulty(category),
+        source: source,
+        difficulty: calculateDifficulty(mappedCategory),
         estimatedTime: Math.ceil(cards.length * 2),
         tags: JSON.stringify([category, author.toLowerCase().replace(/\s+/g, '-')]),
         topics: JSON.stringify([category]),
@@ -293,6 +309,7 @@ function calculateDifficulty(category) {
     'economics': 'MEDIUM',
     'business': 'MEDIUM',
     'history': 'MEDIUM',
+    'general': 'MEDIUM',
     'personal-development': 'EASY',
     'health': 'EASY',
     'arts': 'EASY'
@@ -339,7 +356,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 
   console.log(`🤖 Using AI Provider: ${aiProvider.toUpperCase()} (${aiProvider === 'openai' ? 'GPT-4.1-mini' : 'Claude-3-Haiku'})`)
 
-  addBookToLibrary(filePath, category, aiProvider, override)
+  addBookToLibrary(filePath, category, aiProvider, override, 'CURATED', null)
     .then(() => {
       console.log('🎉 Book added successfully!')
       process.exit(0)

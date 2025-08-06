@@ -175,11 +175,41 @@ model ContentUpload {
   // Processing status
   status      String   @default("PROCESSING") // PROCESSING, COMPLETED, FAILED
   error       String?
+  metadata    String?  // JSON: { type, title, difficulty, category, customInstructions }
+  
+  // Relations
+  jobs        ProcessingJob[]
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
   @@map("content_uploads")
+}
+
+model ProcessingJob {
+  id          String   @id @default(uuid())
+  uploadId    String
+  upload      ContentUpload @relation(fields: [uploadId], references: [id], onDelete: Cascade)
+  
+  // Queue information
+  queueJobId  String   @unique // Bull queue job ID
+  jobType     String   // Type of processing job
+  
+  // Job status
+  status      String   @default("waiting") // waiting, active, completed, failed, delayed, paused
+  progress    Int      @default(0) // 0-100
+  
+  // Job data and results
+  inputData   String?  // JSON: input parameters
+  result      String?  // JSON: job result
+  error       String?  // Error message if failed
+  
+  // Timing
+  createdAt   DateTime @default(now())
+  startedAt   DateTime?
+  completedAt DateTime?
+  
+  @@map("processing_jobs")
 }
 
 model ChatConversation {

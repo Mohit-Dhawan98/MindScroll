@@ -15,11 +15,15 @@ const router = express.Router()
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, process.env.UPLOAD_DIR || './uploads')
+    const uploadDir = process.env.UPLOAD_DIR || './uploads'
+    console.log('📁 Upload directory:', uploadDir)
+    cb(null, uploadDir)
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    cb(null, file.fieldname + '-' + uniqueSuffix + '.' + file.originalname.split('.').pop())
+    const filename = file.fieldname + '-' + uniqueSuffix + '.' + file.originalname.split('.').pop()
+    console.log('📝 Generated filename:', filename)
+    cb(null, filename)
   }
 })
 
@@ -35,11 +39,14 @@ const fileFilter = (req, file, cb) => {
   }
 }
 
+const maxFileSize = parseInt(process.env.MAX_FILE_SIZE) || 50 * 1024 * 1024 // 50MB default
+console.log('📏 Max file size set to:', maxFileSize, 'bytes (', Math.round(maxFileSize / 1024 / 1024), 'MB )')
+
 const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: parseInt(process.env.MAX_FILE_SIZE) || 10 * 1024 * 1024 // 10MB default
+    fileSize: maxFileSize
   }
 })
 
@@ -47,6 +54,36 @@ const upload = multer({
 // @route   POST /api/upload
 // @access  Private
 router.post('/', protect, upload.single('file'), uploadContent)
+
+// @desc    Upload content with metadata (unified endpoint)
+// @route   POST /api/upload/content
+// @access  Private
+router.post('/content', protect, (req, res, next) => {
+  console.log('🔧 Multer middleware starting...')
+  upload.single('file')(req, res, (err) => {
+    if (err) {
+      console.log('❌ Multer error:', err.message, err.code)
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({
+          success: false,
+          error: 'File too large. Maximum file size is 50MB.'
+        })
+      }
+      if (err.message === 'Invalid file type. Only PDF, DOC, DOCX, and TXT files are allowed.') {
+        return res.status(400).json({
+          success: false,
+          error: err.message
+        })
+      }
+      return res.status(400).json({
+        success: false,
+        error: err.message || 'File upload error'
+      })
+    }
+    console.log('✅ Multer middleware completed successfully')
+    next()
+  })
+}, uploadContent)
 
 // @desc    Upload content from URL
 // @route   POST /api/upload/url

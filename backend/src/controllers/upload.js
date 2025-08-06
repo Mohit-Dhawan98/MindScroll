@@ -4,6 +4,7 @@ import { UploadStatus } from '../utils/constants.js'
 import contentProcessor from '../services/contentProcessor.js'
 import { extractTextFromPDF } from '../processors/textExtractor.js'
 import { EnhancedCardGenerator } from '../processors/enhancedCardGenerator.js'
+import { addJob, JOB_TYPES } from '../services/queueService.js'
 import path from 'path'
 import fs from 'fs/promises'
 
@@ -14,11 +15,40 @@ const prisma = new PrismaClient()
 // @access  Private
 export const uploadContent = async (req, res, next) => {
   try {
-    // Handle both file upload and URL upload
+    console.log('📤 Upload request received:')
+    console.log('- Body:', req.body)
+    console.log('- File:', req.file ? `${req.file.originalname} (${req.file.size} bytes)` : 'No file')
+    console.log('- User:', req.user ? `ID: ${req.user.id}` : 'No user')
+    
+    if (!req.user) {
+      console.log('❌ No user found - authentication failed')
+      return res.status(401).json({
+        success: false,
+        error: 'Authentication required'
+      })
+    }
+    
+    const userId = req.user.id
+    const { 
+      type, 
+      title, 
+      difficulty = 'medium', 
+      category = 'general', 
+      customInstructions,
+      url 
+    } = req.body
+
+    // Handle file upload
     if (req.file) {
-      // File upload
-      const { file } = req
-      const userId = req.user.id
+      const file = req.file
+      
+      // Validate file type matches selected type
+      if (type === 'pdf' && file.mimetype !== 'application/pdf') {
+        return res.status(400).json({
+          success: false,
+          error: 'Please upload a PDF file'
+        })
+      }
 
       const upload = await prisma.contentUpload.create({
         data: {
@@ -28,30 +58,77 @@ export const uploadContent = async (req, res, next) => {
           mimeType: file.mimetype,
           size: file.size,
           url: file.path,
-          status: UploadStatus.PROCESSING
+          status: UploadStatus.PROCESSING,
+          metadata: JSON.stringify({
+            type,
+            title: title || file.originalname.replace(/\.[^/.]+$/, ''),
+            difficulty,
+            category,
+            customInstructions
+          })
         }
       })
 
-      // Process file in background
-      processFileUpload(upload.id, file.path, file.mimetype)
-
-      res.status(201).json({
-        success: true,
-        data: upload,
-        message: 'File uploaded successfully. Processing will begin shortly.'
+      // Check if there's already a job for this upload to prevent duplicates
+      const existingJob = await prisma.processingJob.findFirst({
+        where: { uploadId: upload.id }
       })
-    } else {
-      // URL upload
-      const errors = validationResult(req)
-      if (!errors.isEmpty()) {
-        return res.status(400).json({
-          success: false,
-          errors: errors.array()
+
+      if (existingJob) {
+        console.log(`⚠️ Job already exists for upload ${upload.id}, skipping duplicate`)
+        return res.status(200).json({
+          success: true,
+          data: { 
+            id: upload.id,
+            jobId: existingJob.queueJobId,
+            title: title || file.originalname.replace(/\.[^/.]+$/, ''),
+            status: upload.status
+          },
+          message: 'Upload already queued for processing.'
         })
       }
 
-      const { url, title } = req.body
-      const userId = req.user.id
+      // Queue file processing job instead of inline processing
+      const jobType = file.mimetype === 'application/pdf' ? JOB_TYPES.PROCESS_PDF_UPLOAD : JOB_TYPES.PROCESS_TEXT_UPLOAD
+      
+      const job = await addJob(jobType, {
+        uploadId: upload.id,
+        userId,
+        filePath: file.path,
+        mimeType: file.mimetype,
+        metadata: {
+          title: title || file.originalname.replace(/\.[^/.]+$/, ''),
+          difficulty,
+          category,
+          customInstructions
+        }
+      })
+
+      console.log(`📋 Queued ${jobType} job ${job.id} for upload ${upload.id}`)
+    console.log(`📋 Upload record created: ${upload.id} with status: ${upload.status}`)
+
+      res.status(201).json({
+        success: true,
+        data: { 
+          id: upload.id,
+          jobId: job.id,
+          title: title || file.originalname.replace(/\.[^/.]+$/, ''),
+          status: upload.status
+        },
+        message: 'File uploaded successfully. Processing has been queued and will begin shortly.'
+      })
+    } 
+    // Handle URL upload
+    else if (url) {
+      // Validate URL format
+      try {
+        new URL(url)
+      } catch {
+        return res.status(400).json({
+          success: false,
+          error: 'Please enter a valid URL'
+        })
+      }
 
       const upload = await prisma.contentUpload.create({
         data: {
@@ -61,31 +138,97 @@ export const uploadContent = async (req, res, next) => {
           mimeType: 'text/html',
           size: 0,
           url,
-          status: UploadStatus.PROCESSING
+          status: UploadStatus.PROCESSING,
+          metadata: JSON.stringify({
+            type,
+            title: title || extractTitleFromUrl(url),
+            difficulty,
+            category,
+            customInstructions
+          })
         }
       })
 
-      // Process URL in background
-      processUrlUpload(upload.id, url)
+      // Check if there's already a job for this upload to prevent duplicates
+      const existingJob = await prisma.processingJob.findFirst({
+        where: { uploadId: upload.id }
+      })
+
+      if (existingJob) {
+        console.log(`⚠️ Job already exists for upload ${upload.id}, skipping duplicate`)
+        return res.status(200).json({
+          success: true,
+          data: { 
+            id: upload.id,
+            jobId: existingJob.queueJobId,
+            title: title || extractTitleFromUrl(url),
+            status: upload.status
+          },
+          message: 'Upload already queued for processing.'
+        })
+      }
+
+      // Queue URL processing job instead of inline processing
+      const job = await addJob(JOB_TYPES.PROCESS_URL_UPLOAD, {
+        uploadId: upload.id,
+        userId,
+        url,
+        metadata: {
+          title: title || extractTitleFromUrl(url),
+          difficulty,
+          category,
+          customInstructions
+        }
+      })
+
+      console.log(`📋 Queued URL processing job ${job.id} for upload ${upload.id}`)
 
       res.status(201).json({
         success: true,
-        data: upload,
-        message: 'URL submitted successfully. Processing will begin shortly.'
+        data: { 
+          id: upload.id,
+          jobId: job.id,
+          title: title || extractTitleFromUrl(url),
+          status: upload.status
+        },
+        message: 'URL submitted successfully. Processing has been queued and will begin shortly.'
+      })
+    } 
+    else {
+      console.log('❌ No file or URL provided')
+      return res.status(400).json({
+        success: false,
+        error: 'Please provide either a file or URL'
       })
     }
   } catch (error) {
-    next(error)
+    console.error('❌ Upload error:', error)
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Internal server error'
+    })
   }
 }
 
-// @desc    Get upload status
+// Helper function to extract title from URL
+function extractTitleFromUrl(url) {
+  try {
+    const urlObj = new URL(url)
+    return urlObj.hostname + urlObj.pathname
+  } catch {
+    return url
+  }
+}
+
+// @desc    Get upload status with job progress
 // @route   GET /api/upload/:id/status
 // @access  Private
 export const getUploadStatus = async (req, res, next) => {
   try {
     const { id } = req.params
     const userId = req.user.id
+
+    console.log(`🔍 Checking upload status for ID: ${id}, User: ${userId}`)
 
     const upload = await prisma.contentUpload.findFirst({
       where: {
@@ -104,17 +247,59 @@ export const getUploadStatus = async (req, res, next) => {
     })
 
     if (!upload) {
+      console.log(`❌ Upload ${id} not found for user ${userId}`)
       return res.status(404).json({
         success: false,
         error: 'Upload not found'
       })
     }
 
-    res.json({
-      success: true,
-      data: upload
+    console.log(`✅ Found upload ${id} with status: ${upload.status}`)
+
+    // Get job status from database
+    const jobs = await prisma.processingJob.findMany({
+      where: { uploadId: id },
+      orderBy: { createdAt: 'desc' }
     })
+    
+    const activeJob = jobs.find(job => job.status === 'active' || job.status === 'waiting')
+    const completedJobs = jobs.filter(job => job.status === 'completed')
+    const failedJobs = jobs.filter(job => job.status === 'failed')
+
+    const response = {
+      success: true,
+      data: {
+        ...upload,
+        processing: {
+          jobs: jobs.length,
+          completed: completedJobs.length,
+          failed: failedJobs.length,
+          currentJob: activeJob ? {
+            id: activeJob.id,
+            status: activeJob.status,
+            progress: activeJob.progress,
+            jobType: activeJob.jobType,
+            createdAt: activeJob.createdAt,
+            startedAt: activeJob.startedAt,
+            error: activeJob.error
+          } : null,
+          lastJob: jobs.length > 0 ? {
+            id: jobs[0].id,
+            status: jobs[0].status,
+            progress: jobs[0].progress,
+            jobType: jobs[0].jobType,
+            createdAt: jobs[0].createdAt,
+            startedAt: jobs[0].startedAt,
+            completedAt: jobs[0].completedAt,
+            error: jobs[0].error
+          } : null
+        }
+      }
+    }
+
+    res.json(response)
   } catch (error) {
+    console.error('Error getting upload status:', error)
     next(error)
   }
 }
@@ -139,6 +324,10 @@ export const getUserUploads = async (req, res, next) => {
             title: true,
             type: true
           }
+        },
+        jobs: {
+          orderBy: { createdAt: 'desc' },
+          take: 1 // Get the most recent job for each upload
         }
       },
       skip,
@@ -150,9 +339,28 @@ export const getUserUploads = async (req, res, next) => {
       where: { userId }
     })
 
+    // Format uploads with job information
+    const formattedUploads = uploads.map(upload => ({
+      ...upload,
+      processing: {
+        hasJobs: upload.jobs.length > 0,
+        latestJob: upload.jobs.length > 0 ? {
+          id: upload.jobs[0].id,
+          status: upload.jobs[0].status,
+          progress: upload.jobs[0].progress,
+          jobType: upload.jobs[0].jobType,
+          createdAt: upload.jobs[0].createdAt,
+          startedAt: upload.jobs[0].startedAt,
+          completedAt: upload.jobs[0].completedAt,
+          error: upload.jobs[0].error
+        } : null
+      },
+      jobs: undefined // Remove jobs array from response to avoid duplication
+    }))
+
     res.json({
       success: true,
-      data: uploads,
+      data: formattedUploads,
       pagination: {
         page: parseInt(page),
         limit: parseInt(limit),
@@ -273,195 +481,4 @@ export const deleteUpload = async (req, res, next) => {
   }
 }
 
-// Background processing functions
-async function processFileUpload(uploadId, filePath, mimeType, options = {}) {
-  try {
-    console.log(`Processing file upload ${uploadId}...`)
-
-    let contentData
-    if (mimeType === 'application/pdf') {
-      // Use the working extractTextFromPDF function instead of broken contentProcessor
-      const extractedContent = await extractTextFromPDF(filePath)
-      
-      // Handle both string and object returns from extractTextFromPDF
-      if (typeof extractedContent === 'string') {
-        contentData = { 
-          text: extractedContent, 
-          title: path.basename(filePath, '.pdf'),
-          pages: null,
-          metadata: {}
-        }
-      } else {
-        // Full structured result from extractTextFromPDF
-        contentData = {
-          text: extractedContent.text,
-          title: extractedContent.title || path.basename(filePath, '.pdf'), 
-          pages: extractedContent.pages,
-          metadata: extractedContent.metadata || {}
-        }
-      }
-    } else {
-      // For other file types, read as text
-      const text = await fs.readFile(filePath, 'utf-8')
-      contentData = { 
-        text, 
-        title: path.basename(filePath),
-        pages: null,
-        metadata: {}
-      }
-    }
-
-    // Generate metadata
-    const metadata = contentProcessor.generateMetadata(contentData)
-
-    // Create content record
-    const content = await prisma.content.create({
-      data: {
-        title: contentData.title || 'Uploaded Content',
-        description: `Uploaded file: ${path.basename(filePath)}`,
-        type: 'UPLOADED',
-        source: 'USER_UPLOADED',
-        difficulty: options.difficulty || metadata.difficulty,
-        topics: JSON.stringify(options.topics || metadata.topics),
-        tags: JSON.stringify([]),
-        estimatedTime: metadata.readingTime,
-        isAiGenerated: true,
-        sourceType: mimeType
-      }
-    })
-
-    // Generate enhanced cards using the same system as global library
-    const cardGenerator = new EnhancedCardGenerator()
-    
-    // Prepare content in the format expected by enhancedCardGenerator
-    const textContent = {
-      text: contentData.text,
-      pages: contentData.pages || [], // Use extracted pages if available
-      metadata: contentData.metadata || {}
-    }
-    
-    const cards = await cardGenerator.generateEnhancedLearningCards(
-      textContent, 
-      contentData.title,
-      'Unknown Author', // No author for user uploads
-      options.category || metadata.topics?.[0] || 'general',
-      content.id // Use database content ID
-    )
-
-    // Save cards to database
-    for (const cardData of cards) {
-      await prisma.card.create({
-        data: {
-          contentId: content.id,
-          type: cardData.type,
-          title: cardData.title,
-          front: cardData.front || null,
-          back: cardData.back || null,
-          quiz: cardData.quiz ? JSON.stringify(cardData.quiz) : null, // For QUIZ cards
-          order: cardData.order || 0
-        }
-      })
-    }
-
-    // Update upload status
-    await prisma.contentUpload.update({
-      where: { id: uploadId },
-      data: {
-        status: UploadStatus.COMPLETED,
-        contentId: content.id
-      }
-    })
-
-    console.log(`File upload ${uploadId} processed successfully`)
-  } catch (error) {
-    console.error(`Error processing file upload ${uploadId}:`, error)
-
-    await prisma.contentUpload.update({
-      where: { id: uploadId },
-      data: {
-        status: UploadStatus.FAILED,
-        error: error.message
-      }
-    })
-  }
-}
-
-async function processUrlUpload(uploadId, url) {
-  try {
-    console.log(`Processing URL upload ${uploadId}: ${url}`)
-
-    const contentData = await contentProcessor.processURL(url)
-    const metadata = contentProcessor.generateMetadata(contentData)
-
-    // Create content record
-    const content = await prisma.content.create({
-      data: {
-        title: contentData.title,
-        description: contentData.description,
-        type: 'UPLOADED',
-        source: 'USER_UPLOADED',
-        sourceUrl: url,
-        difficulty: metadata.difficulty,
-        topics: JSON.stringify(metadata.topics),
-        tags: JSON.stringify([]),
-        estimatedTime: metadata.readingTime,
-        isAiGenerated: true,
-        sourceType: 'webpage'
-      }
-    })
-
-    // Generate enhanced cards using the same system as global library
-    const cardGenerator = new EnhancedCardGenerator()
-    
-    // Prepare content in the format expected by enhancedCardGenerator
-    const textContent = {
-      text: contentData.text,
-      pages: [], // URLs don't have page structure
-      metadata: { title: contentData.title, description: contentData.description }
-    }
-    
-    const cards = await cardGenerator.generateEnhancedLearningCards(
-      textContent, 
-      contentData.title,
-      'Web Content', // Generic author for URLs
-      metadata.topics?.[0] || 'general',
-      content.id // Use database content ID
-    )
-
-    // Save cards to database (using same pattern as addBook.js)
-    const cardData = cards.map((card, index) => ({
-      contentId: content.id,
-      type: card.type || 'SUMMARY',
-      title: card.title,
-      order: index + 1,
-      // Add quiz data if it's a quiz card
-      ...(card.quiz && { quiz: JSON.stringify(card.quiz) }),
-      // Add flashcard/summary data using front/back fields
-      ...(card.front && { front: card.front }),
-      ...(card.back && { back: card.back })
-    }))
-    
-    const cardResult = await prisma.card.createMany({ data: cardData })
-
-    // Update upload status
-    await prisma.contentUpload.update({
-      where: { id: uploadId },
-      data: {
-        status: UploadStatus.COMPLETED,
-        contentId: content.id
-      }
-    })
-
-    console.log(`URL upload ${uploadId} processed successfully`)
-  } catch (error) {
-    console.error(`Error processing URL upload ${uploadId}:`, error)
-
-    await prisma.contentUpload.update({
-      where: { id: uploadId },
-      data: {
-        status: UploadStatus.FAILED,
-        error: error.message
-      }
-    })
-  }
-}
+// Note: Background processing functions moved to worker.js for queue-based processing

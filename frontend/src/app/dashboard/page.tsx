@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { useRouter } from 'next/navigation'
 import CardViewer from '@/components/cards/CardViewer'
 import AITutor from '@/components/chat/AITutor'
-import { progressAPI, libraryAPI } from '@/lib/api'
+import UploadModal from '@/components/upload/UploadModal'
+import { progressAPI, libraryAPI, uploadAPI } from '@/lib/api'
 import toast from 'react-hot-toast'
 import { 
   BookOpen, 
@@ -18,7 +19,10 @@ import {
   Upload,
   Plus,
   Briefcase,
-  CheckCircle
+  CheckCircle,
+  Clock,
+  AlertCircle,
+  Loader2
 } from 'lucide-react'
 
 // Mock data - replace with API calls
@@ -50,15 +54,17 @@ const mockCards = [
 ]
 
 export default function Dashboard() {
-  const { user, logout, hasHydrated } = useAuthStore()
+  const { user, logout, hasHydrated, token } = useAuthStore()
   const router = useRouter()
   const [showCards, setShowCards] = useState(false)
   const [cards, setCards] = useState<any[]>([])
   const [currentSession, setCurrentSession] = useState<any>(null)
   const [availableContent, setAvailableContent] = useState<any[]>([])
   const [enrolledContent, setEnrolledContent] = useState<any[]>([])
+  const [userUploads, setUserUploads] = useState<any[]>([])
   const [showAITutor, setShowAITutor] = useState(false)
   const [isAITutorMinimized, setIsAITutorMinimized] = useState(true)
+  const [showUploadModal, setShowUploadModal] = useState(false)
   const [loading, setLoading] = useState(true)
   const [userStats, setUserStats] = useState({
     streak: 0,
@@ -70,6 +76,9 @@ export default function Dashboard() {
     accuracy: 0,
     progressPercentage: 0
   })
+  
+  // Ref to store polling interval so it can be cleared
+  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     // Don't redirect until Zustand has hydrated from localStorage
@@ -85,15 +94,26 @@ export default function Dashboard() {
     loadDashboardData()
   }, [user, router, hasHydrated])
 
+  // Cleanup polling interval on component unmount
+  useEffect(() => {
+    return () => {
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current)
+        pollingIntervalRef.current = null
+      }
+    }
+  }, [])
+
   const loadDashboardData = async () => {
     try {
       setLoading(true)
       
       // 🚀 Parallel API calls for 40-60% faster loading
-      const [statsResponse, enrolledResponse, contentResponse] = await Promise.allSettled([
+      const [statsResponse, enrolledResponse, contentResponse, uploadsResponse] = await Promise.allSettled([
         progressAPI.getStats(),
         libraryAPI.getMyLibrary({ limit: 5 }),
-        libraryAPI.getContent({ limit: 5, excludeEnrolled: 'true' })
+        libraryAPI.getContent({ limit: 5, excludeEnrolled: 'true' }),
+        uploadAPI.getUserUploads({ limit: 5 })
       ])
       
       // Handle each response independently
@@ -110,6 +130,11 @@ export default function Dashboard() {
         setAvailableContent(contentResponse.value.data.data.content)
       }
       
+      if (uploadsResponse.status === 'fulfilled' && uploadsResponse.value.data?.success) {
+        console.log('📤 Dashboard: Setting user uploads:', uploadsResponse.value.data.data)
+        setUserUploads(uploadsResponse.value.data.data)
+      }
+      
       // Log any failures without blocking the UI
       if (statsResponse.status === 'rejected') {
         console.warn('Stats API failed:', statsResponse.reason)
@@ -119,6 +144,9 @@ export default function Dashboard() {
       }
       if (contentResponse.status === 'rejected') {
         console.warn('Available content API failed:', contentResponse.reason)
+      }
+      if (uploadsResponse.status === 'rejected') {
+        console.warn('User uploads API failed:', uploadsResponse.reason)
       }
       
     } catch (error) {
@@ -213,6 +241,84 @@ export default function Dashboard() {
     
     return { inProgressBooks: inProgress, completedBooks: completed }
   }, [enrolledContent])
+
+  const handleUploadComplete = async (uploadId: string) => {
+    toast.success('🎉 Content uploaded successfully! Processing will begin in the background.')
+    
+    // Refresh dashboard data to show new upload
+    await loadDashboardData()
+    
+    // Close upload modal
+    setShowUploadModal(false)
+    
+    // Clear any existing polling interval
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current)
+    }
+    
+    // Start polling every 3 seconds
+    pollingIntervalRef.current = setInterval(async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload/${uploadId}/status`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+        
+        if (response.ok) {
+          const data = await response.json()
+          const upload = data.data
+          
+          // Debug logging to see what we're getting
+          console.log('📋 Polling response:', { 
+            status: upload.status, 
+            processing: upload.processing,
+            contentId: upload.contentId
+          })
+          
+          if (upload.status === 'COMPLETED') {
+            // Upload completed, refresh dashboard and stop polling
+            await loadDashboardData()
+            toast.success('📚 Your book is ready to learn!')
+            if (pollingIntervalRef.current) {
+              clearInterval(pollingIntervalRef.current)
+              pollingIntervalRef.current = null
+            }
+          } else if (upload.status === 'FAILED') {
+            // Upload failed, show error and stop polling
+            toast.error('❌ Upload processing failed. Please try again.')
+            if (pollingIntervalRef.current) {
+              clearInterval(pollingIntervalRef.current)
+              pollingIntervalRef.current = null
+            }
+          }
+          // Continue polling for PROCESSING status
+        } else if (response.status === 404) {
+          // Upload not found, stop polling
+          console.log('Upload not found, stopping polling')
+          if (pollingIntervalRef.current) {
+            clearInterval(pollingIntervalRef.current)
+            pollingIntervalRef.current = null
+          }
+        }
+      } catch (error) {
+        console.error('Error polling upload status:', error)
+        // Stop polling on error to prevent infinite requests
+        if (pollingIntervalRef.current) {
+          clearInterval(pollingIntervalRef.current)
+          pollingIntervalRef.current = null
+        }
+      }
+    }, 10000)
+    
+    // Stop polling after 10 minutes to avoid infinite polling
+    setTimeout(() => {
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current)
+        pollingIntervalRef.current = null
+      }
+    }, 600000)
+  }
 
   if (!hasHydrated || (!user && hasHydrated)) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>
@@ -344,7 +450,10 @@ export default function Dashboard() {
                   </div>
                 </button>
                 
-                <button className="flex items-center space-x-3 p-4 bg-orange-50 hover:bg-orange-100 rounded-xl transition-colors text-left">
+                <button 
+                  onClick={() => setShowUploadModal(true)}
+                  className="flex items-center space-x-3 p-4 bg-orange-50 hover:bg-orange-100 rounded-xl transition-colors text-left"
+                >
                   <Upload className="w-6 h-6 text-orange-600" />
                   <div>
                     <p className="font-medium text-gray-900">Upload Content</p>
@@ -483,6 +592,126 @@ export default function Dashboard() {
                                       <div className="text-right">
                                         <p className="text-sm font-medium text-green-900">✓ Complete</p>
                                         <p className="text-xs text-green-600">{progressPercentage}% complete</p>
+                                      </div>
+                                    </div>
+                                  )
+                                })}
+                              </div>
+                            </div>
+                          )}
+                          
+                          {/* User Uploads */}
+                          {userUploads.length > 0 && (
+                            <div className="mb-6">
+                              <h3 className="text-sm font-medium text-gray-700 mb-3 flex items-center">
+                                <Upload className="w-4 h-4 mr-2 text-orange-600" />
+                                My Uploads
+                              </h3>
+                              <div className="space-y-3">
+                                {userUploads.map((upload) => {
+                                  const getStatusIcon = () => {
+                                    // Check job status first, then fallback to upload status
+                                    const jobStatus = upload.processing?.latestJob?.status
+                                    const uploadStatus = upload.status
+                                    
+                                    if (jobStatus === 'active' || (uploadStatus === 'PROCESSING' && jobStatus !== 'failed')) {
+                                      return <Loader2 className="w-5 h-5 text-blue-600 animate-spin" />
+                                    } else if (uploadStatus === 'COMPLETED') {
+                                      return <CheckCircle className="w-5 h-5 text-green-600" />
+                                    } else if (uploadStatus === 'FAILED' || jobStatus === 'failed') {
+                                      return <AlertCircle className="w-5 h-5 text-red-600" />
+                                    } else if (jobStatus === 'waiting') {
+                                      return <Clock className="w-5 h-5 text-blue-600" />
+                                    } else {
+                                      return <Clock className="w-5 h-5 text-gray-600" />
+                                    }
+                                  }
+                                  
+                                  const getStatusText = () => {
+                                    const jobStatus = upload.processing?.latestJob?.status
+                                    const uploadStatus = upload.status
+                                    const progress = upload.processing?.latestJob?.progress || 0
+                                    
+                                    if (jobStatus === 'active') {
+                                      return `Processing... ${progress}%`
+                                    } else if (jobStatus === 'waiting') {
+                                      return 'Queued for Processing'
+                                    } else if (uploadStatus === 'COMPLETED') {
+                                      return 'Ready to Learn'
+                                    } else if (uploadStatus === 'FAILED' || jobStatus === 'failed') {
+                                      return 'Processing Failed'
+                                    } else if (uploadStatus === 'PROCESSING') {
+                                      return 'Processing...'
+                                    } else {
+                                      return 'Uploaded'
+                                    }
+                                  }
+                                  
+                                  const getStatusColor = () => {
+                                    const jobStatus = upload.processing?.latestJob?.status
+                                    const uploadStatus = upload.status
+                                    
+                                    if (jobStatus === 'active' || jobStatus === 'waiting' || uploadStatus === 'PROCESSING') {
+                                      return 'bg-blue-50 border-blue-200 hover:bg-blue-100'
+                                    } else if (uploadStatus === 'COMPLETED') {
+                                      return 'bg-green-50 border-green-200 hover:bg-green-100 cursor-pointer'
+                                    } else if (uploadStatus === 'FAILED' || jobStatus === 'failed') {
+                                      return 'bg-red-50 border-red-200'
+                                    } else {
+                                      return 'bg-gray-50 border-gray-200'
+                                    }
+                                  }
+                                  
+                                  return (
+                                    <div 
+                                      key={upload.id}
+                                      className={`flex items-center justify-between p-4 rounded-xl transition-colors border ${getStatusColor()}`}
+                                      onClick={() => {
+                                        if (upload.status === 'COMPLETED' && upload.content) {
+                                          router.push(`/library/learn/${upload.content.id}`)
+                                        }
+                                      }}
+                                    >
+                                      <div className="flex items-center space-x-4">
+                                        <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-orange-100">
+                                          {getStatusIcon()}
+                                        </div>
+                                        <div className="flex-1">
+                                          <h3 className="font-medium text-gray-900">{upload.originalName}</h3>
+                                          <p className="text-sm text-gray-600">
+                                            {(upload.size / 1024 / 1024).toFixed(1)} MB • {upload.mimeType.split('/')[1].toUpperCase()}
+                                          </p>
+                                          
+                                          {/* Progress bar for active jobs */}
+                                          {upload.processing?.latestJob?.status === 'active' && (
+                                            <div className="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                                              <div 
+                                                className="bg-blue-600 h-1.5 rounded-full transition-all duration-300"
+                                                style={{ width: `${upload.processing.latestJob.progress || 0}%` }}
+                                              />
+                                            </div>
+                                          )}
+                                          
+                                          {/* Error message */}
+                                          {(upload.error || upload.processing?.latestJob?.error) && (
+                                            <p className="text-xs text-red-600 mt-1">
+                                              {upload.processing?.latestJob?.error || upload.error}
+                                            </p>
+                                          )}
+                                        </div>
+                                      </div>
+                                      <div className="text-right">
+                                        <p className={`text-sm font-medium ${
+                                          upload.status === 'COMPLETED' ? 'text-green-900' :
+                                          upload.status === 'PROCESSING' ? 'text-blue-900' :
+                                          upload.status === 'FAILED' ? 'text-red-900' :
+                                          'text-gray-900'
+                                        }`}>
+                                          {getStatusText()}
+                                        </p>
+                                        <p className="text-xs text-gray-500">
+                                          {new Date(upload.createdAt).toLocaleDateString()}
+                                        </p>
                                       </div>
                                     </div>
                                   )
@@ -658,6 +887,13 @@ export default function Dashboard() {
           onClose={() => setShowAITutor(false)}
         />
       )}
+
+      {/* Upload Modal */}
+      <UploadModal
+        isOpen={showUploadModal}
+        onClose={() => setShowUploadModal(false)}
+        onUploadComplete={handleUploadComplete}
+      />
     </div>
   )
 }
