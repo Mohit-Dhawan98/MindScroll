@@ -323,31 +323,45 @@ export class EnhancedCardGenerator {
    */
   async detectChaptersWithAI(firstPagesText, structuredPages = null) {
     try {
-      const prompt = `You are an expert at analyzing book structure. Analyze this excerpt from the beginning of a book and extract all chapter titles/names with maximum precision and consistency.
+      const prompt = `You are an expert at analyzing book structure. Analyze this excerpt from the beginning of a book and extract ALL distinct learning sections at the most granular level.
 
 Book excerpt (first ~10 pages):
 ${firstPagesText}
 
-Please identify all chapter titles from this text. Look for:
-1. Table of Contents entries
-2. Chapter headings (Chapter 1:, Chapter 2:, etc.)
-3. Section titles that appear to be main chapters
+IMPORTANT: Many books have hierarchical structures like:
+- Part I > Chapter 1, Chapter 2
+- Section A > Subsection 1, Subsection 2
+- Chapter 1 > 1.1, 1.2, 1.3
 
-Return a JSON array of chapter titles in the EXACT order they appear:
+Your task is to FLATTEN this hierarchy and extract ALL the most granular chapters/sections that contain actual content.
+
+For example, if you see:
+"Part I: The Cognitive Revolution
+  Chapter 1: An Animal of No Significance
+  Chapter 2: The Tree of Knowledge
+Part II: The Agricultural Revolution
+  Chapter 3: A Day in the Life of Adam and Eve"
+
+You should return:
+["Chapter 1: An Animal of No Significance", "Chapter 2: The Tree of Knowledge", "Chapter 3: A Day in the Life of Adam and Eve"]
+
+Return a JSON array with ALL the most granular chapter/section titles:
 {
   "chapters": [
-    "Chapter 1: Introduction to Clean Code",
-    "Chapter 2: Meaningful Names", 
-    "Chapter 3: Functions"
-  ]
+    "Chapter 1: An Animal of No Significance",
+    "Chapter 2: The Tree of Knowledge",
+    "Chapter 3: A Day in the Life of Adam and Eve"
+  ],
+  "debug_hierarchy": "Describe the book's hierarchy structure here if it exists (e.g., 'Parts containing Chapters' or 'Chapters containing numbered sections')"
 }
 
 CRITICAL REQUIREMENTS:
-- Be EXTREMELY consistent - same input should produce identical output
-- Only include actual chapter titles, not subsections
-- Preserve the EXACT original chapter names as they appear in the book
-- Return empty array if no clear chapters are found
-- Use the EXACT format shown above
+- FLATTEN the hierarchy - only return the most granular level that contains actual content
+- Skip parent containers (Parts, Sections) that only group other chapters
+- Include ALL granular chapters/sections, even if there are 20-30 of them
+- Preserve the EXACT original names as they appear
+- Include chapter numbers if present (Chapter 1, 1.1, etc.)
+- Return empty array if no clear structure is found
 - Return only the JSON, no additional text`
 
       const response = await this.callAI(prompt, { 
@@ -356,8 +370,46 @@ CRITICAL REQUIREMENTS:
         temperature: 0 
       })
       
+      // Log the full AI response for debugging
+      if (response) {
+        console.log('🔍 Full AI TOC Detection Response:')
+        console.log(JSON.stringify(response, null, 2))
+        
+        // Store AI response for debugging (create debug file)
+        try {
+          const fs = await import('fs')
+          const debugDir = './debug_toc'
+          if (!fs.existsSync(debugDir)) {
+            fs.mkdirSync(debugDir, { recursive: true })
+          }
+          const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+          const debugFile = `${debugDir}/toc_response_${timestamp}.json`
+          fs.writeFileSync(debugFile, JSON.stringify({
+            prompt: prompt.substring(0, 500) + '...',
+            response: response,
+            timestamp: new Date().toISOString(),
+            bookInfo: {
+              firstPagesLength: firstPagesText.length,
+              firstPagesWords: firstPagesText.split(/\s+/).length
+            }
+          }, null, 2))
+          console.log(`📝 TOC response saved to: ${debugFile}`)
+        } catch (debugError) {
+          console.log('⚠️ Could not save debug file:', debugError.message)
+        }
+      }
+      
       if (response && response.chapters && Array.isArray(response.chapters)) {
-        console.log(`🤖 AI extracted chapters: ${response.chapters.join(', ')}`)
+        console.log(`🤖 AI extracted ${response.chapters.length} chapters`)
+        if (response.debug_hierarchy) {
+          console.log(`📚 Hierarchy structure: ${response.debug_hierarchy}`)
+        }
+        
+        // Log each chapter for visibility
+        response.chapters.forEach((chapter, i) => {
+          console.log(`   ${i + 1}. ${chapter}`)
+        })
+        
         return response.chapters.filter(chapter => 
           chapter && 
           typeof chapter === 'string' && 
