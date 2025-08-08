@@ -73,16 +73,39 @@ export const addJob = async (jobType, data, options = {}) => {
     })
 
     // Save job to database for tracking
-    await prisma.processingJob.create({
-      data: {
-        uploadId: data.uploadId,
-        queueJobId: job.id.toString(),
-        jobType,
-        status: 'waiting',
-        progress: 0,
-        inputData: JSON.stringify(data)
+    // Use a composite key with timestamp to ensure uniqueness
+    const uniqueJobId = `${job.id}_${Date.now()}`
+    
+    try {
+      // First try to create with the original job ID
+      await prisma.processingJob.create({
+        data: {
+          uploadId: data.uploadId,
+          queueJobId: job.id.toString(),
+          jobType,
+          status: 'waiting',
+          progress: 0,
+          inputData: JSON.stringify(data)
+        }
+      })
+    } catch (error) {
+      if (error.code === 'P2002') { // Unique constraint violation
+        console.warn(`⚠️ Job ID ${job.id} already exists, using unique ID: ${uniqueJobId}`)
+        // If original ID exists, create with timestamp-based unique ID
+        await prisma.processingJob.create({
+          data: {
+            uploadId: data.uploadId,
+            queueJobId: uniqueJobId,
+            jobType,
+            status: 'waiting',
+            progress: 0,
+            inputData: JSON.stringify(data)
+          }
+        })
+      } else {
+        throw error
       }
-    })
+    }
 
     console.log(`✅ Job added successfully: ${job.id}`)
     return job
