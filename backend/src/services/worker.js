@@ -96,6 +96,16 @@ const processJob = async (job) => {
   } catch (error) {
     console.error(`❌ Worker job ${job.id} failed:`, error)
     
+    // Clean up uploaded file on failure
+    try {
+      if (filePath && await fs.access(filePath).then(() => true).catch(() => false)) {
+        await fs.unlink(filePath)
+        console.log(`🗑️ Cleaned up failed upload file: ${filePath}`)
+      }
+    } catch (cleanupError) {
+      console.warn(`⚠️ Could not delete failed upload file ${filePath}:`, cleanupError.message)
+    }
+    
     // Update upload status to failed
     await prisma.contentUpload.update({
       where: { id: uploadId },
@@ -149,6 +159,17 @@ async function processPdfUpload(job, uploadId, filePath, metadata = {}) {
   })
 
   await job.progress(100)
+
+  // Clean up the uploaded PDF file
+  try {
+    if (filePath && await fs.access(filePath).then(() => true).catch(() => false)) {
+      await fs.unlink(filePath)
+      console.log(`🗑️ Cleaned up uploaded file: ${filePath}`)
+    }
+  } catch (error) {
+    console.warn(`⚠️ Could not delete uploaded file ${filePath}:`, error.message)
+    // Don't fail the job if cleanup fails
+  }
 
   console.log(`✅ PDF upload ${uploadId} processed successfully using addBook script`)
   return { contentId: content.id, cardsGenerated: content.totalCards }
@@ -409,6 +430,17 @@ async function processTextUpload(job, uploadId, filePath, metadata = {}) {
   })
 
   await job.progress(100)
+
+  // Clean up the uploaded text file
+  try {
+    if (filePath && await fs.access(filePath).then(() => true).catch(() => false)) {
+      await fs.unlink(filePath)
+      console.log(`🗑️ Cleaned up uploaded file: ${filePath}`)
+    }
+  } catch (error) {
+    console.warn(`⚠️ Could not delete uploaded file ${filePath}:`, error.message)
+    // Don't fail the job if cleanup fails
+  }
 
   console.log(`✅ Text upload ${uploadId} processed successfully`)
   return { contentId: content.id, cardsGenerated: cards.length }
