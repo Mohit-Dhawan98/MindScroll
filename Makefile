@@ -151,7 +151,7 @@ dev-logs: logs ## Alias for logs command
 prod: ## Start production environment
 	$(call log_info,"Starting production environment...")
 	@if [ ! -f .env ]; then \
-		$(call log_error,"Missing .env file! Copy .env.example and configure it."); \
+		echo "$(RED)❌ Missing .env file! Copy .env.example and configure it.$(NC)"; \
 		exit 1; \
 	fi
 	@docker-compose -f docker-compose.prod.yml up -d
