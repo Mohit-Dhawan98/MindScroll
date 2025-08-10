@@ -1,0 +1,150 @@
+# ============================================================================
+# Docker Build Optimization - .dockerignore
+# ============================================================================
+# Excludes unnecessary files from Docker build context to:
+# 1. Reduce build time and image size
+# 2. Improve security by not copying sensitive files
+# 3. Prevent cache invalidation from irrelevant file changes
+# ============================================================================
+
+# ===================
+# Node.js
+# ===================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+
+# ===================
+# Environment & Config
+# ===================
+.env*
+!.env.example
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ===================
+# Version Control
+# ===================
+.git/
+.gitignore
+.gitattributes
+.github/
+
+# ===================
+# IDE & Editors
+# ===================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ===================
+# Development & Testing
+# ===================
+coverage/
+.nyc_output
+.jest/
+test-results/
+*.test.js
+*.spec.js
+__tests__/
+tests/
+jest.config.js
+.eslintrc*
+.prettierrc*
+
+# ===================
+# Documentation
+# ===================
+*.md
+!README.md
+docs/
+CHANGELOG*
+LICENSE*
+
+# ===================
+# Logs & Runtime
+# ===================
+logs/
+*.log
+pids/
+*.pid
+*.seed
+*.pid.lock
+.tmp/
+tmp/
+
+# ===================
+# Application-specific
+# ===================
+# Local database files
+prisma/dev.db*
+prisma/migrations_backup/
+
+# Cache directories
+storage/cache/
+storage/chunks/
+
+# Upload directories (persistent data should use volumes)
+uploads/
+storage/extracted-text/
+
+# Debug outputs
+debug_toc/
+
+# Scripts not needed in production
+scripts/migration/
+scripts/library/
+cleanup*.js
+remove-uploads.js
+
+# ===================
+# Build artifacts
+# ===================
+dist/
+build/
+out/
+
+# ===================
+# OS generated files
+# ===================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ===================
+# Docker
+# ===================
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# ===================
+# Production deployment files
+# ===================
+PRODUCTION_DEPLOYMENT_PLAN.md
+SUPABASE_MIGRATION.md
+
+# ===================
+# What IS included in builds:
+# ===================
+# ✅ src/ - Application source code
+# ✅ prisma/schema.prisma - Database schema
+# ✅ prisma/migrations/ - Database migrations
+# ✅ package.json, package-lock.json - Dependencies
+# ✅ public/ - Static assets
+# ✅ scripts/docker-health.js - Health check script
+# ✅ ecosystem.config.js - PM2 configuration
+# ============================================================================

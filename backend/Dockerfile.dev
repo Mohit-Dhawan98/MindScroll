@@ -1,0 +1,90 @@
+# ==============================================================================
+# MindScroll Backend - Development Dockerfile
+# Optimized for fast development with hot reload and debugging support
+# ==============================================================================
+
+FROM node:20-slim
+
+LABEL stage=development
+LABEL maintainer="MindScroll Team"
+LABEL description="Development environment with hot reload and debugging"
+
+# Set development environment
+ENV NODE_ENV=development
+ENV DEBUG=*
+ENV CHOKIDAR_USEPOLLING=true
+
+# Install system dependencies for development and debugging
+RUN apt-get update && apt-get install -y \
+    python3 \
+    make \
+    g++ \
+    libcairo2-dev \
+    libjpeg-dev \
+    libpango1.0-dev \
+    libgif-dev \
+    libpixman-1-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
+    git \
+    curl \
+    bash \
+    nano \
+    procps \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create development user
+RUN groupadd -g 1001 nodejs && \
+    useradd -u 1001 -g nodejs -s /bin/bash mindscroll
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files for better layer caching
+COPY package*.json ./
+COPY prisma/ ./prisma/
+
+# Install ALL dependencies (including dev dependencies) and global tools
+RUN npm install && \
+    npm install -g nodemon pm2 prisma && \
+    npm cache clean --force
+
+# Create required directories with proper permissions
+RUN mkdir -p \
+    logs \
+    storage/cache \
+    storage/chunks \
+    storage/extracted-text \
+    uploads \
+    node_modules/.cache && \
+    chown -R mindscroll:nodejs /app
+
+# Switch to non-root user
+USER mindscroll
+
+# Copy source code (this will be overridden by volume mounts in compose)
+COPY --chown=mindscroll:nodejs . .
+
+# Generate Prisma client
+RUN npx prisma generate
+
+# Expose application port and debug port
+EXPOSE 3001 9229
+
+# Health check for development - more forgiving timeouts
+HEALTHCHECK --interval=30s --timeout=10s --start-period=20s --retries=3 \
+    CMD curl -f http://localhost:3001/health || node scripts/docker-health.js || exit 1
+
+# Development startup with hot reload
+CMD ["nodemon", "--inspect=0.0.0.0:9229", "--legacy-watch", "src/index.js"]
+
+# ==============================================================================
+# Development Features:
+# 1. Hot reload with nodemon and file watching optimizations
+# 2. Debug port exposed (9229) for IDE integration
+# 3. Full dev dependencies and debugging tools installed
+# 4. Volume mounting support for live code editing
+# 5. Bash shell for better container interaction
+# 6. Development utilities (nano, procps) for debugging
+# 7. Optimized layer caching for fast rebuilds
+# ==============================================================================

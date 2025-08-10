@@ -1,0 +1,154 @@
+# ============================================================================
+# MindScroll - Local Development Environment
+# ============================================================================
+# Usage:
+#   docker-compose up -d          # Start all services in background
+#   docker-compose logs -f api    # Follow API logs
+#   docker-compose down           # Stop all services
+# ============================================================================
+
+version: '3.8'
+
+services:
+  # =====================
+  # Redis Service (Local)
+  # =====================
+  redis:
+    image: redis:7-alpine
+    container_name: mindscroll-redis-dev
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - mindscroll-network
+
+  # =====================
+  # Backend API Service
+  # =====================
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: mindscroll-api-dev
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    ports:
+      - "3001:3001"
+      - "9229:9229"  # Debug port
+    environment:
+      # Override specific settings for Docker
+      - NODE_ENV=development
+      - PORT=3001
+      - REDIS_URL=redis://redis:6379
+      - CORS_ORIGIN=http://localhost:3000
+      - RATE_LIMIT_WINDOW_MS=900000
+      - RATE_LIMIT_MAX_REQUESTS=100
+      - BCRYPT_SALT_ROUNDS=10
+      # Tell Prisma to stop looking for .env files since we're using environment variables
+      - PRISMA_DISABLE_DOTENV=1
+      
+    volumes:
+      # Source code volume for hot reload
+      - ./backend/src:/app/src:ro
+      - ./backend/prisma:/app/prisma:ro
+      - ./backend/scripts:/app/scripts:ro
+      - ./backend/public:/app/public:ro
+      - ./backend/nodemon.json:/app/nodemon.json:ro
+      - ./backend/package.json:/app/package.json:ro
+      
+      # Persistent data volumes
+      - backend_logs:/app/logs
+      - backend_storage:/app/storage
+      - backend_uploads:/app/uploads
+    
+    depends_on:
+      redis:
+        condition: service_healthy
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    networks:
+      - mindscroll-network
+
+  # =====================
+  # Worker Service
+  # =====================
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: mindscroll-worker-dev
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      # Override specific settings for Docker
+      - NODE_ENV=development
+      - WORKER_MODE=true
+      - REDIS_URL=redis://redis:6379
+      # Use transaction pooler connection in Docker (port 6543)
+      - WORKER_DATABASE_URL=${WORKER_DATABASE_URL}
+      # Tell Prisma to stop looking for .env files since we're using environment variables
+      - PRISMA_DISABLE_DOTENV=1
+      
+    volumes:
+      # Source code volume for hot reload
+      - ./backend/src:/app/src:ro
+      - ./backend/prisma:/app/prisma:ro
+      - ./backend/scripts:/app/scripts:ro
+      
+      # Shared persistent data volumes
+      - backend_storage:/app/storage
+      - backend_uploads:/app/uploads
+      - backend_logs:/app/logs
+    
+    depends_on:
+      redis:
+        condition: service_healthy
+    
+    command: ["node", "src/services/worker.js"]
+    
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "worker.js"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    networks:
+      - mindscroll-network
+
+# =====================
+# Volumes
+# =====================
+volumes:
+  redis_data:
+    driver: local
+  backend_logs:
+    driver: local
+  backend_storage:
+    driver: local
+  backend_uploads:
+    driver: local
+
+# =====================
+# Networks
+# =====================
+networks:
+  mindscroll-network:
+    name: mindscroll-dev-network
+    driver: bridge

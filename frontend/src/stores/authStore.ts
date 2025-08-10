@@ -33,7 +33,7 @@ export const useAuthStore = create<AuthState>()(
         set({ loading: true, error: null })
         try {
           const response = await authAPI.login({ email, password })
-          const { token, user } = response.data.data || response.data
+          const { token, user } = response.data
           
           set({ user, token, loading: false })
         } catch (error: any) {
@@ -47,7 +47,7 @@ export const useAuthStore = create<AuthState>()(
         set({ loading: true, error: null })
         try {
           const response = await authAPI.register({ email, password, name })
-          const { token, user } = response.data.data || response.data
+          const { token, user } = response.data
           
           set({ user, token, loading: false })
         } catch (error: any) {

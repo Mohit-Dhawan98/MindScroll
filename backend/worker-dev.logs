@@ -1,0 +1,1033 @@
+2025-08-11 00:38:36.102 | prisma:tryLoadEnv Environment variables not found at null +3ms
+2025-08-11 00:38:36.102 | prisma:tryLoadEnv Environment variables not found at undefined +1ms
+2025-08-11 00:38:36.102 | prisma:tryLoadEnv No Environment variables loaded +0ms
+2025-08-11 00:38:36.103 | prisma:client checkPlatformCaching:postinstall false +1ms
+2025-08-11 00:38:36.103 | prisma:client checkPlatformCaching:ciName undefined +0ms
+2025-08-11 00:38:36.103 | prisma:tryLoadEnv Environment variables not found at null +0ms
+2025-08-11 00:38:36.103 | prisma:tryLoadEnv Environment variables not found at undefined +0ms
+2025-08-11 00:38:36.103 | prisma:tryLoadEnv No Environment variables loaded +0ms
+2025-08-11 00:38:36.103 | prisma:client dirname /app/node_modules/.prisma/client +0ms
+2025-08-11 00:38:36.103 | prisma:client relativePath ../../../prisma +0ms
+2025-08-11 00:38:36.103 | prisma:client cwd /app/prisma +0ms
+2025-08-11 00:38:36.103 | prisma:client clientVersion 6.13.0 +0ms
+2025-08-11 00:38:36.104 | prisma:client:libraryEngine internalSetup +1ms
+2025-08-11 00:38:36.105 | 🔧 Redis Configuration: { host: 'redis', port: 6379, hasPassword: false }
+2025-08-11 00:38:36.106 | 2025-08-10T19:08:36.105Z ioredis:redis status[redis:6379]: wait -> connecting
+2025-08-11 00:38:36.107 | 2025-08-10T19:08:36.106Z ioredis:redis status[redis:6379]: wait -> connecting
+2025-08-11 00:38:36.108 | 2025-08-10T19:08:36.107Z ioredis:redis queue command[redis:6379]: 0 -> info([])
+2025-08-11 00:38:36.108 | 2025-08-10T19:08:36.108Z ioredis:redis status[redis:6379]: wait -> connecting
+2025-08-11 00:38:36.589 | prisma:client checkPlatformCaching:postinstall false +485ms
+2025-08-11 00:38:36.589 | prisma:client checkPlatformCaching:ciName undefined +0ms
+2025-08-11 00:38:36.589 | prisma:tryLoadEnv Environment variables not found at null +0ms
+2025-08-11 00:38:36.589 | prisma:tryLoadEnv Environment variables not found at undefined +0ms
+2025-08-11 00:38:36.589 | prisma:tryLoadEnv No Environment variables loaded +0ms
+2025-08-11 00:38:36.589 | prisma:client dirname /app/node_modules/.prisma/client +0ms
+2025-08-11 00:38:36.589 | prisma:client relativePath ../../../prisma +0ms
+2025-08-11 00:38:36.589 | prisma:client cwd /app/prisma +0ms
+2025-08-11 00:38:36.589 | prisma:client clientVersion 6.13.0 +0ms
+2025-08-11 00:38:36.589 | ☁️ R2 Storage initialized: mindscroll-uploads
+2025-08-11 00:38:36.589 | 🔗 Worker using database: Direct connection
+2025-08-11 00:38:36.590 | prisma:client:libraryEngine internalSetup +0ms
+2025-08-11 00:38:36.590 | 🔧 Worker Environment Check:
+2025-08-11 00:38:36.590 |    DATABASE_URL: SET
+2025-08-11 00:38:36.590 |    WORKER_DATABASE_URL: SET
+2025-08-11 00:38:36.590 |    REDIS_URL: SET
+2025-08-11 00:38:36.590 |    CLOUDFLARE_R2_ENDPOINT: SET
+2025-08-11 00:38:36.590 |    CLOUDFLARE_R2_BUCKET_NAME: SET
+2025-08-11 00:38:36.590 |    NODE_ENV: development
+2025-08-11 00:38:36.590 |    Working Directory: /app
+2025-08-11 00:38:36.590 | ☁️ Testing R2 connection...
+2025-08-11 00:38:36.618 | 2025-08-10T19:08:36.618Z ioredis:redis status[172.18.0.2:6379]: connecting -> connect
+2025-08-11 00:38:36.618 | 2025-08-10T19:08:36.618Z ioredis:redis status[172.18.0.2:6379]: connect -> ready
+2025-08-11 00:38:36.618 | 2025-08-10T19:08:36.618Z ioredis:connection send 1 commands in offline queue
+2025-08-11 00:38:36.618 | 2025-08-10T19:08:36.618Z ioredis:redis write command[172.18.0.2:6379]: 0 -> info([])
+2025-08-11 00:38:36.619 | 2025-08-10T19:08:36.619Z ioredis:redis status[172.18.0.2:6379]: connecting -> connect
+2025-08-11 00:38:36.619 | 2025-08-10T19:08:36.619Z ioredis:redis status[172.18.0.2:6379]: connect -> ready
+2025-08-11 00:38:36.619 | 2025-08-10T19:08:36.619Z ioredis:redis status[172.18.0.2:6379]: connecting -> connect
+2025-08-11 00:38:36.619 | 2025-08-10T19:08:36.619Z ioredis:redis status[172.18.0.2:6379]: connect -> ready
+2025-08-11 00:38:36.620 | 2025-08-10T19:08:36.619Z ioredis:redis write command[172.18.0.2:6379]: 0 -> psubscribe([ 'bull:content processing:waiting*' ])
+2025-08-11 00:38:36.621 | prisma:get-platform Found distro info:
+2025-08-11 00:38:36.621 | {
+2025-08-11 00:38:36.621 |   "targetDistro": "debian",
+2025-08-11 00:38:36.621 |   "familyDistro": "debian",
+2025-08-11 00:38:36.621 |   "originalDistro": "debian"
+2025-08-11 00:38:36.621 | } +32ms
+2025-08-11 00:38:36.621 | prisma:get-platform Trying platform-specific paths for "debian" (and "ubuntu") +0ms
+2025-08-11 00:38:36.621 | prisma:get-platform Found distro info:
+2025-08-11 00:38:36.621 | {
+2025-08-11 00:38:36.621 |   "targetDistro": "debian",
+2025-08-11 00:38:36.621 |   "familyDistro": "debian",
+2025-08-11 00:38:36.621 |   "originalDistro": "debian"
+2025-08-11 00:38:36.621 | } +0ms
+2025-08-11 00:38:36.621 | prisma:get-platform Trying platform-specific paths for "debian" (and "ubuntu") +0ms
+2025-08-11 00:38:36.622 | prisma:get-platform Found libssl.so file using platform-specific paths: libssl.so.3 +1ms
+2025-08-11 00:38:36.622 | prisma:get-platform The parsed libssl version is: 3.0.x +0ms
+2025-08-11 00:38:36.622 | prisma:client:engines:resolveEnginePath enginePath /app/node_modules/.prisma/client/libquery_engine-linux-arm64-openssl-3.0.x.so.node +0ms
+2025-08-11 00:38:36.635 | prisma:get-platform Found libssl.so file using platform-specific paths: libssl.so.3 +12ms
+2025-08-11 00:38:36.635 | prisma:get-platform The parsed libssl version is: 3.0.x +1ms
+2025-08-11 00:38:36.635 | prisma:client:engines:resolveEnginePath enginePath /app/node_modules/.prisma/client/libquery_engine-linux-arm64-openssl-3.0.x.so.node +0ms
+2025-08-11 00:38:38.311 | 🗑️ Deleting from R2: test-connection
+2025-08-11 00:38:38.738 | ✅ R2 delete successful: test-connection
+2025-08-11 00:38:38.738 | ✅ R2 connection successful
+2025-08-11 00:38:38.738 | 🔗 Testing database connection...
+2025-08-11 00:38:38.740 | prisma:client prisma.$queryRaw(SELECT 1, []) +2105ms
+2025-08-11 00:38:38.741 | prisma:client Prisma Client call: +1ms
+2025-08-11 00:38:38.742 | prisma:client prisma.$queryRaw({
+2025-08-11 00:38:38.742 |   query: "SELECT 1",
+2025-08-11 00:38:38.742 |   parameters: {
+2025-08-11 00:38:38.742 |     values: "[]",
+2025-08-11 00:38:38.742 |     __prismaRawParameters__: true
+2025-08-11 00:38:38.742 |   }
+2025-08-11 00:38:38.742 | }) +1ms
+2025-08-11 00:38:38.742 | prisma:client Generated request: +0ms
+2025-08-11 00:38:38.742 | prisma:client {
+2025-08-11 00:38:38.742 |   "action": "queryRaw",
+2025-08-11 00:38:38.742 |   "query": {
+2025-08-11 00:38:38.742 |     "arguments": {
+2025-08-11 00:38:38.742 |       "query": "SELECT 1",
+2025-08-11 00:38:38.742 |       "parameters": "[]"
+2025-08-11 00:38:38.742 |     },
+2025-08-11 00:38:38.742 |     "selection": {}
+2025-08-11 00:38:38.742 |   }
+2025-08-11 00:38:38.742 | }
+2025-08-11 00:38:38.742 |  +0ms
+2025-08-11 00:38:38.743 | prisma:client:libraryEngine sending request, this.libraryStarted: false +0ms
+2025-08-11 00:38:38.743 | prisma:client:libraryEngine library starting +1ms
+2025-08-11 00:38:40.330 | prisma:client:request_handler {
+2025-08-11 00:38:40.330 |   "clientVersion": "6.13.0",
+2025-08-11 00:38:40.330 |   "errorCode": "P1001",
+2025-08-11 00:38:40.330 |   "name": "PrismaClientInitializationError"
+2025-08-11 00:38:40.330 | } +1586ms
+2025-08-11 00:38:40.335 | ❌ Database connection failed: 
+2025-08-11 00:38:40.335 | Invalid `prisma.$queryRaw()` invocation:
+2025-08-11 00:38:40.335 | 
+2025-08-11 00:38:40.335 | 
+2025-08-11 00:38:40.335 | Can't reach database server at `db.ygbmipgorchmzfmmppei.supabase.co:5432`
+2025-08-11 00:38:40.335 | 
+2025-08-11 00:38:40.335 | Please make sure your database server is running at `db.ygbmipgorchmzfmmppei.supabase.co:5432`.
+2025-08-11 00:38:40.335 | 🧹 Cleaning up old jobs...
+2025-08-11 00:38:40.338 | 2025-08-10T19:08:40.337Z ioredis:redis write command[172.18.0.2:6379]: 0 -> multi([])
+2025-08-11 00:38:40.338 | 2025-08-10T19:08:40.338Z ioredis:redis write command[172.18.0.2:6379]: 0 -> exec([])
+2025-08-11 00:38:40.340 | 2025-08-10T19:08:40.340Z ioredis:redis write command[172.18.0.2:6379]: 0 -> multi([])
+2025-08-11 00:38:40.341 | 2025-08-10T19:08:40.340Z ioredis:redis write command[172.18.0.2:6379]: 0 -> zrevrange([ 'bull:content processing:failed', '0', '50' ])
+2025-08-11 00:38:40.341 | 2025-08-10T19:08:40.341Z ioredis:redis write command[172.18.0.2:6379]: 0 -> exec([])
+2025-08-11 00:38:40.342 | 2025-08-10T19:08:40.342Z ioredis:redis write command[172.18.0.2:6379]: 0 -> multi([])
+2025-08-11 00:38:40.342 | 2025-08-10T19:08:40.342Z ioredis:redis write command[172.18.0.2:6379]: 0 -> zrevrange([ 'bull:content processing:completed', '5', '100' ])
+2025-08-11 00:38:40.342 | 2025-08-10T19:08:40.342Z ioredis:redis write command[172.18.0.2:6379]: 0 -> exec([])
+2025-08-11 00:38:40.343 | ✅ Old jobs cleanup completed
+2025-08-11 00:38:40.343 | 🔧 Registering job processors for: [
+2025-08-11 00:38:40.343 |   'process-pdf-upload',
+2025-08-11 00:38:40.343 |   'process-url-upload',
+2025-08-11 00:38:40.343 |   'process-text-upload',
+2025-08-11 00:38:40.343 |   'generate-cards',
+2025-08-11 00:38:40.343 |   'process-content'
+2025-08-11 00:38:40.343 | ]
+2025-08-11 00:38:40.343 | 🚀 Content processing worker started with job types:
+2025-08-11 00:38:40.343 |   - process-pdf-upload
+2025-08-11 00:38:40.343 |   - process-url-upload
+2025-08-11 00:38:40.343 |   - process-text-upload
+2025-08-11 00:38:40.344 | 2025-08-10T19:08:40.344Z ioredis:redis status[redis:6379]: wait -> connecting
+2025-08-11 00:38:40.344 | 2025-08-10T19:08:40.344Z ioredis:redis queue command[redis:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> client([ 'setname', 'bull:Y29udGVudCBwcm9jZXNzaW5n' ])
+2025-08-11 00:38:40.344 | 2025-08-10T19:08:40.344Z ioredis:redis queue command[redis:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> client([ 'setname', 'bull:Y29udGVudCBwcm9jZXNzaW5n' ])
+2025-08-11 00:38:40.345 | 2025-08-10T19:08:40.344Z ioredis:redis queue command[redis:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> client([ 'setname', 'bull:Y29udGVudCBwcm9jZXNzaW5n' ])
+2025-08-11 00:38:40.345 | 2025-08-10T19:08:40.345Z ioredis:redis write command[172.18.0.2:6379]: 0 -> subscribe([ 'bull:content processing:delayed' ])
+2025-08-11 00:38:40.346 | 2025-08-10T19:08:40.345Z ioredis:dataHandler receive reply "subscribe" in subscriber mode
+2025-08-11 00:38:40.346 | 2025-08-10T19:08:40.346Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:38:40.347 | 2025-08-10T19:08:40.347Z ioredis:redis status[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: connecting -> connect
+2025-08-11 00:38:40.347 | 2025-08-10T19:08:40.347Z ioredis:redis status[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: connect -> ready
+2025-08-11 00:38:40.347 | 2025-08-10T19:08:40.347Z ioredis:connection set the connection name [bull:Y29udGVudCBwcm9jZXNzaW5n]
+2025-08-11 00:38:40.347 | 2025-08-10T19:08:40.347Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> client([ 'setname', 'bull:Y29udGVudCBwcm9jZXNzaW5n' ])
+2025-08-11 00:38:40.347 | 2025-08-10T19:08:40.347Z ioredis:connection send 3 commands in offline queue
+2025-08-11 00:38:40.347 | 2025-08-10T19:08:40.347Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> client([ 'setname', 'bull:Y29udGVudCBwcm9jZXNzaW5n' ])
+2025-08-11 00:38:40.348 | 2025-08-10T19:08:40.348Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> client([ 'setname', 'bull:Y29udGVudCBwcm9jZXNzaW5n' ])
+2025-08-11 00:38:40.348 | 2025-08-10T19:08:40.348Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> client([ 'setname', 'bull:Y29udGVudCBwcm9jZXNzaW5n' ])
+2025-08-11 00:38:40.349 | 2025-08-10T19:08:40.349Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:38:40.349 | 2025-08-10T19:08:40.349Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:38:40.350 | 2025-08-10T19:08:40.349Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:38:40.351 | 2025-08-10T19:08:40.351Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:38:40.351 | 2025-08-10T19:08:40.351Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:38:40.352 | 2025-08-10T19:08:40.352Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:38:40.352 | 2025-08-10T19:08:40.352Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:38:40.353 | 2025-08-10T19:08:40.352Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:38:40.353 | 2025-08-10T19:08:40.353Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:38:45.353 | 2025-08-10T19:08:45.353Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:38:45.354 | 2025-08-10T19:08:45.354Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:38:50.361 | 2025-08-10T19:08:50.361Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:38:50.362 | 2025-08-10T19:08:50.362Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:38:55.367 | 2025-08-10T19:08:55.367Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:38:55.368 | 2025-08-10T19:08:55.368Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:39:00.372 | 2025-08-10T19:09:00.372Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:39:00.373 | 2025-08-10T19:09:00.373Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:39:05.381 | 2025-08-10T19:09:05.381Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:39:05.382 | 2025-08-10T19:09:05.382Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:39:10.361 | 2025-08-10T19:09:10.360Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:39:10.384 | 2025-08-10T19:09:10.383Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:39:10.385 | 2025-08-10T19:09:10.384Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:39:15.396 | 2025-08-10T19:09:15.396Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:39:15.397 | 2025-08-10T19:09:15.396Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:39:20.404 | 2025-08-10T19:09:20.404Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:39:20.406 | 2025-08-10T19:09:20.405Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:39:25.413 | 2025-08-10T19:09:25.412Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:39:25.414 | 2025-08-10T19:09:25.414Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:39:30.427 | 2025-08-10T19:09:30.427Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:39:30.431 | 2025-08-10T19:09:30.430Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:39:35.437 | 2025-08-10T19:09:35.436Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:39:35.437 | 2025-08-10T19:09:35.437Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:39:40.365 | 2025-08-10T19:09:40.365Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:39:40.443 | 2025-08-10T19:09:40.443Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:39:40.445 | 2025-08-10T19:09:40.445Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:39:45.450 | 2025-08-10T19:09:45.449Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:39:45.451 | 2025-08-10T19:09:45.450Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:39:50.465 | 2025-08-10T19:09:50.464Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:39:50.468 | 2025-08-10T19:09:50.467Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:39:55.475 | 2025-08-10T19:09:55.475Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:39:55.476 | 2025-08-10T19:09:55.476Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:40:00.483 | 2025-08-10T19:10:00.483Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:40:00.488 | 2025-08-10T19:10:00.487Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:40:05.498 | 2025-08-10T19:10:05.498Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:40:05.500 | 2025-08-10T19:10:05.500Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:40:10.370 | 2025-08-10T19:10:10.370Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:40:10.506 | 2025-08-10T19:10:10.506Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:40:10.507 | 2025-08-10T19:10:10.507Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:40:15.516 | 2025-08-10T19:10:15.515Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:40:15.518 | 2025-08-10T19:10:15.518Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:40:20.525 | 2025-08-10T19:10:20.524Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:40:20.526 | 2025-08-10T19:10:20.526Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:40:25.535 | 2025-08-10T19:10:25.534Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:40:25.537 | 2025-08-10T19:10:25.536Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:40:30.545 | 2025-08-10T19:10:30.544Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:40:30.546 | 2025-08-10T19:10:30.546Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:40:35.557 | 2025-08-10T19:10:35.556Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:40:35.557 | 2025-08-10T19:10:35.557Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:40:40.380 | 2025-08-10T19:10:40.379Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:40:40.564 | 2025-08-10T19:10:40.564Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:40:40.565 | 2025-08-10T19:10:40.565Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:40:45.578 | 2025-08-10T19:10:45.575Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:40:45.579 | 2025-08-10T19:10:45.578Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:40:50.587 | 2025-08-10T19:10:50.587Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:40:50.588 | 2025-08-10T19:10:50.588Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:40:55.592 | 2025-08-10T19:10:55.592Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:40:55.593 | 2025-08-10T19:10:55.592Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:41:00.604 | 2025-08-10T19:11:00.604Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:41:00.605 | 2025-08-10T19:11:00.605Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:41:05.614 | 2025-08-10T19:11:05.613Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:41:05.615 | 2025-08-10T19:11:05.615Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:41:10.392 | 2025-08-10T19:11:10.391Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:41:10.619 | 2025-08-10T19:11:10.618Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:41:10.620 | 2025-08-10T19:11:10.620Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:41:15.629 | 2025-08-10T19:11:15.628Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:41:15.630 | 2025-08-10T19:11:15.630Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:41:20.650 | 2025-08-10T19:11:20.650Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:41:20.651 | 2025-08-10T19:11:20.651Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:41:25.656 | 2025-08-10T19:11:25.656Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:41:25.657 | 2025-08-10T19:11:25.657Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:41:30.662 | 2025-08-10T19:11:30.661Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:41:30.662 | 2025-08-10T19:11:30.662Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:41:35.674 | 2025-08-10T19:11:35.674Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:41:35.675 | 2025-08-10T19:11:35.675Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:41:40.402 | 2025-08-10T19:11:40.401Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:41:40.683 | 2025-08-10T19:11:40.683Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:41:40.684 | 2025-08-10T19:11:40.684Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:41:45.694 | 2025-08-10T19:11:45.694Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:41:45.696 | 2025-08-10T19:11:45.695Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:41:50.707 | 2025-08-10T19:11:50.707Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:41:50.708 | 2025-08-10T19:11:50.708Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:41:55.719 | 2025-08-10T19:11:55.718Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:41:55.720 | 2025-08-10T19:11:55.720Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:42:00.730 | 2025-08-10T19:12:00.730Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:42:00.731 | 2025-08-10T19:12:00.731Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:42:05.743 | 2025-08-10T19:12:05.743Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:42:05.745 | 2025-08-10T19:12:05.744Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:42:10.407 | 2025-08-10T19:12:10.407Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:42:10.748 | 2025-08-10T19:12:10.748Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:42:10.749 | 2025-08-10T19:12:10.749Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:42:15.760 | 2025-08-10T19:12:15.759Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:42:15.761 | 2025-08-10T19:12:15.761Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:42:20.770 | 2025-08-10T19:12:20.770Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:42:20.773 | 2025-08-10T19:12:20.772Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:42:25.781 | 2025-08-10T19:12:25.781Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:42:25.783 | 2025-08-10T19:12:25.782Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:42:30.795 | 2025-08-10T19:12:30.794Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:42:30.797 | 2025-08-10T19:12:30.796Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:42:35.810 | 2025-08-10T19:12:35.809Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:42:35.811 | 2025-08-10T19:12:35.811Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:42:40.412 | 2025-08-10T19:12:40.412Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:42:40.816 | 2025-08-10T19:12:40.816Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:42:40.818 | 2025-08-10T19:12:40.817Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:42:45.827 | 2025-08-10T19:12:45.826Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:42:45.829 | 2025-08-10T19:12:45.829Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:42:50.834 | 2025-08-10T19:12:50.834Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:42:50.834 | 2025-08-10T19:12:50.834Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:42:55.847 | 2025-08-10T19:12:55.846Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:42:55.848 | 2025-08-10T19:12:55.848Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:43:00.857 | 2025-08-10T19:13:00.856Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:43:00.859 | 2025-08-10T19:13:00.858Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:43:05.870 | 2025-08-10T19:13:05.869Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:43:05.871 | 2025-08-10T19:13:05.871Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:43:10.422 | 2025-08-10T19:13:10.422Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:43:10.878 | 2025-08-10T19:13:10.877Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:43:10.878 | 2025-08-10T19:13:10.878Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:43:15.887 | 2025-08-10T19:13:15.887Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:43:15.888 | 2025-08-10T19:13:15.888Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:43:20.899 | 2025-08-10T19:13:20.897Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:43:20.901 | 2025-08-10T19:13:20.900Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:43:25.902 | 2025-08-10T19:13:25.901Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:43:25.903 | 2025-08-10T19:13:25.902Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:43:30.911 | 2025-08-10T19:13:30.910Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:43:30.913 | 2025-08-10T19:13:30.912Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:43:35.920 | 2025-08-10T19:13:35.920Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:43:35.921 | 2025-08-10T19:13:35.920Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:43:40.430 | 2025-08-10T19:13:40.430Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:43:40.924 | 2025-08-10T19:13:40.924Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:43:40.925 | 2025-08-10T19:13:40.925Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:43:45.936 | 2025-08-10T19:13:45.936Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:43:45.937 | 2025-08-10T19:13:45.937Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:43:50.947 | 2025-08-10T19:13:50.947Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:43:50.948 | 2025-08-10T19:13:50.948Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:43:55.958 | 2025-08-10T19:13:55.958Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:43:55.959 | 2025-08-10T19:13:55.959Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:44:00.972 | 2025-08-10T19:14:00.971Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:44:00.973 | 2025-08-10T19:14:00.972Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:44:05.984 | 2025-08-10T19:14:05.983Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:44:05.985 | 2025-08-10T19:14:05.985Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:44:10.441 | 2025-08-10T19:14:10.440Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:44:10.991 | 2025-08-10T19:14:10.991Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:44:10.992 | 2025-08-10T19:14:10.991Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:44:16.001 | 2025-08-10T19:14:16.000Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:44:16.002 | 2025-08-10T19:14:16.002Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:44:21.010 | 2025-08-10T19:14:21.009Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:44:21.011 | 2025-08-10T19:14:21.011Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:44:26.020 | 2025-08-10T19:14:26.020Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:44:26.021 | 2025-08-10T19:14:26.021Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:44:31.031 | 2025-08-10T19:14:31.030Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:44:31.033 | 2025-08-10T19:14:31.032Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:44:36.044 | 2025-08-10T19:14:36.043Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:44:36.046 | 2025-08-10T19:14:36.045Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:44:40.446 | 2025-08-10T19:14:40.446Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:44:41.053 | 2025-08-10T19:14:41.053Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:44:41.054 | 2025-08-10T19:14:41.054Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:44:46.060 | 2025-08-10T19:14:46.060Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:44:46.062 | 2025-08-10T19:14:46.062Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:44:51.074 | 2025-08-10T19:14:51.073Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:44:51.075 | 2025-08-10T19:14:51.075Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:44:56.081 | 2025-08-10T19:14:56.081Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:44:56.082 | 2025-08-10T19:14:56.082Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:45:01.090 | 2025-08-10T19:15:01.089Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:45:01.092 | 2025-08-10T19:15:01.092Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:45:06.095 | 2025-08-10T19:15:06.095Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:45:06.096 | 2025-08-10T19:15:06.095Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:45:10.462 | 2025-08-10T19:15:10.461Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:45:11.109 | 2025-08-10T19:15:11.109Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:45:11.109 | 2025-08-10T19:15:11.109Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:45:16.114 | 2025-08-10T19:15:16.114Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:45:16.114 | 2025-08-10T19:15:16.114Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:45:21.121 | 2025-08-10T19:15:21.120Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:45:21.122 | 2025-08-10T19:15:21.122Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:45:26.129 | 2025-08-10T19:15:26.128Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:45:26.130 | 2025-08-10T19:15:26.129Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:45:31.143 | 2025-08-10T19:15:31.142Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:45:31.145 | 2025-08-10T19:15:31.145Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:45:36.153 | 2025-08-10T19:15:36.152Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:45:36.155 | 2025-08-10T19:15:36.154Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:45:40.467 | 2025-08-10T19:15:40.467Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:45:41.165 | 2025-08-10T19:15:41.163Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:45:41.166 | 2025-08-10T19:15:41.166Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:45:46.171 | 2025-08-10T19:15:46.170Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:45:46.174 | 2025-08-10T19:15:46.172Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:45:51.180 | 2025-08-10T19:15:51.179Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:45:51.183 | 2025-08-10T19:15:51.181Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:45:56.189 | 2025-08-10T19:15:56.188Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:45:56.191 | 2025-08-10T19:15:56.190Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:46:01.205 | 2025-08-10T19:16:01.205Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:46:01.206 | 2025-08-10T19:16:01.205Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:46:06.220 | 2025-08-10T19:16:06.219Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:46:06.221 | 2025-08-10T19:16:06.221Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:46:10.475 | 2025-08-10T19:16:10.475Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:46:11.233 | 2025-08-10T19:16:11.233Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:46:11.234 | 2025-08-10T19:16:11.234Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:46:16.242 | 2025-08-10T19:16:16.242Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:46:16.243 | 2025-08-10T19:16:16.243Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:46:21.251 | 2025-08-10T19:16:21.251Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:46:21.252 | 2025-08-10T19:16:21.252Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:46:26.268 | 2025-08-10T19:16:26.267Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:46:26.270 | 2025-08-10T19:16:26.270Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:46:31.286 | 2025-08-10T19:16:31.285Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:46:31.288 | 2025-08-10T19:16:31.287Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:46:36.299 | 2025-08-10T19:16:36.298Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:46:36.301 | 2025-08-10T19:16:36.300Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:46:40.484 | 2025-08-10T19:16:40.484Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:46:41.314 | 2025-08-10T19:16:41.313Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:46:41.316 | 2025-08-10T19:16:41.316Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:46:46.329 | 2025-08-10T19:16:46.329Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:46:46.331 | 2025-08-10T19:16:46.331Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:46:51.340 | 2025-08-10T19:16:51.339Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:46:51.341 | 2025-08-10T19:16:51.341Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:46:56.354 | 2025-08-10T19:16:56.354Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:46:56.355 | 2025-08-10T19:16:56.355Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:47:01.372 | 2025-08-10T19:17:01.371Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:47:01.375 | 2025-08-10T19:17:01.374Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:47:06.384 | 2025-08-10T19:17:06.383Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:47:06.385 | 2025-08-10T19:17:06.385Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:47:10.500 | 2025-08-10T19:17:10.499Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:47:11.392 | 2025-08-10T19:17:11.391Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:47:11.394 | 2025-08-10T19:17:11.394Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:47:16.400 | 2025-08-10T19:17:16.399Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:47:16.401 | 2025-08-10T19:17:16.400Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:47:21.409 | 2025-08-10T19:17:21.409Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:47:21.410 | 2025-08-10T19:17:21.410Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:47:26.427 | 2025-08-10T19:17:26.426Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:47:26.429 | 2025-08-10T19:17:26.428Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:47:31.446 | 2025-08-10T19:17:31.445Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:47:31.448 | 2025-08-10T19:17:31.447Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:47:36.454 | 2025-08-10T19:17:36.454Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:47:36.455 | 2025-08-10T19:17:36.454Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:47:40.511 | 2025-08-10T19:17:40.510Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:47:41.467 | 2025-08-10T19:17:41.466Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:47:41.467 | 2025-08-10T19:17:41.467Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:47:46.484 | 2025-08-10T19:17:46.483Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:47:46.485 | 2025-08-10T19:17:46.485Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:47:51.501 | 2025-08-10T19:17:51.501Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:47:51.501 | 2025-08-10T19:17:51.501Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:47:56.515 | 2025-08-10T19:17:56.514Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:47:56.518 | 2025-08-10T19:17:56.518Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:48:01.533 | 2025-08-10T19:18:01.532Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:48:01.534 | 2025-08-10T19:18:01.533Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:48:06.545 | 2025-08-10T19:18:06.544Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:48:06.545 | 2025-08-10T19:18:06.545Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:48:10.525 | 2025-08-10T19:18:10.524Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:48:11.550 | 2025-08-10T19:18:11.549Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:48:11.551 | 2025-08-10T19:18:11.551Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:48:16.565 | 2025-08-10T19:18:16.564Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:48:16.567 | 2025-08-10T19:18:16.566Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:48:21.578 | 2025-08-10T19:18:21.578Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:48:21.580 | 2025-08-10T19:18:21.579Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:48:26.598 | 2025-08-10T19:18:26.597Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:48:26.599 | 2025-08-10T19:18:26.599Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:48:31.605 | 2025-08-10T19:18:31.604Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:48:31.605 | 2025-08-10T19:18:31.605Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:48:36.618 | 2025-08-10T19:18:36.618Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:48:36.620 | 2025-08-10T19:18:36.620Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:48:40.533 | 2025-08-10T19:18:40.533Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:48:41.627 | 2025-08-10T19:18:41.626Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:48:41.628 | 2025-08-10T19:18:41.628Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:48:46.640 | 2025-08-10T19:18:46.639Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:48:46.641 | 2025-08-10T19:18:46.641Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:48:51.657 | 2025-08-10T19:18:51.656Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:48:51.658 | 2025-08-10T19:18:51.657Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:48:56.676 | 2025-08-10T19:18:56.675Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:48:56.678 | 2025-08-10T19:18:56.677Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:49:01.689 | 2025-08-10T19:19:01.689Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:49:01.691 | 2025-08-10T19:19:01.691Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:49:06.709 | 2025-08-10T19:19:06.708Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:49:06.711 | 2025-08-10T19:19:06.711Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:49:10.544 | 2025-08-10T19:19:10.543Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:49:11.722 | 2025-08-10T19:19:11.721Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:49:11.723 | 2025-08-10T19:19:11.723Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:49:16.735 | 2025-08-10T19:19:16.734Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:49:16.736 | 2025-08-10T19:19:16.736Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:49:21.752 | 2025-08-10T19:19:21.751Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:49:21.753 | 2025-08-10T19:19:21.753Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:49:26.758 | 2025-08-10T19:19:26.758Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:49:26.758 | 2025-08-10T19:19:26.758Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:49:31.766 | 2025-08-10T19:19:31.766Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:49:31.767 | 2025-08-10T19:19:31.766Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:49:36.782 | 2025-08-10T19:19:36.781Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:49:36.784 | 2025-08-10T19:19:36.784Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:49:40.548 | 2025-08-10T19:19:40.547Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:49:41.794 | 2025-08-10T19:19:41.793Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:49:41.794 | 2025-08-10T19:19:41.794Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:49:46.806 | 2025-08-10T19:19:46.805Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:49:46.808 | 2025-08-10T19:19:46.807Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:49:51.820 | 2025-08-10T19:19:51.820Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:49:51.821 | 2025-08-10T19:19:51.821Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:49:56.827 | 2025-08-10T19:19:56.827Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:49:56.829 | 2025-08-10T19:19:56.828Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:50:01.840 | 2025-08-10T19:20:01.840Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:50:01.841 | 2025-08-10T19:20:01.840Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:50:06.857 | 2025-08-10T19:20:06.856Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:50:06.859 | 2025-08-10T19:20:06.858Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:50:10.563 | 2025-08-10T19:20:10.562Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:50:11.869 | 2025-08-10T19:20:11.868Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:50:11.871 | 2025-08-10T19:20:11.871Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:50:16.885 | 2025-08-10T19:20:16.885Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:50:16.886 | 2025-08-10T19:20:16.885Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:50:21.896 | 2025-08-10T19:20:21.896Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:50:21.897 | 2025-08-10T19:20:21.896Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:50:26.906 | 2025-08-10T19:20:26.905Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:50:26.907 | 2025-08-10T19:20:26.907Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:50:31.911 | 2025-08-10T19:20:31.910Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:50:31.911 | 2025-08-10T19:20:31.911Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:50:36.923 | 2025-08-10T19:20:36.923Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:50:36.925 | 2025-08-10T19:20:36.925Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:50:40.576 | 2025-08-10T19:20:40.575Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:50:41.935 | 2025-08-10T19:20:41.934Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:50:41.936 | 2025-08-10T19:20:41.936Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:50:46.946 | 2025-08-10T19:20:46.945Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:50:46.947 | 2025-08-10T19:20:46.946Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:50:51.955 | 2025-08-10T19:20:51.954Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:50:51.955 | 2025-08-10T19:20:51.955Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:50:56.969 | 2025-08-10T19:20:56.968Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:50:56.970 | 2025-08-10T19:20:56.970Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:51:01.979 | 2025-08-10T19:21:01.978Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:51:01.980 | 2025-08-10T19:21:01.980Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:51:06.992 | 2025-08-10T19:21:06.991Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:51:06.994 | 2025-08-10T19:21:06.993Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:51:10.582 | 2025-08-10T19:21:10.581Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:51:12.007 | 2025-08-10T19:21:12.006Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:51:12.009 | 2025-08-10T19:21:12.008Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:51:17.018 | 2025-08-10T19:21:17.017Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:51:17.020 | 2025-08-10T19:21:17.019Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:51:22.030 | 2025-08-10T19:21:22.029Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:51:22.032 | 2025-08-10T19:21:22.031Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:51:27.044 | 2025-08-10T19:21:27.043Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:51:27.045 | 2025-08-10T19:21:27.045Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:51:32.056 | 2025-08-10T19:21:32.056Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:51:32.057 | 2025-08-10T19:21:32.057Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:51:37.067 | 2025-08-10T19:21:37.066Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:51:37.069 | 2025-08-10T19:21:37.069Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:51:40.591 | 2025-08-10T19:21:40.590Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:51:42.075 | 2025-08-10T19:21:42.074Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:51:42.077 | 2025-08-10T19:21:42.076Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:51:47.088 | 2025-08-10T19:21:47.088Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:51:47.090 | 2025-08-10T19:21:47.090Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:51:52.099 | 2025-08-10T19:21:52.099Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:51:52.101 | 2025-08-10T19:21:52.100Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:51:57.112 | 2025-08-10T19:21:57.111Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:51:57.113 | 2025-08-10T19:21:57.113Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:52:02.124 | 2025-08-10T19:22:02.124Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:52:02.126 | 2025-08-10T19:22:02.126Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:52:07.139 | 2025-08-10T19:22:07.138Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:52:07.141 | 2025-08-10T19:22:07.139Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:52:10.598 | 2025-08-10T19:22:10.598Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:52:12.146 | 2025-08-10T19:22:12.146Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:52:12.148 | 2025-08-10T19:22:12.148Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:52:17.157 | 2025-08-10T19:22:17.156Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:52:17.159 | 2025-08-10T19:22:17.158Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:52:22.166 | 2025-08-10T19:22:22.165Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:52:22.167 | 2025-08-10T19:22:22.167Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:52:27.180 | 2025-08-10T19:22:27.179Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:52:27.181 | 2025-08-10T19:22:27.181Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:52:32.191 | 2025-08-10T19:22:32.191Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:52:32.193 | 2025-08-10T19:22:32.192Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:52:37.204 | 2025-08-10T19:22:37.203Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:52:37.206 | 2025-08-10T19:22:37.206Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:52:40.603 | 2025-08-10T19:22:40.602Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:52:42.213 | 2025-08-10T19:22:42.212Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:52:42.214 | 2025-08-10T19:22:42.213Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:52:47.222 | 2025-08-10T19:22:47.221Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:52:47.223 | 2025-08-10T19:22:47.223Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:52:52.231 | 2025-08-10T19:22:52.230Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:52:52.232 | 2025-08-10T19:22:52.232Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:52:57.240 | 2025-08-10T19:22:57.239Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:52:57.242 | 2025-08-10T19:22:57.242Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:53:02.255 | 2025-08-10T19:23:02.254Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:53:02.257 | 2025-08-10T19:23:02.256Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:53:07.260 | 2025-08-10T19:23:07.259Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:53:07.269 | 2025-08-10T19:23:07.268Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:53:10.611 | 2025-08-10T19:23:10.611Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:53:12.275 | 2025-08-10T19:23:12.275Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:53:12.278 | 2025-08-10T19:23:12.278Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:53:17.284 | 2025-08-10T19:23:17.283Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:53:17.284 | 2025-08-10T19:23:17.284Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:53:22.291 | 2025-08-10T19:23:22.291Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:53:22.292 | 2025-08-10T19:23:22.291Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:53:27.293 | 2025-08-10T19:23:27.293Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:53:27.295 | 2025-08-10T19:23:27.294Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:53:32.310 | 2025-08-10T19:23:32.309Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:53:32.312 | 2025-08-10T19:23:32.311Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:53:37.322 | 2025-08-10T19:23:37.322Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:53:37.323 | 2025-08-10T19:23:37.323Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:53:40.618 | 2025-08-10T19:23:40.617Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:53:42.331 | 2025-08-10T19:23:42.330Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:53:42.333 | 2025-08-10T19:23:42.332Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:53:47.345 | 2025-08-10T19:23:47.344Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:53:47.346 | 2025-08-10T19:23:47.345Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:53:52.356 | 2025-08-10T19:23:52.355Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:53:52.358 | 2025-08-10T19:23:52.357Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:53:57.367 | 2025-08-10T19:23:57.366Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:53:57.368 | 2025-08-10T19:23:57.368Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:54:02.378 | 2025-08-10T19:24:02.377Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:54:02.380 | 2025-08-10T19:24:02.379Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:54:07.389 | 2025-08-10T19:24:07.388Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:54:07.390 | 2025-08-10T19:24:07.390Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:54:10.624 | 2025-08-10T19:24:10.624Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:54:12.396 | 2025-08-10T19:24:12.395Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:54:12.398 | 2025-08-10T19:24:12.398Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:54:17.406 | 2025-08-10T19:24:17.406Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:54:17.408 | 2025-08-10T19:24:17.408Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:54:22.415 | 2025-08-10T19:24:22.415Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:54:22.415 | 2025-08-10T19:24:22.415Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:54:27.443 | 2025-08-10T19:24:27.442Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:54:27.450 | 2025-08-10T19:24:27.450Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:54:32.460 | 2025-08-10T19:24:32.459Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:54:32.460 | 2025-08-10T19:24:32.460Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:54:37.470 | 2025-08-10T19:24:37.470Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:54:37.471 | 2025-08-10T19:24:37.471Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:54:40.632 | 2025-08-10T19:24:40.631Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:54:42.478 | 2025-08-10T19:24:42.477Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:54:42.479 | 2025-08-10T19:24:42.479Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:54:47.488 | 2025-08-10T19:24:47.487Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:54:47.488 | 2025-08-10T19:24:47.488Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:54:52.496 | 2025-08-10T19:24:52.496Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:54:52.497 | 2025-08-10T19:24:52.497Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:54:57.509 | 2025-08-10T19:24:57.508Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:54:57.509 | 2025-08-10T19:24:57.509Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:55:02.520 | 2025-08-10T19:25:02.518Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:55:02.522 | 2025-08-10T19:25:02.521Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:55:07.532 | 2025-08-10T19:25:07.531Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:55:07.536 | 2025-08-10T19:25:07.534Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:55:10.637 | 2025-08-10T19:25:10.637Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:55:12.544 | 2025-08-10T19:25:12.544Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:55:12.546 | 2025-08-10T19:25:12.546Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:55:17.548 | 2025-08-10T19:25:17.547Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:55:17.549 | 2025-08-10T19:25:17.549Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:55:22.561 | 2025-08-10T19:25:22.561Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:55:22.562 | 2025-08-10T19:25:22.562Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:55:27.571 | 2025-08-10T19:25:27.571Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:55:27.573 | 2025-08-10T19:25:27.572Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:55:32.581 | 2025-08-10T19:25:32.580Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:55:32.584 | 2025-08-10T19:25:32.583Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:55:37.592 | 2025-08-10T19:25:37.591Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:55:37.592 | 2025-08-10T19:25:37.592Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:55:40.646 | 2025-08-10T19:25:40.645Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:55:42.597 | 2025-08-10T19:25:42.596Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:55:42.599 | 2025-08-10T19:25:42.599Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:55:45.317 | 2025-08-10T19:25:45.317Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('5bf9083c794d9aca062606b3c5431e4050262cf1,8,bull:content processing:wait,bull:content processing:active,bull:content processing:priority,bull:content processing:active@d9265079-fd89-4a7d-a28d-eec58fa6c ... <REDACTED full-length="415">')
+2025-08-11 00:55:45.317 | 2025-08-10T19:25:45.317Z ioredis:dataHandler receive reply "pmessage" in subscriber mode
+2025-08-11 00:55:45.322 | 🔄 Worker processing job 6: {
+2025-08-11 00:55:45.322 |   jobType: 'process-pdf-upload',
+2025-08-11 00:55:45.322 |   uploadId: '69251136-2abb-47d3-891d-652ff70cdf58',
+2025-08-11 00:55:45.322 |   userId: '26b35d72-d21b-4636-ad07-b376cd2707d2',
+2025-08-11 00:55:45.322 |   metadata: [ 'title', 'difficulty', 'category' ]
+2025-08-11 00:55:45.322 | }
+2025-08-11 00:55:45.325 | 🔄 Job 6 started processing: undefined
+2025-08-11 00:55:45.326 | prisma:client Prisma Client call: +1024997ms
+2025-08-11 00:55:45.327 | prisma:client prisma.processingJob.updateMany({
+2025-08-11 00:55:45.327 |   where: {
+2025-08-11 00:55:45.327 |     queueJobId: "6"
+2025-08-11 00:55:45.327 |   },
+2025-08-11 00:55:45.327 |   data: {
+2025-08-11 00:55:45.327 |     status: "active",
+2025-08-11 00:55:45.327 |     startedAt: new Date("2025-08-10T19:25:45.325Z")
+2025-08-11 00:55:45.327 |   }
+2025-08-11 00:55:45.327 | }) +1ms
+2025-08-11 00:55:45.327 | prisma:client Generated request: +0ms
+2025-08-11 00:55:45.327 | prisma:client {
+2025-08-11 00:55:45.327 |   "modelName": "ProcessingJob",
+2025-08-11 00:55:45.327 |   "action": "updateMany",
+2025-08-11 00:55:45.327 |   "query": {
+2025-08-11 00:55:45.327 |     "arguments": {
+2025-08-11 00:55:45.327 |       "where": {
+2025-08-11 00:55:45.327 |         "queueJobId": "6"
+2025-08-11 00:55:45.327 |       },
+2025-08-11 00:55:45.327 |       "data": {
+2025-08-11 00:55:45.327 |         "status": "active",
+2025-08-11 00:55:45.327 |         "startedAt": {
+2025-08-11 00:55:45.327 |           "$type": "DateTime",
+2025-08-11 00:55:45.327 |           "value": "2025-08-10T19:25:45.325Z"
+2025-08-11 00:55:45.327 |         }
+2025-08-11 00:55:45.327 |       }
+2025-08-11 00:55:45.327 |     },
+2025-08-11 00:55:45.327 |     "selection": {
+2025-08-11 00:55:45.327 |       "$composites": true,
+2025-08-11 00:55:45.327 |       "$scalars": true
+2025-08-11 00:55:45.327 |     }
+2025-08-11 00:55:45.327 |   }
+2025-08-11 00:55:45.327 | }
+2025-08-11 00:55:45.327 |  +0ms
+2025-08-11 00:55:45.327 | prisma:client:libraryEngine sending request, this.libraryStarted: false +0ms
+2025-08-11 00:55:45.327 | prisma:client Prisma Client call: +0ms
+2025-08-11 00:55:45.328 | prisma:client prisma.contentUpload.findUnique({
+2025-08-11 00:55:45.328 |   where: {
+2025-08-11 00:55:45.328 |     id: "69251136-2abb-47d3-891d-652ff70cdf58"
+2025-08-11 00:55:45.328 |   },
+2025-08-11 00:55:45.328 |   include: {
+2025-08-11 00:55:45.328 |     content: {
+2025-08-11 00:55:45.328 |       include: {
+2025-08-11 00:55:45.328 |         _count: {
+2025-08-11 00:55:45.328 |           select: {
+2025-08-11 00:55:45.328 |             cards: true
+2025-08-11 00:55:45.328 |           }
+2025-08-11 00:55:45.328 |         }
+2025-08-11 00:55:45.328 |       }
+2025-08-11 00:55:45.328 |     }
+2025-08-11 00:55:45.328 |   }
+2025-08-11 00:55:45.328 | }) +1ms
+2025-08-11 00:55:45.328 | prisma:client Generated request: +0ms
+2025-08-11 00:55:45.328 | prisma:client {
+2025-08-11 00:55:45.328 |   "modelName": "ContentUpload",
+2025-08-11 00:55:45.328 |   "action": "findUnique",
+2025-08-11 00:55:45.328 |   "query": {
+2025-08-11 00:55:45.328 |     "arguments": {
+2025-08-11 00:55:45.328 |       "where": {
+2025-08-11 00:55:45.328 |         "id": "69251136-2abb-47d3-891d-652ff70cdf58"
+2025-08-11 00:55:45.328 |       }
+2025-08-11 00:55:45.328 |     },
+2025-08-11 00:55:45.328 |     "selection": {
+2025-08-11 00:55:45.328 |       "$composites": true,
+2025-08-11 00:55:45.328 |       "$scalars": true,
+2025-08-11 00:55:45.328 |       "content": {
+2025-08-11 00:55:45.328 |         "arguments": {},
+2025-08-11 00:55:45.328 |         "selection": {
+2025-08-11 00:55:45.328 |           "$composites": true,
+2025-08-11 00:55:45.328 |           "$scalars": true,
+2025-08-11 00:55:45.328 |           "_count": {
+2025-08-11 00:55:45.328 |             "arguments": {},
+2025-08-11 00:55:45.328 |             "selection": {
+2025-08-11 00:55:45.328 |               "cards": true
+2025-08-11 00:55:45.328 |             }
+2025-08-11 00:55:45.328 |           }
+2025-08-11 00:55:45.328 |         }
+2025-08-11 00:55:45.328 |       }
+2025-08-11 00:55:45.328 |     }
+2025-08-11 00:55:45.328 |   }
+2025-08-11 00:55:45.328 | }
+2025-08-11 00:55:45.328 |  +0ms
+2025-08-11 00:55:45.328 | prisma:client:libraryEngine library starting +0ms
+2025-08-11 00:55:45.328 | prisma:client:libraryEngine sending request, this.libraryStarted: false +0ms
+2025-08-11 00:55:45.328 | prisma:client:libraryEngine library starting +0ms
+2025-08-11 00:55:45.398 | prisma:client:request_handler {
+2025-08-11 00:55:45.398 |   "clientVersion": "6.13.0",
+2025-08-11 00:55:45.398 |   "errorCode": "P1001",
+2025-08-11 00:55:45.398 |   "name": "PrismaClientInitializationError"
+2025-08-11 00:55:45.398 | } +69ms
+2025-08-11 00:55:45.400 | ❌ Worker job 6 failed: PrismaClientInitializationError: 
+2025-08-11 00:55:45.400 | Invalid `prisma.contentUpload.findUnique()` invocation:
+2025-08-11 00:55:45.400 | 
+2025-08-11 00:55:45.400 | 
+2025-08-11 00:55:45.400 | Can't reach database server at `db.ygbmipgorchmzfmmppei.supabase.co:5432`
+2025-08-11 00:55:45.400 | 
+2025-08-11 00:55:45.400 | Please make sure your database server is running at `db.ygbmipgorchmzfmmppei.supabase.co:5432`.
+2025-08-11 00:55:45.400 |     at ri.handleRequestError (/app/node_modules/@prisma/client/runtime/library.js:121:7759)
+2025-08-11 00:55:45.400 |     at ri.handleAndLogRequestError (/app/node_modules/@prisma/client/runtime/library.js:121:6784)
+2025-08-11 00:55:45.400 |     at ri.request (/app/node_modules/@prisma/client/runtime/library.js:121:6491)
+2025-08-11 00:55:45.400 |     at async l (/app/node_modules/@prisma/client/runtime/library.js:130:9812)
+2025-08-11 00:55:45.400 |     at async Queue.processJob (file:///app/src/services/worker.js:85:28) {
+2025-08-11 00:55:45.400 |   clientVersion: '6.13.0',
+2025-08-11 00:55:45.400 |   errorCode: undefined,
+2025-08-11 00:55:45.400 |   retryable: undefined
+2025-08-11 00:55:45.400 | }
+2025-08-11 00:55:45.400 | 🗑️ Deleting from R2: temp/uploads/69251136-2abb-47d3-891d-652ff70cdf58_1754853934654_f0761997.pdf
+2025-08-11 00:55:45.582 | prisma:client:libraryEngine library started +185ms
+2025-08-11 00:55:45.847 | ✅ R2 delete successful: temp/uploads/69251136-2abb-47d3-891d-652ff70cdf58_1754853934654_f0761997.pdf
+2025-08-11 00:55:45.847 | 🗑️ Cleaned up failed R2 upload file: temp/uploads/69251136-2abb-47d3-891d-652ff70cdf58_1754853934654_f0761997.pdf
+2025-08-11 00:55:45.848 | prisma:client Prisma Client call: +266ms
+2025-08-11 00:55:45.848 | prisma:client prisma.contentUpload.update({
+2025-08-11 00:55:45.848 |   where: {
+2025-08-11 00:55:45.848 |     id: "69251136-2abb-47d3-891d-652ff70cdf58"
+2025-08-11 00:55:45.848 |   },
+2025-08-11 00:55:45.848 |   data: {
+2025-08-11 00:55:45.848 |     status: "FAILED",
+2025-08-11 00:55:45.848 |     error: "\nInvalid `prisma.contentUpload.findUnique()` invocation:\n\n\nCan't reach database server at `db.ygbmipgorchmzfmmppei.supabase.co:5432`\n\nPlease make sure your database server is running at `db.ygbmipgorchmzfmmppei.supabase.co:5432`."
+2025-08-11 00:55:45.848 |   }
+2025-08-11 00:55:45.848 | }) +0ms
+2025-08-11 00:55:45.848 | prisma:client Generated request: +0ms
+2025-08-11 00:55:45.848 | prisma:client {
+2025-08-11 00:55:45.848 |   "modelName": "ContentUpload",
+2025-08-11 00:55:45.848 |   "action": "updateOne",
+2025-08-11 00:55:45.848 |   "query": {
+2025-08-11 00:55:45.848 |     "arguments": {
+2025-08-11 00:55:45.848 |       "where": {
+2025-08-11 00:55:45.848 |         "id": "69251136-2abb-47d3-891d-652ff70cdf58"
+2025-08-11 00:55:45.848 |       },
+2025-08-11 00:55:45.848 |       "data": {
+2025-08-11 00:55:45.848 |         "status": "FAILED",
+2025-08-11 00:55:45.848 |         "error": "\nInvalid `prisma.contentUpload.findUnique()` invocation:\n\n\nCan't reach database server at `db.ygbmipgorchmzfmmppei.supabase.co:5432`\n\nPlease make sure your database server is running at `db.ygbmipgorchmzfmmppei.supabase.co:5432`."
+2025-08-11 00:55:45.848 |       }
+2025-08-11 00:55:45.848 |     },
+2025-08-11 00:55:45.848 |     "selection": {
+2025-08-11 00:55:45.848 |       "$composites": true,
+2025-08-11 00:55:45.848 |       "$scalars": true
+2025-08-11 00:55:45.848 |     }
+2025-08-11 00:55:45.848 |   }
+2025-08-11 00:55:45.848 | }
+2025-08-11 00:55:45.848 |  +0ms
+2025-08-11 00:55:45.848 | prisma:client:libraryEngine sending request, this.libraryStarted: false +0ms
+2025-08-11 00:55:45.849 | prisma:client:libraryEngine library starting +0ms
+2025-08-11 00:55:45.896 | prisma:client:request_handler {
+2025-08-11 00:55:45.896 |   "clientVersion": "6.13.0",
+2025-08-11 00:55:45.896 |   "errorCode": "P1001",
+2025-08-11 00:55:45.896 |   "name": "PrismaClientInitializationError"
+2025-08-11 00:55:45.896 | } +48ms
+2025-08-11 00:55:45.898 | 2025-08-10T19:25:45.898Z ioredis:redis write command[172.18.0.2:6379]: 0 -> multi([])
+2025-08-11 00:55:45.898 | 2025-08-10T19:25:45.898Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('23996046b5a6e4968b864f843d2367f6ce8d1916,1,bull:content processing:6,["PrismaClientInitializationError: \\nInvalid `prisma.contentUpload.update()` invocation:\\n\\n\\nCan\'t reach database server at `db.yg ... <REDACTED full-length="992">')
+2025-08-11 00:55:45.898 | 2025-08-10T19:25:45.898Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('746b66d4047ecef6498d31e1e241103c178809f8,4,bull:content processing:active,bull:content processing:delayed,bull:content processing:6,bull:content processing:stalled,7187881782874118,6,d9265079-fd89-4a7 ... <REDACTED full-length="219">')
+2025-08-11 00:55:45.898 | 2025-08-10T19:25:45.898Z ioredis:redis write command[172.18.0.2:6379]: 0 -> exec([])
+2025-08-11 00:55:45.899 | 2025-08-10T19:25:45.899Z ioredis:dataHandler receive reply "message" in subscriber mode
+2025-08-11 00:55:45.899 | 2025-08-10T19:25:45.899Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:55:45.900 | ❌ Job 6 failed: 
+2025-08-11 00:55:45.900 | Invalid `prisma.contentUpload.update()` invocation:
+2025-08-11 00:55:45.900 | 
+2025-08-11 00:55:45.900 | 
+2025-08-11 00:55:45.900 | Can't reach database server at `db.ygbmipgorchmzfmmppei.supabase.co:5432`
+2025-08-11 00:55:45.900 | 
+2025-08-11 00:55:45.900 | Please make sure your database server is running at `db.ygbmipgorchmzfmmppei.supabase.co:5432`.
+2025-08-11 00:55:45.900 | prisma:client Prisma Client call: +4ms
+2025-08-11 00:55:45.900 | prisma:client prisma.processingJob.updateMany({
+2025-08-11 00:55:45.900 |   where: {
+2025-08-11 00:55:45.900 |     queueJobId: "6"
+2025-08-11 00:55:45.900 |   },
+2025-08-11 00:55:45.900 |   data: {
+2025-08-11 00:55:45.900 |     status: "failed",
+2025-08-11 00:55:45.900 |     error: "\nInvalid `prisma.contentUpload.update()` invocation:\n\n\nCan't reach database server at `db.ygbmipgorchmzfmmppei.supabase.co:5432`\n\nPlease make sure your database server is running at `db.ygbmipgorchmzfmmppei.supabase.co:5432`.",
+2025-08-11 00:55:45.900 |     completedAt: new Date("2025-08-10T19:25:45.900Z")
+2025-08-11 00:55:45.900 |   }
+2025-08-11 00:55:45.900 | }) +0ms
+2025-08-11 00:55:45.900 | prisma:client Generated request: +0ms
+2025-08-11 00:55:45.900 | prisma:client {
+2025-08-11 00:55:45.900 |   "modelName": "ProcessingJob",
+2025-08-11 00:55:45.900 |   "action": "updateMany",
+2025-08-11 00:55:45.900 |   "query": {
+2025-08-11 00:55:45.900 |     "arguments": {
+2025-08-11 00:55:45.900 |       "where": {
+2025-08-11 00:55:45.900 |         "queueJobId": "6"
+2025-08-11 00:55:45.900 |       },
+2025-08-11 00:55:45.900 |       "data": {
+2025-08-11 00:55:45.900 |         "status": "failed",
+2025-08-11 00:55:45.900 |         "error": "\nInvalid `prisma.contentUpload.update()` invocation:\n\n\nCan't reach database server at `db.ygbmipgorchmzfmmppei.supabase.co:5432`\n\nPlease make sure your database server is running at `db.ygbmipgorchmzfmmppei.supabase.co:5432`.",
+2025-08-11 00:55:45.900 |         "completedAt": {
+2025-08-11 00:55:45.900 |           "$type": "DateTime",
+2025-08-11 00:55:45.900 |           "value": "2025-08-10T19:25:45.900Z"
+2025-08-11 00:55:45.900 |         }
+2025-08-11 00:55:45.900 |       }
+2025-08-11 00:55:45.900 |     },
+2025-08-11 00:55:45.900 |     "selection": {
+2025-08-11 00:55:45.900 |       "$composites": true,
+2025-08-11 00:55:45.900 |       "$scalars": true
+2025-08-11 00:55:45.900 |     }
+2025-08-11 00:55:45.900 |   }
+2025-08-11 00:55:45.900 | }
+2025-08-11 00:55:45.900 |  +0ms
+2025-08-11 00:55:45.900 | prisma:client:libraryEngine sending request, this.libraryStarted: true +0ms
+2025-08-11 00:55:45.901 | 2025-08-10T19:25:45.900Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('5bf9083c794d9aca062606b3c5431e4050262cf1,8,bull:content processing:wait,bull:content processing:active,bull:content processing:priority,bull:content processing:active@d9265079-fd89-4a7d-a28d-eec58fa6c ... <REDACTED full-length="414">')
+2025-08-11 00:55:45.901 | 2025-08-10T19:25:45.901Z ioredis:dataHandler receive reply "message" in subscriber mode
+2025-08-11 00:55:45.901 | 2025-08-10T19:25:45.901Z ioredis:dataHandler receive reply "message" in subscriber mode
+2025-08-11 00:55:45.901 | 2025-08-10T19:25:45.901Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:55:50.349 | 2025-08-10T19:25:50.348Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:55:50.904 | 2025-08-10T19:25:50.904Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:55:50.906 | 2025-08-10T19:25:50.906Z ioredis:dataHandler receive reply "pmessage" in subscriber mode
+2025-08-11 00:55:51.403 | 2025-08-10T19:25:51.403Z ioredis:dataHandler receive reply "message" in subscriber mode
+2025-08-11 00:55:51.403 | 2025-08-10T19:25:51.403Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:55:51.404 | 2025-08-10T19:25:51.403Z ioredis:dataHandler receive reply "message" in subscriber mode
+2025-08-11 00:55:51.404 | 2025-08-10T19:25:51.404Z ioredis:dataHandler receive reply "message" in subscriber mode
+2025-08-11 00:55:55.442 | 2025-08-10T19:25:55.442Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:55:56.409 | 2025-08-10T19:25:56.408Z ioredis:dataHandler receive reply "message" in subscriber mode
+2025-08-11 00:55:56.409 | 2025-08-10T19:25:56.409Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:55:56.410 | 2025-08-10T19:25:56.410Z ioredis:dataHandler receive reply "message" in subscriber mode
+2025-08-11 00:56:00.477 | 2025-08-10T19:26:00.476Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:56:01.415 | 2025-08-10T19:26:01.415Z ioredis:dataHandler receive reply "message" in subscriber mode
+2025-08-11 00:56:01.416 | 2025-08-10T19:26:01.416Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:56:01.417 | 2025-08-10T19:26:01.417Z ioredis:dataHandler receive reply "message" in subscriber mode
+2025-08-11 00:56:05.515 | 2025-08-10T19:26:05.515Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:56:06.404 | 2025-08-10T19:26:06.404Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:56:06.408 | 2025-08-10T19:26:06.408Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('5bf9083c794d9aca062606b3c5431e4050262cf1,8,bull:content processing:wait,bull:content processing:active,bull:content processing:priority,bull:content processing:active@d9265079-fd89-4a7d-a28d-eec58fa6c ... <REDACTED full-length="415">')
+2025-08-11 00:56:06.423 | 🔄 Worker processing job 6: {
+2025-08-11 00:56:06.423 |   jobType: 'process-pdf-upload',
+2025-08-11 00:56:06.423 |   uploadId: '69251136-2abb-47d3-891d-652ff70cdf58',
+2025-08-11 00:56:06.423 |   userId: '26b35d72-d21b-4636-ad07-b376cd2707d2',
+2025-08-11 00:56:06.423 |   metadata: [ 'title', 'difficulty', 'category' ]
+2025-08-11 00:56:06.423 | }
+2025-08-11 00:56:06.423 | 🔄 Job 6 started processing: undefined
+2025-08-11 00:56:06.424 | prisma:client Prisma Client call: +20524ms
+2025-08-11 00:56:06.424 | prisma:client prisma.processingJob.updateMany({
+2025-08-11 00:56:06.424 |   where: {
+2025-08-11 00:56:06.424 |     queueJobId: "6"
+2025-08-11 00:56:06.424 |   },
+2025-08-11 00:56:06.424 |   data: {
+2025-08-11 00:56:06.424 |     status: "active",
+2025-08-11 00:56:06.424 |     startedAt: new Date("2025-08-10T19:26:06.423Z")
+2025-08-11 00:56:06.424 |   }
+2025-08-11 00:56:06.424 | }) +0ms
+2025-08-11 00:56:06.424 | prisma:client Generated request: +0ms
+2025-08-11 00:56:06.424 | prisma:client {
+2025-08-11 00:56:06.424 |   "modelName": "ProcessingJob",
+2025-08-11 00:56:06.424 |   "action": "updateMany",
+2025-08-11 00:56:06.424 |   "query": {
+2025-08-11 00:56:06.424 |     "arguments": {
+2025-08-11 00:56:06.424 |       "where": {
+2025-08-11 00:56:06.424 |         "queueJobId": "6"
+2025-08-11 00:56:06.424 |       },
+2025-08-11 00:56:06.424 |       "data": {
+2025-08-11 00:56:06.424 |         "status": "active",
+2025-08-11 00:56:06.424 |         "startedAt": {
+2025-08-11 00:56:06.424 |           "$type": "DateTime",
+2025-08-11 00:56:06.424 |           "value": "2025-08-10T19:26:06.423Z"
+2025-08-11 00:56:06.424 |         }
+2025-08-11 00:56:06.424 |       }
+2025-08-11 00:56:06.424 |     },
+2025-08-11 00:56:06.424 |     "selection": {
+2025-08-11 00:56:06.424 |       "$composites": true,
+2025-08-11 00:56:06.424 |       "$scalars": true
+2025-08-11 00:56:06.424 |     }
+2025-08-11 00:56:06.424 |   }
+2025-08-11 00:56:06.424 | }
+2025-08-11 00:56:06.424 |  +0ms
+2025-08-11 00:56:06.424 | prisma:client:libraryEngine sending request, this.libraryStarted: true +0ms
+2025-08-11 00:56:06.425 | prisma:client Prisma Client call: +1ms
+2025-08-11 00:56:06.425 | prisma:client prisma.contentUpload.findUnique({
+2025-08-11 00:56:06.425 |   where: {
+2025-08-11 00:56:06.425 |     id: "69251136-2abb-47d3-891d-652ff70cdf58"
+2025-08-11 00:56:06.425 |   },
+2025-08-11 00:56:06.425 |   include: {
+2025-08-11 00:56:06.426 |     content: {
+2025-08-11 00:56:06.426 |       include: {
+2025-08-11 00:56:06.426 |         _count: {
+2025-08-11 00:56:06.426 |           select: {
+2025-08-11 00:56:06.426 |             cards: true
+2025-08-11 00:56:06.426 |           }
+2025-08-11 00:56:06.426 |         }
+2025-08-11 00:56:06.426 |       }
+2025-08-11 00:56:06.426 |     }
+2025-08-11 00:56:06.426 |   }
+2025-08-11 00:56:06.426 | }) +0ms
+2025-08-11 00:56:06.426 | prisma:client Generated request: +0ms
+2025-08-11 00:56:06.426 | prisma:client {
+2025-08-11 00:56:06.426 |   "modelName": "ContentUpload",
+2025-08-11 00:56:06.426 |   "action": "findUnique",
+2025-08-11 00:56:06.426 |   "query": {
+2025-08-11 00:56:06.426 |     "arguments": {
+2025-08-11 00:56:06.426 |       "where": {
+2025-08-11 00:56:06.426 |         "id": "69251136-2abb-47d3-891d-652ff70cdf58"
+2025-08-11 00:56:06.426 |       }
+2025-08-11 00:56:06.426 |     },
+2025-08-11 00:56:06.426 |     "selection": {
+2025-08-11 00:56:06.426 |       "$composites": true,
+2025-08-11 00:56:06.426 |       "$scalars": true,
+2025-08-11 00:56:06.426 |       "content": {
+2025-08-11 00:56:06.426 |         "arguments": {},
+2025-08-11 00:56:06.426 |         "selection": {
+2025-08-11 00:56:06.426 |           "$composites": true,
+2025-08-11 00:56:06.426 |           "$scalars": true,
+2025-08-11 00:56:06.426 |           "_count": {
+2025-08-11 00:56:06.426 |             "arguments": {},
+2025-08-11 00:56:06.426 |             "selection": {
+2025-08-11 00:56:06.426 |               "cards": true
+2025-08-11 00:56:06.426 |             }
+2025-08-11 00:56:06.426 |           }
+2025-08-11 00:56:06.426 |         }
+2025-08-11 00:56:06.426 |       }
+2025-08-11 00:56:06.426 |     }
+2025-08-11 00:56:06.426 |   }
+2025-08-11 00:56:06.426 | }
+2025-08-11 00:56:06.426 |  +0ms
+2025-08-11 00:56:06.426 | prisma:client:libraryEngine sending request, this.libraryStarted: false +1ms
+2025-08-11 00:56:06.426 | prisma:client:libraryEngine library starting +0ms
+2025-08-11 00:56:06.427 | 2025-08-10T19:26:06.426Z ioredis:dataHandler receive reply "pmessage" in subscriber mode
+2025-08-11 00:56:06.427 | ⏳ Job 6 is waiting
+2025-08-11 00:56:06.475 | prisma:client:request_handler {
+2025-08-11 00:56:06.475 |   "clientVersion": "6.13.0",
+2025-08-11 00:56:06.475 |   "errorCode": "P1001",
+2025-08-11 00:56:06.475 |   "name": "PrismaClientInitializationError"
+2025-08-11 00:56:06.475 | } +49ms
+2025-08-11 00:56:06.476 | 🗑️ Deleting from R2: temp/uploads/69251136-2abb-47d3-891d-652ff70cdf58_1754853934654_f0761997.pdf
+2025-08-11 00:56:06.476 | ❌ Worker job 6 failed: PrismaClientInitializationError: 
+2025-08-11 00:56:06.476 | Invalid `prisma.contentUpload.findUnique()` invocation:
+2025-08-11 00:56:06.476 | 
+2025-08-11 00:56:06.476 | 
+2025-08-11 00:56:06.476 | Can't reach database server at `db.ygbmipgorchmzfmmppei.supabase.co:5432`
+2025-08-11 00:56:06.476 | 
+2025-08-11 00:56:06.476 | Please make sure your database server is running at `db.ygbmipgorchmzfmmppei.supabase.co:5432`.
+2025-08-11 00:56:06.476 |     at ri.handleRequestError (/app/node_modules/@prisma/client/runtime/library.js:121:7759)
+2025-08-11 00:56:06.476 |     at ri.handleAndLogRequestError (/app/node_modules/@prisma/client/runtime/library.js:121:6784)
+2025-08-11 00:56:06.476 |     at ri.request (/app/node_modules/@prisma/client/runtime/library.js:121:6491)
+2025-08-11 00:56:06.476 |     at async l (/app/node_modules/@prisma/client/runtime/library.js:130:9812)
+2025-08-11 00:56:06.476 |     at async Queue.processJob (file:///app/src/services/worker.js:85:28) {
+2025-08-11 00:56:06.476 |   clientVersion: '6.13.0',
+2025-08-11 00:56:06.476 |   errorCode: undefined,
+2025-08-11 00:56:06.476 |   retryable: undefined
+2025-08-11 00:56:06.476 | }
+2025-08-11 00:56:06.875 | ✅ R2 delete successful: temp/uploads/69251136-2abb-47d3-891d-652ff70cdf58_1754853934654_f0761997.pdf
+2025-08-11 00:56:06.875 | 🗑️ Cleaned up failed R2 upload file: temp/uploads/69251136-2abb-47d3-891d-652ff70cdf58_1754853934654_f0761997.pdf
+2025-08-11 00:56:06.876 | prisma:client Prisma Client call: +401ms
+2025-08-11 00:56:06.877 | prisma:client prisma.contentUpload.update({
+2025-08-11 00:56:06.877 |   where: {
+2025-08-11 00:56:06.877 |     id: "69251136-2abb-47d3-891d-652ff70cdf58"
+2025-08-11 00:56:06.877 |   },
+2025-08-11 00:56:06.877 |   data: {
+2025-08-11 00:56:06.877 |     status: "FAILED",
+2025-08-11 00:56:06.877 |     error: "\nInvalid `prisma.contentUpload.findUnique()` invocation:\n\n\nCan't reach database server at `db.ygbmipgorchmzfmmppei.supabase.co:5432`\n\nPlease make sure your database server is running at `db.ygbmipgorchmzfmmppei.supabase.co:5432`."
+2025-08-11 00:56:06.877 |   }
+2025-08-11 00:56:06.877 | }) +0ms
+2025-08-11 00:56:06.877 | prisma:client Generated request: +0ms
+2025-08-11 00:56:06.877 | prisma:client {
+2025-08-11 00:56:06.877 |   "modelName": "ContentUpload",
+2025-08-11 00:56:06.877 |   "action": "updateOne",
+2025-08-11 00:56:06.877 |   "query": {
+2025-08-11 00:56:06.877 |     "arguments": {
+2025-08-11 00:56:06.877 |       "where": {
+2025-08-11 00:56:06.877 |         "id": "69251136-2abb-47d3-891d-652ff70cdf58"
+2025-08-11 00:56:06.877 |       },
+2025-08-11 00:56:06.877 |       "data": {
+2025-08-11 00:56:06.877 |         "status": "FAILED",
+2025-08-11 00:56:06.877 |         "error": "\nInvalid `prisma.contentUpload.findUnique()` invocation:\n\n\nCan't reach database server at `db.ygbmipgorchmzfmmppei.supabase.co:5432`\n\nPlease make sure your database server is running at `db.ygbmipgorchmzfmmppei.supabase.co:5432`."
+2025-08-11 00:56:06.877 |       }
+2025-08-11 00:56:06.877 |     },
+2025-08-11 00:56:06.877 |     "selection": {
+2025-08-11 00:56:06.877 |       "$composites": true,
+2025-08-11 00:56:06.877 |       "$scalars": true
+2025-08-11 00:56:06.877 |     }
+2025-08-11 00:56:06.877 |   }
+2025-08-11 00:56:06.877 | }
+2025-08-11 00:56:06.877 |  +0ms
+2025-08-11 00:56:06.877 | prisma:client:libraryEngine sending request, this.libraryStarted: false +1ms
+2025-08-11 00:56:06.877 | prisma:client:libraryEngine library starting +0ms
+2025-08-11 00:56:06.926 | prisma:client:request_handler {
+2025-08-11 00:56:06.926 |   "clientVersion": "6.13.0",
+2025-08-11 00:56:06.926 |   "errorCode": "P1001",
+2025-08-11 00:56:06.926 |   "name": "PrismaClientInitializationError"
+2025-08-11 00:56:06.926 | } +49ms
+2025-08-11 00:56:06.928 | 2025-08-10T19:26:06.928Z ioredis:redis write command[172.18.0.2:6379]: 0 -> multi([])
+2025-08-11 00:56:06.928 | 2025-08-10T19:26:06.928Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('23996046b5a6e4968b864f843d2367f6ce8d1916,1,bull:content processing:6,["PrismaClientInitializationError: \\nInvalid `prisma.contentUpload.update()` invocation:\\n\\n\\nCan\'t reach database server at `db.yg ... <REDACTED full-length="2380">')
+2025-08-11 00:56:06.928 | 2025-08-10T19:26:06.928Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('b621e0d9acfa2bcf07dc672825a8c669a44d3bae,9,bull:content processing:active,bull:content processing:failed,bull:content processing:6,bull:content processing:wait,bull:content processing:priority,bull:co ... <REDACTED full-length="991">')
+2025-08-11 00:56:06.929 | 2025-08-10T19:26:06.929Z ioredis:redis write command[172.18.0.2:6379]: 0 -> exec([])
+2025-08-11 00:56:06.929 | ❌ Job 6 failed: 
+2025-08-11 00:56:06.929 | Invalid `prisma.contentUpload.update()` invocation:
+2025-08-11 00:56:06.929 | 
+2025-08-11 00:56:06.929 | 
+2025-08-11 00:56:06.929 | Can't reach database server at `db.ygbmipgorchmzfmmppei.supabase.co:5432`
+2025-08-11 00:56:06.929 | 
+2025-08-11 00:56:06.929 | Please make sure your database server is running at `db.ygbmipgorchmzfmmppei.supabase.co:5432`.
+2025-08-11 00:56:06.930 | prisma:client Prisma Client call: +4ms
+2025-08-11 00:56:06.930 | prisma:client prisma.processingJob.updateMany({
+2025-08-11 00:56:06.930 |   where: {
+2025-08-11 00:56:06.930 |     queueJobId: "6"
+2025-08-11 00:56:06.930 |   },
+2025-08-11 00:56:06.930 |   data: {
+2025-08-11 00:56:06.930 |     status: "failed",
+2025-08-11 00:56:06.930 |     error: "\nInvalid `prisma.contentUpload.update()` invocation:\n\n\nCan't reach database server at `db.ygbmipgorchmzfmmppei.supabase.co:5432`\n\nPlease make sure your database server is running at `db.ygbmipgorchmzfmmppei.supabase.co:5432`.",
+2025-08-11 00:56:06.930 |     completedAt: new Date("2025-08-10T19:26:06.929Z")
+2025-08-11 00:56:06.930 |   }
+2025-08-11 00:56:06.930 | }) +0ms
+2025-08-11 00:56:06.930 | prisma:client Generated request: +0ms
+2025-08-11 00:56:06.930 | prisma:client {
+2025-08-11 00:56:06.930 |   "modelName": "ProcessingJob",
+2025-08-11 00:56:06.930 |   "action": "updateMany",
+2025-08-11 00:56:06.930 |   "query": {
+2025-08-11 00:56:06.930 |     "arguments": {
+2025-08-11 00:56:06.930 |       "where": {
+2025-08-11 00:56:06.930 |         "queueJobId": "6"
+2025-08-11 00:56:06.930 |       },
+2025-08-11 00:56:06.930 |       "data": {
+2025-08-11 00:56:06.930 |         "status": "failed",
+2025-08-11 00:56:06.930 |         "error": "\nInvalid `prisma.contentUpload.update()` invocation:\n\n\nCan't reach database server at `db.ygbmipgorchmzfmmppei.supabase.co:5432`\n\nPlease make sure your database server is running at `db.ygbmipgorchmzfmmppei.supabase.co:5432`.",
+2025-08-11 00:56:06.930 |         "completedAt": {
+2025-08-11 00:56:06.930 |           "$type": "DateTime",
+2025-08-11 00:56:06.930 |           "value": "2025-08-10T19:26:06.929Z"
+2025-08-11 00:56:06.930 |         }
+2025-08-11 00:56:06.930 |       }
+2025-08-11 00:56:06.930 |     },
+2025-08-11 00:56:06.930 |     "selection": {
+2025-08-11 00:56:06.930 |       "$composites": true,
+2025-08-11 00:56:06.930 |       "$scalars": true
+2025-08-11 00:56:06.930 |     }
+2025-08-11 00:56:06.930 |   }
+2025-08-11 00:56:06.930 | }
+2025-08-11 00:56:06.930 |  +0ms
+2025-08-11 00:56:06.930 | prisma:client:libraryEngine sending request, this.libraryStarted: true +0ms
+2025-08-11 00:56:06.930 | 2025-08-10T19:26:06.930Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('5bf9083c794d9aca062606b3c5431e4050262cf1,8,bull:content processing:wait,bull:content processing:active,bull:content processing:priority,bull:content processing:active@d9265079-fd89-4a7d-a28d-eec58fa6c ... <REDACTED full-length="414">')
+2025-08-11 00:56:06.931 | 2025-08-10T19:26:06.931Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:56:10.652 | 2025-08-10T19:26:10.652Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('a4a736ae46aac1a806e0285ae7a256d67406dca9,7,bull:content processing:stalled,bull:content processing:wait,bull:content processing:active,bull:content processing:failed,bull:content processing:stalled-ch ... <REDACTED full-length="317">')
+2025-08-11 00:56:11.413 | 2025-08-10T19:26:11.412Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:56:11.415 | 2025-08-10T19:26:11.414Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
+2025-08-11 00:56:16.423 | 2025-08-10T19:26:16.423Z ioredis:redis write command[172.18.0.2:6379]: 0 -> evalsha('f7a4e2e3f5835e307a3b720b30234203c9ed8d84,6,bull:content processing:delayed,bull:content processing:active,bull:content processing:wait,bull:content processing:priority,bull:content processing:paused,b ... <REDACTED full-length="310">')
+2025-08-11 00:56:16.424 | 2025-08-10T19:26:16.424Z ioredis:redis write command[172.18.0.2:6379 (bull:Y29udGVudCBwcm9jZXNzaW5n)]: 0 -> brpoplpush([ 'bull:content processing:wait', 'bull:content processing:active', '5' ])
