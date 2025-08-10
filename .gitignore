@@ -17,6 +17,7 @@ node_modules/
 backend/.env.backup
 backend/.env.production
 
+
 # Development databases (keep migrations and schema)
 *.db
 *.sqlite
@@ -28,6 +29,9 @@ backend/storage/extracted-text/
 backend/storage/cache/
 backend/uploads/
 uploads/
+
+backend/debug_toc
+backend/debug_toc/*
 
 backend/prisma/migrations_backup
 # Content libraries (exclude for public repo due to copyright)
