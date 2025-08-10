@@ -1,0 +1,46 @@
+{
+  "prompt": "You are an expert at analyzing book structure. Analyze this excerpt from the beginning of a book and extract ALL distinct learning sections at the most granular level.\n\nBook excerpt (first ~10 pages):\n--- PAGE 2 ---\n—The Guardian\ngenerations to come. The Gene is an important guide to that future.”\nscientific revolutions, one that is destined to have a fundamental impact on the lives of\n“A well-written, accessible, and entertaining account of one of the most important of all\n—The New York Times\np...",
+  "response": {
+    "chapters": [
+      "Prologue: Families",
+      "Epigraph",
+      "From Genes to Genesis",
+      "Regulation, Replication, Recombination",
+      "“That Damned, Elusive Pimpernel”",
+      "“Important Biological Objects Come in Pairs”",
+      "“That Stupid Molecule”",
+      "Lebensunwertes Leben (Lives Unworthy of Living)",
+      "Transformation",
+      "Truths and Reconciliations",
+      "“Abhed”",
+      "“Three Generations of Imbeciles Is Enough”",
+      "Eugenics",
+      "“A Certain Mendel”",
+      "“Flowers He Loved”",
+      "The “Very Wide Blank”",
+      "“The Mystery of Mysteries”",
+      "The Walled Garden",
+      "The Hunger Winter",
+      "The Last Mile",
+      "The First Derivative of Identity",
+      "“So, We’s the Same”",
+      "The Book of Man (in Twenty-Three Volumes)",
+      "The Geographers",
+      "“To Get the Genome”",
+      "A Village of Dancers, an Atlas of Moles",
+      "“Interfere, Interfere, Interfere”",
+      "The Birth of a Clinic",
+      "The Miseries of My Father",
+      "“Clone or Die”",
+      "Einsteins on the Beach",
+      "The New Music",
+      "“Crossing Over”"
+    ],
+    "debug_hierarchy": "Parts containing sections with titles"
+  },
+  "timestamp": "2025-08-10T20:47:16.498Z",
+  "bookInfo": {
+    "firstPagesLength": 8058,
+    "firstPagesWords": 1316
+  }
+}

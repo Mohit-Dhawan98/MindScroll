@@ -12,20 +12,19 @@ import { protect } from '../middleware/auth.js'
 
 const router = express.Router()
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = process.env.UPLOAD_DIR || './uploads'
-    console.log('📁 Upload directory:', uploadDir)
-    cb(null, uploadDir)
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    const filename = file.fieldname + '-' + uniqueSuffix + '.' + file.originalname.split('.').pop()
-    console.log('📝 Generated filename:', filename)
-    cb(null, filename)
-  }
-})
+// Configure multer for streaming uploads
+// Use memory storage to enable streaming to R2
+const hasR2Config = !!(
+  process.env.CLOUDFLARE_R2_ENDPOINT && 
+  process.env.CLOUDFLARE_R2_ACCESS_KEY_ID && 
+  process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY && 
+  process.env.CLOUDFLARE_R2_BUCKET_NAME
+)
+
+console.log(`📁 Multer storage: ${hasR2Config ? 'Memory (R2 streaming enabled)' : 'Disk (R2 not configured)'}`)
+
+// Always use memory storage for streaming architecture
+const storage = multer.memoryStorage()
 
 const fileFilter = (req, file, cb) => {
   // Accept PDFs, DOCs, and text files

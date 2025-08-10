@@ -5,6 +5,7 @@ import contentProcessor from '../services/contentProcessor.js'
 import { extractTextFromPDF } from '../processors/textExtractor.js'
 import { EnhancedCardGenerator } from '../processors/enhancedCardGenerator.js'
 import { addJob, JOB_TYPES } from '../services/queueService.js'
+import r2Storage from '../utils/r2StreamingStorage.js'
 import path from 'path'
 import fs from 'fs/promises'
 
@@ -50,14 +51,21 @@ export const uploadContent = async (req, res, next) => {
         })
       }
 
+      // Generate a filename since we're using memory storage
+      const timestamp = Date.now()
+      const random = Math.round(Math.random() * 1E9)
+      const extension = path.extname(file.originalname).toLowerCase()
+      const generatedFilename = `upload-${timestamp}-${random}${extension}`
+      
+      // Create upload record first to get uploadId
       const upload = await prisma.contentUpload.create({
         data: {
           userId,
-          filename: file.filename,
+          filename: generatedFilename,
           originalName: file.originalname,
           mimeType: file.mimetype,
           size: file.size,
-          url: file.path,
+          url: '', // Will be updated with R2 key after upload
           status: UploadStatus.PROCESSING,
           metadata: JSON.stringify({
             type,
@@ -69,43 +77,135 @@ export const uploadContent = async (req, res, next) => {
         }
       })
 
-      // Check if there's already a job for this upload to prevent duplicates
-      const existingJob = await prisma.processingJob.findFirst({
-        where: { uploadId: upload.id }
-      })
-
-      if (existingJob) {
-        console.log(`⚠️ Job already exists for upload ${upload.id}, skipping duplicate`)
-        return res.status(200).json({
-          success: true,
+      let r2Key = null
+      try {
+        // Simple upload to R2
+        console.log(`☁️ Uploading ${file.originalname} to R2...`)
+        const r2Result = await r2Storage.upload(
+          file.buffer, 
+          file.originalname, 
+          upload.id
+        )
+        
+        r2Key = r2Result.key
+        
+        // Update upload record with R2 key
+        await prisma.contentUpload.update({
+          where: { id: upload.id },
+          data: { url: r2Key }
+        })
+        
+      } catch (r2Error) {
+        console.error('❌ R2 upload failed:', r2Error.message)
+        
+        // Fail the upload if R2 fails (since we're using memory storage now)
+        await prisma.contentUpload.update({
+          where: { id: upload.id },
           data: { 
-            id: upload.id,
-            jobId: existingJob.queueJobId,
-            title: title || file.originalname.replace(/\.[^/.]+$/, ''),
-            status: upload.status
-          },
-          message: 'Upload already queued for processing.'
+            status: UploadStatus.FAILED,
+            error: `R2 upload failed: ${r2Error.message}`
+          }
+        })
+        
+        return res.status(500).json({
+          success: false,
+          error: 'Upload failed - storage service unavailable'
         })
       }
 
-      // Queue file processing job instead of inline processing
+      // Atomic check-and-create operation to prevent race conditions
       const jobType = file.mimetype === 'application/pdf' ? JOB_TYPES.PROCESS_PDF_UPLOAD : JOB_TYPES.PROCESS_TEXT_UPLOAD
       
-      const job = await addJob(jobType, {
-        uploadId: upload.id,
-        userId,
-        filePath: file.path,
-        mimeType: file.mimetype,
-        metadata: {
-          title: title || file.originalname.replace(/\.[^/.]+$/, ''),
-          difficulty,
-          category,
-          customInstructions
-        }
-      })
+      let job, processingJob
 
-      console.log(`📋 Queued ${jobType} job ${job.id} for upload ${upload.id}`)
-    console.log(`📋 Upload record created: ${upload.id} with status: ${upload.status}`)
+      try {
+        // First check if there's already a job for this upload
+        const existingJob = await prisma.processingJob.findFirst({
+          where: { uploadId: upload.id }
+        })
+
+        if (existingJob) {
+          console.log(`⚠️ Job already exists for upload ${upload.id}, skipping duplicate`)
+          return res.status(200).json({
+            success: true,
+            data: { 
+              id: upload.id,
+              jobId: existingJob.queueJobId,
+              title: title || file.originalname.replace(/\.[^/.]+$/, ''),
+              status: upload.status
+            },
+            message: 'Upload already queued for processing.'
+          })
+        }
+
+        // Create job in queue
+        job = await addJob(jobType, {
+          uploadId: upload.id,
+          userId,
+          r2Key: r2Key,
+          mimeType: file.mimetype,
+          metadata: {
+            title: title || file.originalname.replace(/\.[^/.]+$/, ''),
+            difficulty,
+            category,
+            customInstructions
+          }
+        })
+
+        // Immediately create processingJob record to prevent race conditions
+        console.log(`📋 Creating processingJob record for upload ${upload.id}, job ${job.id}`)
+        processingJob = await prisma.processingJob.create({
+          data: {
+            uploadId: upload.id,
+            queueJobId: job.id.toString(),
+            jobType,
+            status: 'waiting',
+            progress: 0,
+            inputData: JSON.stringify({
+              uploadId: upload.id,
+              userId,
+              r2Key,
+              mimeType: file.mimetype
+            })
+          }
+        })
+        console.log(`✅ Created processingJob record: ${processingJob.id}`)
+
+      } catch (error) {
+        if (error.code === 'P2002') { // Unique constraint violation on queueJobId
+          console.warn(`⚠️ Race condition detected: Job ID ${job?.id} already exists in database`)
+          
+          // If processingJob creation failed due to duplicate, find the existing one
+          const existingJob = await prisma.processingJob.findFirst({
+            where: { uploadId: upload.id }
+          })
+          
+          if (existingJob) {
+            return res.status(200).json({
+              success: true,
+              data: { 
+                id: upload.id,
+                jobId: existingJob.queueJobId,
+                title: title || file.originalname.replace(/\.[^/.]+$/, ''),
+                status: upload.status
+              },
+              message: 'Upload already queued for processing.'
+            })
+          }
+        }
+        
+        console.error('❌ Failed to create processing job:', error)
+        console.error('❌ Error details:', {
+          uploadId: upload.id,
+          jobId: job?.id,
+          jobType,
+          error: error.message
+        })
+        throw error
+      }
+
+      console.log(`📋 Queued ${jobType} job ${job.id} for upload ${upload.id} (R2: ${r2Key})`)
+      console.log(`📋 Upload record created: ${upload.id} with status: ${upload.status}`)
 
       res.status(201).json({
         success: true,
@@ -113,9 +213,10 @@ export const uploadContent = async (req, res, next) => {
           id: upload.id,
           jobId: job.id,
           title: title || file.originalname.replace(/\.[^/.]+$/, ''),
-          status: upload.status
+          status: upload.status,
+          storage: 'R2'
         },
-        message: 'File uploaded successfully. Processing has been queued and will begin shortly.'
+        message: 'File uploaded to R2 successfully. Processing has been queued and will begin shortly.'
       })
     } 
     // Handle URL upload
@@ -149,37 +250,92 @@ export const uploadContent = async (req, res, next) => {
         }
       })
 
-      // Check if there's already a job for this upload to prevent duplicates
-      const existingJob = await prisma.processingJob.findFirst({
-        where: { uploadId: upload.id }
-      })
+      // Atomic check-and-create operation to prevent race conditions  
+      let job, processingJob
 
-      if (existingJob) {
-        console.log(`⚠️ Job already exists for upload ${upload.id}, skipping duplicate`)
-        return res.status(200).json({
-          success: true,
-          data: { 
-            id: upload.id,
-            jobId: existingJob.queueJobId,
-            title: title || extractTitleFromUrl(url),
-            status: upload.status
-          },
-          message: 'Upload already queued for processing.'
+      try {
+        // First check if there's already a job for this upload
+        const existingJob = await prisma.processingJob.findFirst({
+          where: { uploadId: upload.id }
         })
-      }
 
-      // Queue URL processing job instead of inline processing
-      const job = await addJob(JOB_TYPES.PROCESS_URL_UPLOAD, {
-        uploadId: upload.id,
-        userId,
-        url,
-        metadata: {
-          title: title || extractTitleFromUrl(url),
-          difficulty,
-          category,
-          customInstructions
+        if (existingJob) {
+          console.log(`⚠️ Job already exists for upload ${upload.id}, skipping duplicate`)
+          return res.status(200).json({
+            success: true,
+            data: { 
+              id: upload.id,
+              jobId: existingJob.queueJobId,
+              title: title || extractTitleFromUrl(url),
+              status: upload.status
+            },
+            message: 'Upload already queued for processing.'
+          })
         }
-      })
+
+        // Create job in queue
+        job = await addJob(JOB_TYPES.PROCESS_URL_UPLOAD, {
+          uploadId: upload.id,
+          userId,
+          url,
+          metadata: {
+            title: title || extractTitleFromUrl(url),
+            difficulty,
+            category,
+            customInstructions
+          }
+        })
+
+        // Immediately create processingJob record to prevent race conditions
+        console.log(`📋 Creating processingJob record for URL upload ${upload.id}, job ${job.id}`)
+        processingJob = await prisma.processingJob.create({
+          data: {
+            uploadId: upload.id,
+            queueJobId: job.id.toString(),
+            jobType: JOB_TYPES.PROCESS_URL_UPLOAD,
+            status: 'waiting',
+            progress: 0,
+            inputData: JSON.stringify({
+              uploadId: upload.id,
+              userId,
+              url
+            })
+          }
+        })
+        console.log(`✅ Created processingJob record: ${processingJob.id}`)
+
+      } catch (error) {
+        if (error.code === 'P2002') { // Unique constraint violation on queueJobId
+          console.warn(`⚠️ Race condition detected: Job ID ${job?.id} already exists in database`)
+          
+          // If processingJob creation failed due to duplicate, find the existing one
+          const existingJob = await prisma.processingJob.findFirst({
+            where: { uploadId: upload.id }
+          })
+          
+          if (existingJob) {
+            return res.status(200).json({
+              success: true,
+              data: { 
+                id: upload.id,
+                jobId: existingJob.queueJobId,
+                title: title || extractTitleFromUrl(url),
+                status: upload.status
+              },
+              message: 'Upload already queued for processing.'
+            })
+          }
+        }
+        
+        console.error('❌ Failed to create URL processing job:', error)
+        console.error('❌ Error details:', {
+          uploadId: upload.id,
+          jobId: job?.id,
+          jobType: JOB_TYPES.PROCESS_URL_UPLOAD,
+          error: error.message
+        })
+        throw error
+      }
 
       console.log(`📋 Queued URL processing job ${job.id} for upload ${upload.id}`)
 
@@ -418,14 +574,10 @@ export const processUpload = async (req, res, next) => {
       })
     }
 
-    // Reprocess with new options
-    processFileUpload(id, upload.url, upload.mimeType, {
-      generateQuiz,
-      generateFlashcards,
-      generateVisuals,
-      difficulty,
-      topics
-    })
+    // Note: Reprocessing functionality not implemented in queue-based system
+    console.log('⚠️ Reprocessing not implemented in queue-based system')
+    
+    // TODO: Implement reprocessing by creating a new job with updated options
 
     res.json({
       success: true,

@@ -13,7 +13,8 @@ node_modules/
 .env.development.local
 .env.test.local
 .env.production.local
-
+.env.backup
+backend/.env.backup
 backend/.env.production
 
 # Development databases (keep migrations and schema)
@@ -28,6 +29,7 @@ backend/storage/cache/
 backend/uploads/
 uploads/
 
+backend/prisma/migrations_backup
 # Content libraries (exclude for public repo due to copyright)
 content-library/
 content-library-pending/

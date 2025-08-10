@@ -1,18 +1,35 @@
 import Queue from 'bull'
 import Redis from 'ioredis'
-import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient()
+// queueService is pure queue management - no database operations
 
-// Redis configuration
-const redisConfig = {
-  host: process.env.REDIS_HOST || 'localhost',
-  port: process.env.REDIS_PORT || 6379,
-  password: process.env.REDIS_PASSWORD || undefined,
+// Redis configuration - parse REDIS_URL if available
+let redisConfig = {
+  host: 'localhost',
+  port: 6379,
+  password: undefined,
   maxRetriesPerRequest: 3,
   retryDelayOnFailover: 100,
   enableReadyCheck: false,
-  maxRetriesPerRequest: null,
+}
+
+// Parse REDIS_URL if provided (format: redis://[password@]host:port)
+if (process.env.REDIS_URL) {
+  try {
+    const url = new URL(process.env.REDIS_URL)
+    redisConfig.host = url.hostname
+    redisConfig.port = parseInt(url.port) || 6379
+    if (url.password) {
+      redisConfig.password = url.password
+    }
+  } catch (error) {
+    console.error('❌ Failed to parse REDIS_URL:', error.message)
+  }
+} else {
+  // Fallback to individual env vars
+  redisConfig.host = process.env.REDIS_HOST || 'localhost'
+  redisConfig.port = process.env.REDIS_PORT || 6379
+  redisConfig.password = process.env.REDIS_PASSWORD || undefined
 }
 
 console.log('🔧 Redis Configuration:', {
@@ -57,7 +74,7 @@ export const JOB_STATUS = {
   PAUSED: 'paused'
 }
 
-// Add job to queue
+// Add job to queue (pure queue management, no database operations)
 export const addJob = async (jobType, data, options = {}) => {
   try {
     console.log(`📋 Adding job to queue: ${jobType}`, {
@@ -71,41 +88,6 @@ export const addJob = async (jobType, data, options = {}) => {
       delay: options.delay || 0,
       ...options
     })
-
-    // Save job to database for tracking
-    // Use a composite key with timestamp to ensure uniqueness
-    const uniqueJobId = `${job.id}_${Date.now()}`
-    
-    try {
-      // First try to create with the original job ID
-      await prisma.processingJob.create({
-        data: {
-          uploadId: data.uploadId,
-          queueJobId: job.id.toString(),
-          jobType,
-          status: 'waiting',
-          progress: 0,
-          inputData: JSON.stringify(data)
-        }
-      })
-    } catch (error) {
-      if (error.code === 'P2002') { // Unique constraint violation
-        console.warn(`⚠️ Job ID ${job.id} already exists, using unique ID: ${uniqueJobId}`)
-        // If original ID exists, create with timestamp-based unique ID
-        await prisma.processingJob.create({
-          data: {
-            uploadId: data.uploadId,
-            queueJobId: uniqueJobId,
-            jobType,
-            status: 'waiting',
-            progress: 0,
-            inputData: JSON.stringify(data)
-          }
-        })
-      } else {
-        throw error
-      }
-    }
 
     console.log(`✅ Job added successfully: ${job.id}`)
     return job
@@ -200,56 +182,21 @@ contentProcessingQueue.on('waiting', async (jobId) => {
   console.log(`⏳ Job ${jobId} is waiting`)
 })
 
+// Simple event logging - database updates handled by worker
 contentProcessingQueue.on('active', async (job) => {
   console.log(`🔄 Job ${job.id} started processing: ${job.data.type}`)
-  
-  // Update database
-  await prisma.processingJob.updateMany({
-    where: { queueJobId: job.id.toString() },
-    data: { 
-      status: 'active',
-      startedAt: new Date()
-    }
-  }).catch(err => console.error('Failed to update job status to active:', err))
 })
 
 contentProcessingQueue.on('completed', async (job, result) => {
   console.log(`✅ Job ${job.id} completed successfully`)
-  
-  // Update database
-  await prisma.processingJob.updateMany({
-    where: { queueJobId: job.id.toString() },
-    data: { 
-      status: 'completed',
-      progress: 100,
-      result: JSON.stringify(result),
-      completedAt: new Date()
-    }
-  }).catch(err => console.error('Failed to update job status to completed:', err))
 })
 
 contentProcessingQueue.on('failed', async (job, err) => {
   console.error(`❌ Job ${job.id} failed:`, err.message)
-  
-  // Update database
-  await prisma.processingJob.updateMany({
-    where: { queueJobId: job.id.toString() },
-    data: { 
-      status: 'failed',
-      error: err.message,
-      completedAt: new Date()
-    }
-  }).catch(dbErr => console.error('Failed to update job status to failed:', dbErr))
 })
 
 contentProcessingQueue.on('progress', async (job, progress) => {
   console.log(`📊 Job ${job.id} progress: ${progress}%`)
-  
-  // Update database
-  await prisma.processingJob.updateMany({
-    where: { queueJobId: job.id.toString() },
-    data: { progress }
-  }).catch(err => console.error('Failed to update job progress:', err))
 })
 
 // Graceful shutdown

@@ -1,0 +1,305 @@
+# ============================================================================
+# MindScroll - Production Environment
+# ============================================================================
+# Usage:
+#   docker-compose -f docker-compose.prod.yml up -d
+#   docker-compose -f docker-compose.prod.yml logs -f
+#   docker-compose -f docker-compose.prod.yml down
+# ============================================================================
+
+version: '3.8'
+
+services:
+  # =====================
+  # Nginx Reverse Proxy
+  # =====================
+  nginx:
+    image: nginx:alpine
+    container_name: mindscroll-nginx-prod
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - nginx_logs:/var/log/nginx
+    depends_on:
+      - api
+    networks:
+      - mindscroll-network
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # =====================
+  # Redis Service (Local)
+  # =====================
+  redis:
+    image: redis:7-alpine
+    container_name: mindscroll-redis-prod
+    restart: always
+    ports:
+      - "127.0.0.1:6379:6379"  # Only bind to localhost for security
+    volumes:
+      - redis_data:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    command: redis-server /usr/local/etc/redis/redis.conf
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - mindscroll-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  # =====================
+  # Backend API Service
+  # =====================
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: runtime-stage
+    image: mindscroll-backend:latest
+    container_name: mindscroll-api-prod
+    restart: always
+    ports:
+      - "127.0.0.1:3001:3001"  # Only bind to localhost (nginx proxy)
+    environment:
+      # Core settings
+      - NODE_ENV=production
+      - PORT=3001
+      - LOG_LEVEL=info
+      
+      # Database (Supabase Production)
+      - DATABASE_URL=${DATABASE_URL}
+      - DIRECT_URL=${DIRECT_URL}
+      
+      # Redis connection
+      - REDIS_URL=redis://redis:6379
+      
+      # Storage (Cloudflare R2)
+      - R2_ACCOUNT_ID=${R2_ACCOUNT_ID}
+      - R2_ACCESS_KEY_ID=${R2_ACCESS_KEY_ID}
+      - R2_SECRET_ACCESS_KEY=${R2_SECRET_ACCESS_KEY}
+      - R2_BUCKET_NAME=${R2_BUCKET_NAME}
+      - R2_PUBLIC_URL=${R2_PUBLIC_URL}
+      
+      # AI Services
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      
+      # Auth
+      - JWT_SECRET=${JWT_SECRET}
+      - BCRYPT_SALT_ROUNDS=12
+      
+      # CORS (Production frontend URL)
+      - CORS_ORIGIN=${CORS_ORIGIN}
+      
+      # Rate limiting (more restrictive for production)
+      - RATE_LIMIT_WINDOW_MS=900000
+      - RATE_LIMIT_MAX_REQUESTS=200
+      
+      # PM2 Settings
+      - PM2_INSTANCES=${PM2_INSTANCES:-2}
+      - PM2_MAX_MEMORY_RESTART=1G
+      
+    volumes:
+      # Persistent data volumes
+      - backend_logs:/app/logs
+      - backend_storage:/app/storage
+      - backend_uploads:/app/uploads
+    
+    depends_on:
+      redis:
+        condition: service_healthy
+    
+    healthcheck:
+      test: ["CMD", "node", "scripts/docker-health.js"]
+      interval: 30s
+      timeout: 15s
+      retries: 3
+      start_period: 120s
+    
+    networks:
+      - mindscroll-network
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '1.0'
+          memory: 1G
+    
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "5"
+
+  # =====================
+  # Worker Service
+  # =====================
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: runtime-stage
+    image: mindscroll-backend:latest
+    container_name: mindscroll-worker-prod
+    restart: always
+    environment:
+      # Core settings
+      - NODE_ENV=production
+      - WORKER_MODE=true
+      - LOG_LEVEL=info
+      
+      # Database (Supabase Production)
+      - DATABASE_URL=${DATABASE_URL}
+      - DIRECT_URL=${DIRECT_URL}
+      
+      # Redis connection
+      - REDIS_URL=redis://redis:6379
+      
+      # Storage (Cloudflare R2)
+      - R2_ACCOUNT_ID=${R2_ACCOUNT_ID}
+      - R2_ACCESS_KEY_ID=${R2_ACCESS_KEY_ID}
+      - R2_SECRET_ACCESS_KEY=${R2_SECRET_ACCESS_KEY}
+      - R2_BUCKET_NAME=${R2_BUCKET_NAME}
+      - R2_PUBLIC_URL=${R2_PUBLIC_URL}
+      
+      # AI Services
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      
+      # Worker-specific settings
+      - WORKER_CONCURRENCY=${WORKER_CONCURRENCY:-5}
+      - WORKER_MAX_JOBS=${WORKER_MAX_JOBS:-100}
+      
+    volumes:
+      # Persistent data volumes (shared with API)
+      - backend_logs:/app/logs
+      - backend_storage:/app/storage
+      - backend_uploads:/app/uploads
+    
+    depends_on:
+      redis:
+        condition: service_healthy
+    
+    command: ["npx", "pm2-runtime", "start", "ecosystem.config.js", "--only", "worker"]
+    
+    healthcheck:
+      test: ["CMD", "npx", "pm2", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    networks:
+      - mindscroll-network
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+
+  # =====================
+  # Log Aggregator (Optional)
+  # =====================
+  # Uncomment if you want centralized logging
+  # logrotate:
+  #   image: alpine:latest
+  #   container_name: mindscroll-logrotate-prod
+  #   restart: always
+  #   volumes:
+  #     - backend_logs:/logs
+  #     - nginx_logs:/nginx_logs
+  #   command: |
+  #     sh -c "
+  #       while true; do
+  #         find /logs -name '*.log' -size +100M -exec gzip {} \;
+  #         find /nginx_logs -name '*.log' -size +100M -exec gzip {} \;
+  #         sleep 86400
+  #       done
+  #     "
+
+# =====================
+# Networks
+# =====================
+networks:
+  mindscroll-network:
+    driver: bridge
+    name: mindscroll-prod-network
+    driver_opts:
+      com.docker.network.bridge.name: mindscroll-br0
+
+# =====================
+# Volumes
+# =====================
+volumes:
+  redis_data:
+    name: mindscroll-redis-data-prod
+    driver: local
+  backend_logs:
+    name: mindscroll-backend-logs-prod
+    driver: local
+  backend_storage:
+    name: mindscroll-backend-storage-prod
+    driver: local
+  backend_uploads:
+    name: mindscroll-backend-uploads-prod
+    driver: local
+  nginx_logs:
+    name: mindscroll-nginx-logs-prod
+    driver: local
+
+# ============================================================================
+# Production Environment Features:
+# 
+# ✅ Nginx reverse proxy with SSL support
+# ✅ Resource limits and reservations for all services
+# ✅ Proper security (only localhost bindings)
+# ✅ Production-grade logging with rotation
+# ✅ Health checks with appropriate timeouts
+# ✅ Restart policies for high availability
+# ✅ PM2 process management with clustering
+# ✅ Shared persistent volumes for data
+# ✅ Network isolation and security
+# ✅ Redis with production configuration
+# 
+# Required files:
+# - .env with production environment variables
+# - nginx/nginx.conf with proper configuration
+# - nginx/ssl/ directory with SSL certificates
+# - redis/redis.conf with production Redis settings
+# 
+# Monitoring recommendations:
+# - Add Prometheus metrics endpoint
+# - Integrate with log aggregation (ELK, Fluentd)
+# - Set up alerting for service failures
+# - Monitor resource usage and set up scaling policies
+# ============================================================================

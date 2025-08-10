@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { validationResult } from 'express-validator'
 import { PrismaClient } from '@prisma/client'
+import crypto from 'crypto'
 
 const prisma = new PrismaClient()
 
@@ -46,9 +47,9 @@ export const register = async (req, res, next) => {
     // Create user
     const user = await prisma.user.create({
       data: {
+        id: crypto.randomUUID(), // Generate UUID for user ID
         email,
         name,
-        // Note: You'll need to add password field to schema
         password: hashedPassword
       },
       select: {
