@@ -99,7 +99,7 @@ export default function Dashboard() {
       const [statsResponse, enrolledResponse, contentResponse] = await Promise.allSettled([
         progressAPI.getStats(),
         libraryAPI.getMyLibrary({ limit: 5 }),
-        libraryAPI.getContent({ limit: 5, excludeEnrolled: 'true' })
+        libraryAPI.getContent({ limit: 5 })
       ])
       
       // Handle each response independently
