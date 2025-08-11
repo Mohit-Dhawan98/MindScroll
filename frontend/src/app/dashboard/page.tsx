@@ -179,7 +179,7 @@ export default function Dashboard() {
         setCurrentSession(sessionResponse.data.data)
         setShowCards(true)
       } else {
-        toast.info('No cards available for review right now!')
+        toast('No cards available for review right now!')
       }
       
     } catch (error) {
