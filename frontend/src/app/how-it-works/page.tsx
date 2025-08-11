@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { 
   Upload, 
   Sparkles, 
-  Swipe, 
+  Move, 
   Brain, 
   Target, 
   TrendingUp,
@@ -59,7 +59,7 @@ export default function HowItWorksPage() {
       step: 3,
       title: "Swipe to Learn",
       description: "Review cards with TikTok-style swiping. Right for 'I know this', left for 'Need review'.",
-      icon: Swipe,
+      icon: Move,
       visual: (
         <div className="relative">
           <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-200 transform rotate-2">
