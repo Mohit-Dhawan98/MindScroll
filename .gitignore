@@ -30,6 +30,12 @@ frontend/.env.production
 *.sqlite
 dev.db
 
+nginx
+nginx/*
+
+redis
+redis/*
+
 # Content storage directories (exclude for public repo)
 backend/storage/chunks/
 backend/storage/extracted-text/
