@@ -52,7 +52,7 @@ export default function RegisterForm() {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl mx-auto mb-4 flex items-center justify-center">
-            <span className="text-2xl font-bold text-white">M</span>
+            <span className="text-2xl font-bold text-white">E</span>
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Create account</h1>
           <p className="text-gray-600">Start your personalized learning journey</p>

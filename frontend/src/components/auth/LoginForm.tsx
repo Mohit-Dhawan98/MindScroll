@@ -46,7 +46,7 @@ export default function LoginForm() {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl mx-auto mb-4 flex items-center justify-center">
-            <span className="text-2xl font-bold text-white">M</span>
+            <span className="text-2xl font-bold text-white">E</span>
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome back</h1>
           <p className="text-gray-600">Sign in to continue your learning journey</p>
@@ -62,7 +62,7 @@ export default function LoginForm() {
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
+                  <Mail className="h-5 w-5 text-gray-600" />
                 </div>
                 <input
                   {...register('email')}
@@ -85,7 +85,7 @@ export default function LoginForm() {
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
+                  <Lock className="h-5 w-5 text-gray-600" />
                 </div>
                 <input
                   {...register('password')}
@@ -101,9 +101,9 @@ export default function LoginForm() {
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                    <EyeOff className="h-5 w-5 text-gray-600 hover:text-gray-800" />
                   ) : (
-                    <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                    <Eye className="h-5 w-5 text-gray-600 hover:text-gray-800" />
                   )}
                 </button>
               </div>
