@@ -13,28 +13,28 @@ export default function TermsPage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">1. Acceptance of Terms</h2>
               <p className="text-gray-700 mb-4">
-                By accessing and using MindScroll, you accept and agree to be bound by the terms and provision of this agreement.
+                By accessing and using Epigram, you accept and agree to be bound by the terms and provision of this agreement.
               </p>
             </section>
 
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">2. Use License</h2>
               <p className="text-gray-700 mb-4">
-                Permission is granted to temporarily download one copy of MindScroll per device for personal, non-commercial transitory viewing only.
+                Permission is granted to temporarily download one copy of Epigram per device for personal, non-commercial transitory viewing only.
               </p>
             </section>
 
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">3. Disclaimer</h2>
               <p className="text-gray-700 mb-4">
-                The materials on MindScroll are provided on an 'as is' basis. MindScroll makes no warranties, expressed or implied.
+                The materials on Epigram are provided on an 'as is' basis. Epigram makes no warranties, expressed or implied.
               </p>
             </section>
 
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">4. Contact Information</h2>
               <p className="text-gray-700">
-                If you have any questions about these Terms of Service, please contact us at support@mindscroll.com
+                If you have any questions about these Terms of Service, please contact us at support@epigram.com
               </p>
             </section>
           </div>

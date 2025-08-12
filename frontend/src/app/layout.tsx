@@ -8,8 +8,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "MindScroll - AI-Powered Microlearning",
-  description: "Learn anything in bite-sized, swipeable cards powered by AI",
+  title: "Epigram - AI-Powered Learning Through Memorable Insights",
+  description: "Transform any content into memorable learning insights with AI-powered microlearning cards",
 };
 
 export default function RootLayout({

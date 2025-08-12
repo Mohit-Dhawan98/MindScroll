@@ -178,9 +178,9 @@ export default function HowItWorksPage() {
           <div className="flex justify-between items-center py-4">
             <Link href="/" className="flex items-center space-x-2">
               <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
-                <span className="text-xl font-bold text-white">M</span>
+                <span className="text-xl font-bold text-white">E</span>
               </div>
-              <span className="text-2xl font-bold gradient-text">MindScroll</span>
+              <span className="text-2xl font-bold gradient-text">Epigram</span>
             </Link>
             
             <div className="flex items-center space-x-4">
@@ -199,7 +199,7 @@ export default function HowItWorksPage() {
       <section className="pt-16 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-purple-50">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            How MindScroll
+            How Epigram
             <span className="block gradient-text">Transforms Learning</span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
@@ -260,7 +260,7 @@ export default function HowItWorksPage() {
       <section className="py-16 bg-gray-50 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Why Choose MindScroll?
+            Why Choose Epigram?
           </h2>
           <p className="text-lg text-gray-600 mb-12">
             The smartest way to learn anything, backed by science and powered by AI
@@ -295,7 +295,7 @@ export default function HowItWorksPage() {
             Ready to Transform Your Learning?
           </h2>
           <p className="text-xl text-blue-100 mb-8">
-            Join thousands of learners already mastering new skills with MindScroll
+            Join thousands of learners already mastering new skills with Epigram
           </p>
           <Link href="/auth/register" className="inline-flex items-center bg-white text-blue-600 hover:bg-gray-100 font-medium text-lg px-8 py-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
             Start Learning Free
@@ -310,13 +310,13 @@ export default function HowItWorksPage() {
           <div className="flex items-center justify-center">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-lg font-bold text-white">M</span>
+                <span className="text-lg font-bold text-white">E</span>
               </div>
-              <span className="text-xl font-bold">MindScroll</span>
+              <span className="text-xl font-bold">Epigram</span>
             </div>
           </div>
           <div className="text-center text-gray-400 text-sm mt-4">
-            © 2024 MindScroll. All rights reserved.
+            © 2024 Epigram. All rights reserved.
           </div>
         </div>
       </footer>
