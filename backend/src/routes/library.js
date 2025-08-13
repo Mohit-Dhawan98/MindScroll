@@ -24,12 +24,12 @@ router.get('/stats', protect, async (req, res) => {
   }
 })
 
-// @desc    Get available content library
+// @desc    Get global content library (curated content + approved user content)
 // @route   GET /api/library/content
 // @access  Private
 router.get('/content', protect, async (req, res) => {
   try {
-    console.log('🔍 Library content request:', req.query)
+    console.log('🔍 Global library content request:', req.query)
     console.log('🔑 User:', req.user?.id)
     
     const { category, difficulty, limit = 20, offset = 0, excludeEnrolled = 'false' } = req.query
@@ -38,14 +38,15 @@ router.get('/content', protect, async (req, res) => {
       isActive: true,
       ...(category && { category }),
       ...(difficulty && { difficulty }),
-      // Exclude user uploads that don't have cards (still processing)
+      // Only include curated content or approved user content
       OR: [
         {
-          source: { not: 'USER_UPLOADED' } // Include all non-user content
+          source: { not: 'USER_UPLOADED' } // Include all curated/AI-generated content
         },
         {
           AND: [
             { source: 'USER_UPLOADED' },
+            { approvedForGlobal: true }, // Only approved user content
             { totalCards: { gt: 0 } }, // Only include user uploads that have cards
             { chapters: { some: {} } }, // And have at least one chapter
             { 
@@ -60,13 +61,19 @@ router.get('/content', protect, async (req, res) => {
       ]
     }
     
-    console.log('📋 Where clause:', whereClause)
+    console.log('📋 Global library where clause:', whereClause)
     
     const content = await prisma.content.findMany({
       where: whereClause,
       include: {
         _count: {
           select: { cards: true }
+        },
+        owner: {
+          select: {
+            id: true,
+            name: true
+          }
         }
       },
       orderBy: { createdAt: 'desc' },
@@ -74,14 +81,16 @@ router.get('/content', protect, async (req, res) => {
       skip: parseInt(offset)
     })
     
-    console.log('📚 Found content count:', content.length)
+    console.log('📚 Found global content count:', content.length)
     if (content.length > 0) {
       console.log('📖 First book:', {
         id: content[0].id,
         title: content[0].title,
         author: content[0].author,
         isActive: content[0].isActive,
-        cards: content[0]._count.cards
+        cards: content[0]._count.cards,
+        source: content[0].source,
+        approved: content[0].approvedForGlobal
       })
     }
     
@@ -178,18 +187,125 @@ router.get('/content', protect, async (req, res) => {
   }
 })
 
+// @desc    Get user's uploaded content (My Uploads)
+// @route   GET /api/library/my-uploads
+// @access  Private
+router.get('/my-uploads', protect, async (req, res) => {
+  try {
+    console.log('📤 User uploads request:', req.query)
+    console.log('🔑 User:', req.user?.id)
+    
+    const userId = req.user.id
+    const { category, difficulty, limit = 20, offset = 0, includeUnapproved = 'true' } = req.query
+    
+    const whereClause = {
+      isActive: true,
+      source: 'USER_UPLOADED',
+      userId: userId, // Critical: Only show content owned by the current user
+      ...(category && { category }),
+      ...(difficulty && { difficulty }),
+      // Include content that has been processed
+      AND: [
+        { totalCards: { gt: 0 } }, // Only include uploads that have cards
+        { chapters: { some: {} } }, // And have at least one chapter
+        { 
+          uploads: {
+            some: {
+              status: 'COMPLETED' // Only show books from completed uploads
+            }
+          }
+        }
+      ]
+    }
+    
+    console.log('📋 User uploads where clause:', whereClause)
+    
+    const content = await prisma.content.findMany({
+      where: whereClause,
+      include: {
+        _count: {
+          select: { cards: true }
+        }
+      },
+      orderBy: { createdAt: 'desc' },
+      take: parseInt(limit),
+      skip: parseInt(offset)
+    })
+    
+    console.log('📚 Found user uploads count:', content.length)
+    if (content.length > 0) {
+      console.log('📖 First upload:', {
+        id: content[0].id,
+        title: content[0].title,
+        author: content[0].author,
+        isActive: content[0].isActive,
+        cards: content[0]._count.cards,
+        approved: content[0].approvedForGlobal,
+        userId: content[0].userId
+      })
+    }
+    
+    const total = await prisma.content.count({ where: whereClause })
+    
+    res.set({
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    })
+    
+    const response = {
+      success: true,
+      data: {
+        content: content.map(item => ({
+          ...item,
+          isOwnContent: true, // Flag to indicate this is user's own content
+          canRequestApproval: !item.approvedForGlobal // User can request approval if not approved
+        })),
+        pagination: {
+          total,
+          limit: parseInt(limit),
+          offset: parseInt(offset),
+          hasMore: total > parseInt(offset) + parseInt(limit)
+        }
+      }
+    }
+    
+    console.log('📤 User uploads response summary:', {
+      success: response.success,
+      contentCount: response.data.content.length,
+      total: response.data.pagination.total,
+      approvedCount: content.filter(c => c.approvedForGlobal).length
+    })
+    
+    res.json(response)
+  } catch (error) {
+    console.error('❌ User uploads error:', error)
+    res.status(500).json({
+      success: false,
+      error: error.message
+    })
+  }
+})
+
 // @desc    Get content by ID with cards
 // @route   GET /api/library/content/:id
 // @access  Private
 router.get('/content/:id', protect, async (req, res) => {
   try {
     const { id } = req.params
+    const userId = req.user.id
     
     const content = await prisma.content.findUnique({
       where: { id },
       include: {
         cards: {
           orderBy: { order: 'asc' }
+        },
+        owner: {
+          select: {
+            id: true,
+            name: true
+          }
         }
       }
     })
@@ -201,9 +317,29 @@ router.get('/content/:id', protect, async (req, res) => {
       })
     }
     
+    // Security check: Ensure user can access this content
+    const isUserContent = content.source === 'USER_UPLOADED'
+    const isContentOwner = content.userId === userId
+    const isApprovedContent = content.approvedForGlobal
+    const isCuratedContent = content.source !== 'USER_UPLOADED'
+    
+    // Allow access if:
+    // 1. It's curated content (not user uploaded), OR
+    // 2. It's user's own content, OR  
+    // 3. It's approved user content
+    if (!isCuratedContent && !isContentOwner && !isApprovedContent) {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied. This content is private.'
+      })
+    }
+    
     res.json({
       success: true,
-      data: content
+      data: {
+        ...content,
+        isOwnContent: isContentOwner
+      }
     })
   } catch (error) {
     res.status(500).json({
@@ -458,6 +594,144 @@ router.delete('/enroll/:id', protect, async (req, res) => {
       data: {
         contentId: content.id,
         removedProgress: deleteResult.count
+      }
+    })
+    
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    })
+  }
+})
+
+// @desc    Approve user content for global library (Admin only)
+// @route   PUT /api/library/approve/:id
+// @access  Private (Admin)
+router.put('/approve/:id', protect, async (req, res) => {
+  try {
+    const { id } = req.params
+    const { approved } = req.body
+    
+    // Check if user is admin (you might want to add admin middleware)
+    if (req.user.role !== 'ADMIN' && req.user.role !== 'SUPER_ADMIN') {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied. Admin privileges required.'
+      })
+    }
+    
+    const content = await prisma.content.findUnique({
+      where: { id },
+      include: {
+        owner: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      }
+    })
+    
+    if (!content) {
+      return res.status(404).json({
+        success: false,
+        error: 'Content not found'
+      })
+    }
+    
+    if (content.source !== 'USER_UPLOADED') {
+      return res.status(400).json({
+        success: false,
+        error: 'Only user-uploaded content can be approved'
+      })
+    }
+    
+    const updatedContent = await prisma.content.update({
+      where: { id },
+      data: {
+        approvedForGlobal: approved === true
+      }
+    })
+    
+    res.json({
+      success: true,
+      message: `Content ${approved ? 'approved for' : 'removed from'} global library`,
+      data: {
+        id: updatedContent.id,
+        title: updatedContent.title,
+        approvedForGlobal: updatedContent.approvedForGlobal,
+        owner: content.owner
+      }
+    })
+    
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    })
+  }
+})
+
+// @desc    Get pending approval content (Admin only)
+// @route   GET /api/library/pending-approval
+// @access  Private (Admin)
+router.get('/pending-approval', protect, async (req, res) => {
+  try {
+    // Check if user is admin
+    if (req.user.role !== 'ADMIN' && req.user.role !== 'SUPER_ADMIN') {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied. Admin privileges required.'
+      })
+    }
+    
+    const { limit = 20, offset = 0 } = req.query
+    
+    const pendingContent = await prisma.content.findMany({
+      where: {
+        source: 'USER_UPLOADED',
+        approvedForGlobal: false,
+        isActive: true,
+        totalCards: { gt: 0 }
+      },
+      include: {
+        owner: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        },
+        _count: {
+          select: { cards: true }
+        }
+      },
+      orderBy: { createdAt: 'desc' },
+      take: parseInt(limit),
+      skip: parseInt(offset)
+    })
+    
+    const total = await prisma.content.count({
+      where: {
+        source: 'USER_UPLOADED',
+        approvedForGlobal: false,
+        isActive: true,
+        totalCards: { gt: 0 }
+      }
+    })
+    
+    res.json({
+      success: true,
+      data: {
+        content: pendingContent,
+        pagination: {
+          total,
+          limit: parseInt(limit),
+          offset: parseInt(offset),
+          hasMore: total > parseInt(offset) + parseInt(limit)
+        }
       }
     })
     

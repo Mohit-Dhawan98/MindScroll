@@ -36,6 +36,7 @@ model User {
   uploads         ContentUpload[]
   conversations   ChatConversation[]
   chapterProgress ChapterProgress[]
+  ownedContent    Content[] // Content owned by this user
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -67,6 +68,11 @@ model Content {
   isActive      Boolean @default(true)  // Enable/disable content
   totalCards    Int     @default(0)     // Total number of cards
   textFileId    String? // Reference to stored text file
+  
+  // User ownership and approval for global library
+  userId            String? // Owner of user-uploaded content
+  owner             User?   @relation(fields: [userId], references: [id])
+  approvedForGlobal Boolean @default(false) // Whether user content is approved for global library
   
   // Simplified Learning System fields
   enabledCardTypes  String  @default("[\"FLASHCARD\", \"QUIZ\", \"SUMMARY\"]") // JSON array as string
