@@ -160,4 +160,8 @@ export const libraryAPI = {
   
   getMyLibrary: (params?: { limit?: number; offset?: number }) =>
     api.get('/library/my-library', { params }),
+  
+  // User uploads endpoint
+  getMyUploads: (params?: { category?: string; difficulty?: string; limit?: number; offset?: number }) =>
+    api.get('/library/my-uploads', { params }),
 }

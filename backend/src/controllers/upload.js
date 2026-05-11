@@ -6,6 +6,7 @@ import { extractTextFromPDF } from '../processors/textExtractor.js'
 import { EnhancedCardGenerator } from '../processors/enhancedCardGenerator.js'
 import { addJob, JOB_TYPES } from '../services/queueService.js'
 import r2Storage from '../utils/r2StreamingStorage.js'
+import { generatePDFFingerprint, checkDuplicatePDF } from '../utils/pdfFingerprint.js'
 import path from 'path'
 import fs from 'fs/promises'
 
@@ -51,31 +52,102 @@ export const uploadContent = async (req, res, next) => {
         })
       }
 
+      // Check for duplicate PDFs using fingerprinting
+      let fingerprint = null;
+      let existingUploadId = null;
+      if (file.mimetype === 'application/pdf') {
+        console.log('🔍 Checking for duplicate PDF...')
+        fingerprint = generatePDFFingerprint(file.buffer);
+        
+        const duplicateCheck = await checkDuplicatePDF(fingerprint, userId);
+        if (duplicateCheck) {
+          console.log('⚠️ Duplicate PDF detected:', duplicateCheck.message)
+          
+          if (duplicateCheck.allowRetry) {
+            // This is a failed upload by the same user - reuse existing record
+            existingUploadId = duplicateCheck.existingUploadId;
+            console.log(`🔄 Retrying failed upload - reusing record ${existingUploadId}`);
+          } else if (duplicateCheck.isDuplicate) {
+            // Return appropriate response based on duplicate type
+            if (duplicateCheck.isOwnUpload) {
+              return res.status(409).json({
+                success: false,
+                error: duplicateCheck.message,
+                isDuplicate: true,
+                content: duplicateCheck.content
+              });
+            } else if (duplicateCheck.isGloballyAvailable) {
+              return res.status(409).json({
+                success: false,
+                error: duplicateCheck.message,
+                isDuplicate: true,
+                isGloballyAvailable: true,
+                content: duplicateCheck.content
+              });
+            } else {
+              // Another user's private/pending content
+              return res.status(409).json({
+                success: false,
+                error: duplicateCheck.message,
+                isDuplicate: true
+              });
+            }
+          }
+        }
+      }
+
       // Generate a filename since we're using memory storage
       const timestamp = Date.now()
       const random = Math.round(Math.random() * 1E9)
       const extension = path.extname(file.originalname).toLowerCase()
       const generatedFilename = `upload-${timestamp}-${random}${extension}`
       
-      // Create upload record first to get uploadId
-      const upload = await prisma.contentUpload.create({
-        data: {
-          userId,
-          filename: generatedFilename,
-          originalName: file.originalname,
-          mimeType: file.mimetype,
-          size: file.size,
-          url: '', // Will be updated with R2 key after upload
-          status: UploadStatus.PROCESSING,
-          metadata: JSON.stringify({
-            type,
-            title: title || file.originalname.replace(/\.[^/.]+$/, ''),
-            difficulty,
-            category,
-            customInstructions
-          })
-        }
-      })
+      let upload;
+      if (existingUploadId) {
+        // Reuse existing upload record for retry
+        console.log(`🔄 Reusing existing upload record ${existingUploadId} for retry`);
+        upload = await prisma.contentUpload.update({
+          where: { id: existingUploadId },
+          data: {
+            filename: generatedFilename,
+            originalName: file.originalname,
+            mimeType: file.mimetype,
+            size: file.size,
+            status: UploadStatus.PROCESSING,
+            error: null, // Clear previous error
+            metadata: JSON.stringify({
+              type,
+              title: title || file.originalname.replace(/\.[^/.]+$/, ''),
+              difficulty,
+              category,
+              customInstructions,
+              retryAttempt: true,
+              retryTimestamp: new Date().toISOString()
+            })
+          }
+        });
+      } else {
+        // Create new upload record
+        upload = await prisma.contentUpload.create({
+          data: {
+            userId,
+            filename: generatedFilename,
+            originalName: file.originalname,
+            mimeType: file.mimetype,
+            size: file.size,
+            url: '', // Will be updated with R2 key after upload
+            fingerprint: fingerprint, // Store fingerprint for duplicate detection
+            status: UploadStatus.PROCESSING,
+            metadata: JSON.stringify({
+              type,
+              title: title || file.originalname.replace(/\.[^/.]+$/, ''),
+              difficulty,
+              category,
+              customInstructions
+            })
+          }
+        });
+      }
 
       let r2Key = null
       try {

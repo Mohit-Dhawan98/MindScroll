@@ -177,6 +177,7 @@ model ContentUpload {
   mimeType    String
   size        Int
   url         String
+  fingerprint String?  // SHA-256 hash of file content for duplicate detection
   
   // Processing status
   status      String   @default("PROCESSING") // PROCESSING, COMPLETED, FAILED
@@ -189,6 +190,7 @@ model ContentUpload {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
+  @@index([fingerprint]) // Index for fast duplicate lookups
   @@map("content_uploads")
 }
 

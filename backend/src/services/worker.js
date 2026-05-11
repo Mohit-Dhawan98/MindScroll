@@ -164,7 +164,7 @@ const processJob = async (job) => {
 
     switch (job.name) {
       case JOB_TYPES.PROCESS_PDF_UPLOAD:
-        const result = await processPdfUpload(job, uploadId, r2Key, metadata)
+        const result = await processPdfUpload(job, uploadId, r2Key, userId, metadata)
         await updateJobStatus(job.id, 'completed', { 
           completedAt: new Date(),
           result: JSON.stringify(result)
@@ -223,7 +223,7 @@ const processJob = async (job) => {
 }
 
 // PDF processing function - simple R2 streaming approach
-async function processPdfUpload(job, uploadId, r2Key, metadata = {}) {
+async function processPdfUpload(job, uploadId, r2Key, userId, metadata = {}) {
   console.log(`📄 Processing PDF upload: ${uploadId} from R2: ${r2Key}`)
   
   await job.progress(25)
@@ -250,7 +250,8 @@ async function processPdfUpload(job, uploadId, r2Key, metadata = {}) {
       'openai',
       true,
       'USER_UPLOADED',
-      metadata.title
+      metadata.title,
+      userId // Pass userId for privacy control
     )
     
     await job.progress(90)

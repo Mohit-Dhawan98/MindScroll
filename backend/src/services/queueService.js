@@ -74,6 +74,13 @@ export const JOB_STATUS = {
   PAUSED: 'paused'
 }
 
+// Generate timestamp-based UUID for job IDs
+const generateJobId = () => {
+  const timestamp = Date.now()
+  const random = Math.floor(Math.random() * 1000000)
+  return `job_${timestamp}_${random}`
+}
+
 // Add job to queue (pure queue management, no database operations)
 export const addJob = async (jobType, data, options = {}) => {
   try {
@@ -83,7 +90,11 @@ export const addJob = async (jobType, data, options = {}) => {
       type: data.type
     })
 
+    // Generate unique timestamp-based job ID
+    const customJobId = generateJobId()
+    
     const job = await contentProcessingQueue.add(jobType, data, {
+      jobId: customJobId, // Use custom timestamp-based ID
       priority: options.priority || 0,
       delay: options.delay || 0,
       ...options

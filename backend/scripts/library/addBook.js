@@ -22,7 +22,7 @@ const prisma = new PrismaClient()
  * - .txt (simple text files)
  */
 
-async function addBookToLibrary(filePath, category, aiProvider = 'openai', override = false, source = 'CURATED', customTitle = null) {
+async function addBookToLibrary(filePath, category, aiProvider = 'openai', override = false, source = 'CURATED', customTitle = null, userId = null) {
   try {
     console.log(`📚 Adding book to library: ${filePath}`)
     
@@ -230,7 +230,11 @@ async function addBookToLibrary(filePath, category, aiProvider = 'openai', overr
         // Important fields restored:
         totalCards: cards.length,
         isActive: true,
-        textFileId: contentId // Reference to file storage
+        textFileId: contentId, // Reference to file storage
+        // User ownership for privacy control
+        ...(userId && source === 'USER_UPLOADED' && { userId }),
+        // Set approval status based on source
+        approvedForGlobal: source !== 'USER_UPLOADED' // Auto-approve curated content, user content needs admin approval
       }
     })
     
