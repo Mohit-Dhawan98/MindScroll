@@ -8,7 +8,7 @@ The reasoning behind the design is written up in [docs/PRINCIPLES.md](docs/PRINC
 
 ## How it works
 
-A book goes through five stages between upload and a card appearing in a study session. The file names below are the ones that do the work.
+A book goes through six stages between upload and a card appearing in a study session. The file names below are the ones that do the work.
 
 1. **Intake.** `backend/src/controllers/upload.js` accepts a file, records a `ContentUpload` row, stores the file in Cloudflare R2 and puts a job on a Bull/Redis queue (`backend/src/services/queueService.js`). `backend/src/services/worker.js` picks the job up. Curated library books skip the queue and are added from the command line with `backend/scripts/library/addBook.js`; the PDF upload job calls the same function, so both routes share one pipeline.
 

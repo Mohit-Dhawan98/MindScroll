@@ -156,3 +156,5 @@ Desktop.ini
 
 # Guide files
 guides/*.md
+# local worker logs
+*.logs
