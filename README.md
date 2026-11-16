@@ -2,7 +2,7 @@
 
 MindScroll turns a book into a chapter-by-chapter course of flashcards, quizzes and summaries, and tracks what each reader has learned.
 
-The deployed app is branded **Epigram**: https://epigram-lake.vercel.app. The repository, package names and most of the code still use the original name, MindScroll.
+The app is branded **Epigram**, and the frontend is still deployed at https://epigram-lake.vercel.app. **The hosted backend is currently offline**, so sign-in and the library do not work there; run it locally with the quick start below. The repository, package names and most of the code still use the original name, MindScroll.
 
 The reasoning behind the design is written up in [docs/PRINCIPLES.md](docs/PRINCIPLES.md).
 
