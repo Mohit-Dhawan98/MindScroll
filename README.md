@@ -1,176 +1,138 @@
-# 🧠 MindScroll V0.1 - AI-Powered Microlearning Platform
+# MindScroll (Epigram)
 
-**Transform any book into an intelligent, adaptive learning experience with AI-generated flashcards, quizzes, and summaries.**
+MindScroll turns a book into a chapter-by-chapter course of flashcards, quizzes and summaries, and tracks what each reader has learned.
 
-MindScroll is a production-ready microlearning platform that uses advanced AI to break down complex content into digestible, interactive learning cards. Built with modern web technologies and featuring intelligent progress tracking, spaced repetition, and adaptive learning paths.
+The deployed app is branded **Epigram**: https://epigram-lake.vercel.app. The repository, package names and most of the code still use the original name, MindScroll.
 
-## ✨ Features
+The reasoning behind the design is written up in [docs/PRINCIPLES.md](docs/PRINCIPLES.md).
 
-### 🎯 **V0.1 Core Features**
-- **📚 Smart Content Processing**: AI-powered book processing with chapter-based organization
-- **🧠 3-Card Learning Flow**: Flashcards → Quizzes → Summaries progression per chapter  
-- **🎮 Gamified Learning**: XP system, streaks, levels, and progress tracking
-- **📱 Responsive Design**: Mobile-first interface with touch-friendly interactions
-- **⚡ Performance Optimized**: 40-60% faster loading with parallel API calls
-- **🔄 Spaced Repetition**: Intelligent review scheduling based on performance
-- **📊 Progress Analytics**: Detailed learning statistics and completion tracking
+## How it works
 
-### 🚀 **Advanced Features**
-- **AI-Generated Content**: Dynamic flashcards, quizzes, and summaries
-- **Chapter-Based Navigation**: Structured learning paths with automatic progression
-- **Smart Difficulty Adjustment**: Easy/Medium/Hard classification with adaptive scheduling
-- **Real-time Feedback**: Instant XP gains and progress updates
-- **Library Management**: Book enrollment, progress tracking, and completion states
-- **Error Resilience**: Robust error handling and graceful degradation
+A book goes through five stages between upload and a card appearing in a study session. The file names below are the ones that do the work.
 
-## 🏗️ **Tech Stack**
+1. **Intake.** `backend/src/controllers/upload.js` accepts a file, records a `ContentUpload` row, stores the file in Cloudflare R2 and puts a job on a Bull/Redis queue (`backend/src/services/queueService.js`). `backend/src/services/worker.js` picks the job up. Curated library books skip the queue and are added from the command line with `backend/scripts/library/addBook.js`; the PDF upload job calls the same function, so both routes share one pipeline.
 
-### **Frontend**
-- **Framework**: Next.js 14 with TypeScript
-- **Styling**: Tailwind CSS
-- **State Management**: Zustand with persistence
-- **Icons**: Lucide React
-- **UI Components**: Custom responsive components
+2. **Extraction.** `backend/src/processors/textExtractor.js` reads PDF (via `pdf.js-extract`), EPUB (via `epub2`) or plain text. For PDFs it rebuilds lines from the x/y position of each text fragment and keeps the result per page. EPUB chapters are cut into roughly 300-word pseudo-pages so both formats come out in the same shape: full text plus a `pages` array.
 
-### **Backend**
-- **API**: Node.js with Express.js
-- **Database**: SQLite with Prisma ORM
-- **AI Integration**: Anthropic Claude API
-- **Authentication**: JWT-based secure authentication
-- **File Processing**: PDF text extraction with semantic chunking
+3. **Structure and chunking.** `detectBookStructure` in `backend/src/processors/enhancedCardGenerator.js` sends the first ten pages to a language model to read chapter names from the table of contents, then asks it to map those names to page ranges. If that fails, it falls back to fixed windows of 5, 8 or 12 pages depending on how dense the pages are. `createSemanticChunks` then splits each chapter into chunks of about 3,500 characters on paragraph boundaries, with a 300-character overlap. Each chunk is embedded locally with `all-MiniLM-L6-v2` (`@xenova/transformers`) into an in-memory vector store.
 
-### **AI & Content Processing**
-- **LLM**: Anthropic Claude for content generation
-- **Text Processing**: Semantic chunking and context-aware generation
-- **Card Generation**: Multi-pass AI analysis for quality content
-- **Content Validation**: AI-powered quality assurance
+4. **Generation passes.** `generateEnhancedLearningCards` in the same file runs the passes in a fixed order, each built on the one before:
+   - **Flashcards**: one per group of four consecutive chunks, with the three most similar chunks from elsewhere in the book added as context (`generateFlashcardFromChunkGroup`).
+   - **Quizzes**: one multiple-choice question per chapter, written from that chapter's flashcards rather than from the raw text (`generateQuizzesFromCards`).
+   - **Summaries**: one per chapter, also written from the chapter's flashcards (`generateChapterSummaries`), plus one whole-book overview card.
 
-## 📁 **Project Structure**
+   A fourth "application" card type is designed but switched off in code until the AI tutor exists.
+
+5. **Validation and storage.** Model output is parsed as JSON with a repair step for common faults (`callAI`). Cards are de-duplicated by type and title. `addBook.js` then checks every card against per-type minimum lengths and required fields, and refuses to save the book at all if fewer than five cards were produced or more than 30% fail. Chapters and cards are written to Postgres through Prisma (`backend/prisma/schema.prisma`).
+
+6. **Sessions and scheduling.** `GET /api/progress/session` in `backend/src/routes/progress.js` finds the first chapter with unfinished cards and serves them in the order flashcards, quizzes, summary. `POST /api/progress/card-action` records "known", "unknown" or "skip", sets the card's next review time, updates the reader's per-card difficulty and chapter progress, and awards XP (10, 5 or 2 points; a level is 100 XP).
+
+### Which model does the generating
+
+The generator supports two providers. The default, and the one the upload worker uses, is OpenAI (`gpt-4o` for chapter mapping, `gpt-4.1-mini` for cards). Anthropic Claude can be selected for library books with `--provider anthropic`. The tutor endpoints in `backend/src/services/aiService.js` call OpenAI.
+
+## What is in the repository
 
 ```
-MindScroll/
-├── backend/                 # Node.js API server
-│   ├── src/
-│   │   ├── controllers/     # API controllers
-│   │   ├── routes/         # Express routes
-│   │   ├── processors/     # AI content processing
-│   │   ├── middleware/     # Auth & error handling
-│   │   └── utils/          # Helper functions
-│   ├── prisma/             # Database schema & migrations
-│   └── storage/            # File storage & cache
-├── frontend/               # Next.js web application
-│   └── src/
-│       ├── app/            # Next.js app router
-│       ├── components/     # React components
-│       ├── lib/            # API client & utilities
-│       └── stores/         # Zustand state management
-├── content-library/        # Curated book collection
-├── docs/                   # Technical documentation
-└── scripts/                # Setup & utility scripts
+backend/
+  src/
+    processors/     text extraction and card generation (the pipeline above)
+    services/       queue, worker, tutor/AI service
+    routes/         library, progress, upload, auth, content, AI endpoints
+    controllers/    request handlers for auth, upload, content, users, AI
+    middleware/     JWT auth, error handling
+    utils/          file cache, R2 storage, SM-2 implementation
+  prisma/           Postgres schema and the initial migration
+  scripts/          library ingestion (addBook, bulkAddBooks), data migration
+  docs/             design notes written while building the card generator
+frontend/
+  src/app/          Next.js app router pages (dashboard, library, learn, auth)
+  src/components/   card viewer, chapter navigation, upload modal, tutor chat
+  src/lib/          API client
+  src/stores/       Zustand auth store
+docs/               principles, architecture, deployment, database and Docker guides
+content-library/    where curated source books are placed (books are not committed)
+mobile/             a Flutter pubspec only; no mobile app has been written
+nginx/, redis/      production configuration
 ```
 
-## 🚀 **Quick Start**
+Other documents at the top level: [PRD.md](PRD.md) (original product brief), [CHANGELOG.md](CHANGELOG.md), [RELEASE_NOTES_V0.1.md](RELEASE_NOTES_V0.1.md), [FUTURE_ROADMAP.md](FUTURE_ROADMAP.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
 
-### **Prerequisites**
-- Node.js 18+
-- npm or yarn
-- SQLite (included)
+## Quick start
 
-### **Installation**
+You need Node.js 18 or later, a PostgreSQL database, a Redis instance, and an OpenAI API key (an Anthropic key as well if you want to use `--provider anthropic`).
 
 ```bash
-# Clone the repository
-git clone https://github.com/your-username/mindscroll.git
-cd mindscroll
+git clone https://github.com/Mohit-Dhawan98/MindScroll.git
+cd MindScroll
 
-# Backend setup
+# Install root, backend and frontend dependencies
+npm run setup
+
+# Configure the backend
+cp backend/.env.example backend/.env
+# then edit backend/.env (see below)
+
+# Create the database tables
 cd backend
-npm install
-npx prisma migrate dev
-npm start
+npm run migrate
+cd ..
 
-# Frontend setup (new terminal)
-cd ../frontend
-npm install
+# Start backend (port 3001) and frontend (port 3000) together
 npm run dev
 ```
 
-### **Environment Configuration**
+`backend/.env`:
 
-**Backend (.env)**
 ```env
-DATABASE_URL="file:./dev.db"
-JWT_SECRET="your-secure-jwt-secret"
-ANTHROPIC_API_KEY="your-claude-api-key"
+DATABASE_URL="postgresql://user:password@localhost:5432/mindscroll"
+JWT_SECRET="a-long-random-string"
+OPENAI_API_KEY="..."
+ANTHROPIC_API_KEY="..."
+REDIS_URL="redis://localhost:6379"
 ```
 
-**Frontend (.env.local)**
+`backend/.env.example` does not list `OPENAI_API_KEY` or `REDIS_URL`; add them by hand. Uploads also need the Cloudflare R2 variables shown in `backend/.env.production.example`.
+
+`frontend/.env.local`:
+
 ```env
 NEXT_PUBLIC_API_URL="http://localhost:3001/api"
 ```
 
-## 📈 **Performance Metrics** 
+To add a book to the library (EPUB gives the best chapter detection):
 
-- **Dashboard Load Time**: ~800ms (60% faster than v0.0)
-- **API Response Time**: ~200ms average (70% improvement)
-- **Database Queries**: 80% reduction in query count
-- **Memory Usage**: Optimized state management and cleanup
-- **Bundle Size**: Optimized for fast initial loading
+```bash
+cd backend
+npm run add-book -- "path/to/Title - Author.epub" business
+npm run add-book -- "path/to/Title - Author.epub" business --provider anthropic
+```
 
-## 🎓 **User Journey**
+The backend and Redis can also be run in Docker with `make dev`; see [docs/DOCKER_GUIDE.md](docs/DOCKER_GUIDE.md).
 
-1. **📖 Discover**: Browse curated book library
-2. **✅ Enroll**: Choose books aligned with learning goals  
-3. **🧠 Learn**: Progress through chapter-based card sequences
-4. **🎯 Practice**: Interactive flashcards and quizzes with feedback
-5. **📝 Synthesize**: Chapter summaries for comprehensive understanding
-6. **📊 Track**: Monitor progress with detailed analytics
-7. **🏆 Complete**: Celebrate achievements and move to next book
+## Stack
 
-## 🛣️ **Roadmap**
+- **Frontend:** Next.js 14, React 18, TypeScript, Tailwind CSS, Zustand, Framer Motion.
+- **Backend:** Node.js, Express, Prisma on PostgreSQL, JWT authentication, Bull on Redis for background jobs, Cloudflare R2 for uploaded files.
+- **Generation:** OpenAI and Anthropic SDKs; local sentence embeddings via `@xenova/transformers`.
+- **Deployment:** frontend on Vercel; backend, worker, Redis and Nginx via Docker Compose.
 
-### **V0.2 - User Content Upload** (Next Release)
-- PDF, article, and URL upload processing
-- Content type detection and routing
-- User content management dashboard
+## Status and known gaps
 
-### **V0.3 - AI Tutor Integration**
-- Contextual AI assistance
-- Conversational learning support
-- Personalized learning guidance
+This is a v0.1 project built by one person. The library, enrolment, chapter-based learning flow, progress tracking and XP work end to end. The points below are where the code stops short of what the documents describe.
 
-### **V0.4 - Enhanced AI Features**
-- "Ask More" button on cards
-- RAG-powered content retrieval
-- Internet-connected learning
+- **Spaced repetition is partial.** A review date is stored on every card action, and a full SM-2 implementation exists in `backend/src/utils/spacedRepetition.js`, but nothing calls it. The route uses a simpler interval ladder (1, 3, 7, 14, 30, 60 days) and currently does not pass the card's streak into it, so a "known" card is always scheduled one day out. The session endpoint serves cards by chapter completion, not by due date.
+- **Streaks.** A per-card streak is maintained. The user-level daily streak shown in the app is stored but no code updates it.
+- **Model-based quality check is off.** `applyQualityAssurance` contains a validate-then-regenerate step, but it is commented out; only de-duplication and the structural checks in `addBook.js` run.
+- **Uploads.** The PDF upload job is wired to the main pipeline. The URL and plain-text upload jobs in `worker.js` call two helper functions that are not defined, so they will fail. The upload filter accepts DOC and DOCX, which the extractor cannot read.
+- **Private uploads.** The library routes restrict a user's uploads to their owner unless an admin approves them, but the pipeline does not yet record the owner on the content it creates. See principle 8 in [docs/PRINCIPLES.md](docs/PRINCIPLES.md).
+- **AI tutor.** The chat UI and endpoints exist; the roadmap lists tutor integration with card content as not built (V0.3 and V0.4 in [FUTURE_ROADMAP.md](FUTURE_ROADMAP.md)).
+- **Mobile app, collaboration, offline use, video and audio sources:** on the roadmap or in the PRD, not built.
+- **Tests.** `npm test` is configured for Jest in the backend but the repository contains no test suite.
+- **Older documents are out of date.** [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) describes an early plan (Clerk, Neon, Pinecone, a Flutter client) rather than what was built. The changelog and release notes say SQLite; the schema is PostgreSQL. `backend/src/processors/contentProcessor.js`, `userContentProcessor.js` and `aiCardGenerator.js` are an earlier pipeline that no longer matches the schema and is not used by the running app.
 
-For detailed roadmap, see [FUTURE_ROADMAP.md](FUTURE_ROADMAP.md)
+The v0.1 release notes report performance improvements from parallel API calls and query changes (a dashboard load of about 800 ms). Those figures come from [RELEASE_NOTES_V0.1.md](RELEASE_NOTES_V0.1.md); the repository has no benchmark that reproduces them.
 
-## 📋 **Release Notes**
+## Licence
 
-**Current Version**: V0.1.0 - Foundation Release
-
-See [RELEASE_NOTES_V0.1.md](RELEASE_NOTES_V0.1.md) for complete feature list and technical details.
-
-## 🤝 **Contributing**
-
-We welcome contributions! Please read our contributing guidelines and feel free to submit issues and pull requests.
-
-## 📄 **License**
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🎯 **Get Started**
-
-Ready to transform your learning experience?
-
-1. ⭐ Star this repository
-2. 🚀 Follow the installation guide above  
-3. 📚 Add your first book and start learning!
-4. 💬 Join our community for updates and support
-
----
-
-**MindScroll V0.1 - The foundation for intelligent learning is here.** 🧠✨
-
-*Built with ❤️ for learners everywhere*
+MIT. See [LICENSE](LICENSE).
